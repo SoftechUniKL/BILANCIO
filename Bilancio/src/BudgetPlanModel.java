@@ -6,6 +6,7 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import com.opencsv.CSVReader;
 
@@ -25,7 +26,7 @@ public class BudgetPlanModel {
 			CSVReader reader = new CSVReader(new FileReader("data/budget.csv"));
 			String[] nextLine;
 			while ((nextLine = reader.readNext()) != null) {
-				DateFormat df = DateFormat.getDateInstance();
+				DateFormat df = DateFormat.getDateInstance(DateFormat.SHORT, Locale.GERMAN);
 				Date datum = df.parse(nextLine[0]);
 				String bezeichnung = nextLine[1];
 				double betrag = Double.parseDouble(nextLine[2]);
