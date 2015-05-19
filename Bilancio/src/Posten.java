@@ -5,7 +5,7 @@ import java.util.Date;
  */
 public class Posten {
 	/**
-	 * Datum, wann der Posten verbucht wurde
+	 * Datum, wann der Posten verbucht wurden
 	 */
 	private Date datum;
 	/**
