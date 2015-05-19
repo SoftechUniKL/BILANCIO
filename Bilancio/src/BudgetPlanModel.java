@@ -18,12 +18,12 @@ import com.opencsv.CSVReader;
  */
 public class BudgetPlanModel {
 	List<Posten> ausgaben;
-
+    String filename = "data/budget.csv" ;
 	public BudgetPlanModel() {
 		this.ausgaben = new ArrayList<Posten>();
 		try {
 			// Zeilenweises Einlesen der Daten
-			CSVReader reader = new CSVReader(new FileReader("data/budget.csv"));
+			CSVReader reader = new CSVReader(new FileReader(filename));
 			String[] nextLine;
 			while ((nextLine = reader.readNext()) != null) {
 				DateFormat df = DateFormat.getDateInstance(DateFormat.SHORT, Locale.GERMAN);
