@@ -158,7 +158,7 @@ public class BudgetPlanGUI extends JFrame {
 	}
 	
 	// Tabelle um eine Zeile Erweitern hinzufuegen
-		public void addRow(DefaultTableModel tableModel) {
+		public void addRow(final DefaultTableModel tableModel) {
 			// registriere den ActionListener fuer den Button als anonyme Klasse
 			addPosten.addActionListener(new ActionListener() {
 				@Override
@@ -170,7 +170,7 @@ public class BudgetPlanGUI extends JFrame {
 		}
 		
 	// Tabelle speichern
-	public void saveTable(DefaultTableModel tableModel, BudgetPlanModel budget) {
+	public void saveTable(final DefaultTableModel tableModel, final BudgetPlanModel budget) {
 		// registriere den ActionListener fuer den Button als anonyme Klasse
 		saveTable.addActionListener(new ActionListener() {
 			@Override
