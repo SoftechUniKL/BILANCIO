@@ -30,7 +30,9 @@ public class BudgetPlanModel {
 				Date datum = df.parse(nextLine[0]);
 				String bezeichnung = nextLine[1];
 				double betrag = Double.parseDouble(nextLine[2]);
-				ausgaben.add(new Posten(datum, bezeichnung, betrag));
+				String kategorie = nextLine[3];
+				
+				ausgaben.add(new Posten(datum, bezeichnung, betrag,kategorie));
 			}
 			reader.close();
 
