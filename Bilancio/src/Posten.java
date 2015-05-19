@@ -16,6 +16,10 @@ public class Posten {
 	 * Hoehe des Postens
 	 */
 	private double betrag;
+	/**
+	 * Kategorie der Ausgabe / Einnahme
+	 */
+	private String kategorie;
 
 	/**
 	 * Konstruktor
@@ -26,11 +30,14 @@ public class Posten {
 	 *            Kurze Beschreibung
 	 * @param betrag
 	 *            Hoehe des Postens
+	 * @param kategorie
+	 *            Art der Ausgabe
 	 */
-	public Posten(Date datum, String bezeichnung, double betrag) {
+	public Posten(Date datum, String bezeichnung, double betrag, String kategorie) {
 		this.bezeichnung = bezeichnung;
 		this.datum = datum;
 		this.betrag = betrag;
+		this.kategorie = kategorie;
 	}
 
 	public Date getDatum() {
@@ -44,4 +51,10 @@ public class Posten {
 	public double getBetrag() {
 		return betrag;
 	}
+	
+	public String getKategorie() {
+		return kategorie;
+	}
+
 }
+
