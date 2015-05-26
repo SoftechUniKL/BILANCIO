@@ -20,6 +20,8 @@ public class Posten {
 	 * Kategorie der Ausgabe / Einnahme
 	 */
 	private String kategorie;
+	
+	double Kontostand; 
 
 	/**
 	 * Konstruktor
@@ -55,6 +57,22 @@ public class Posten {
 	public String getKategorie() {
 		return kategorie;
 	}
+	//Anfangseingabe für aktuellen Kontostand 
+	
+	void setKontostand (double k ) {
+		Kontostand = k; 
+	}
+	
+	void Kontostand_nach_ausgabe (double a)
+	{ Kontostand-=a; }
+	
+	void Kontostand_nach_einzahlung (double e)
+	{ Kontostand+=e; }
+	
+	public double getKontostand()
+	{ return Kontostand;}
+	
+
 
 }
 
