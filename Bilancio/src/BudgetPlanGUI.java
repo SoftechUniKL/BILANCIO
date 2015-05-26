@@ -95,6 +95,7 @@ public class BudgetPlanGUI extends JFrame {
 			data[i][2] = String.format("%.2f", p.getBetrag());
 			data[i][3] = p.getKategorie();
 			i++;
+			
 		}
 		
 		
@@ -204,17 +205,21 @@ public class BudgetPlanGUI extends JFrame {
 				String[] line = new String[4];
 				String str;
 				try {
-					writer = new CSVWriter(new FileWriter("data/myfile.csv"), '\n');
+					writer = new CSVWriter(new FileWriter("data/myfile.csv"), '#', CSVWriter.NO_QUOTE_CHARACTER);
+					
 					int i = 0;
 					for (Posten p : budget.ausgaben) {
 						//
-						str = p.getDatum().toString() + ','
-								+ p.getBezeichnung() + ',' + p.getBetrag()
-								+ ',' + p.getKategorie() ;
 
-						line = str.split("\n");
+						line[0] = new SimpleDateFormat("dd.MM.yyyy").format(p.getDatum());
+						line[1] = p.getBezeichnung() ;
+						//line[2] = Double.toString( p.getBetrag());
+						line[2] = String.format("%.2f", p.getBetrag());
+						line[3] = p.getKategorie().toString();
+						
 						writer.writeNext(line);
 						i++;
+
 					}
 
 					writer.close();
