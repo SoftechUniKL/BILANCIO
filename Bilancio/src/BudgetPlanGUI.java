@@ -48,6 +48,7 @@ public class BudgetPlanGUI extends JFrame {
 	private JButton addPosten;
 	private JButton saveTable;
 	private JButton deletePosten;
+	private JButton initKontostand;
 	
 	private int row; 
 	
@@ -144,8 +145,13 @@ public class BudgetPlanGUI extends JFrame {
 		saveTable.setBounds(300,110,100,30);
 		
 		//DeletePosten Button 
-				deletePosten = new JButton("Delete Posten!");
-				deletePosten.setBounds(300,110,100,30);
+			deletePosten = new JButton("Delete Posten!");
+			deletePosten.setBounds(300,110,100,30);
+				
+		//Kontostand initialisieren 
+			initKontostand = new JButton ("Kontostand eingeben");
+			initKontostand.setBounds(300,110,100,30);
+				
 		
 		
 	 
@@ -159,6 +165,7 @@ public class BudgetPlanGUI extends JFrame {
 		getContentPane().add(panel);
 		getContentPane().add(panel2);
 		getContentPane().add(button);
+		getContentPane().add(initKontostand); 
 		
 		
 		// Berechnet Layout mit geringstem Platzbedarf
