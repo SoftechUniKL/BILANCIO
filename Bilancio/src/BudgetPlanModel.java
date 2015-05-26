@@ -19,7 +19,7 @@ import com.opencsv.CSVReader;
 public class BudgetPlanModel {
 	List<Posten> ausgaben;
     String filename = "data/budget.csv" ;
-    double Kontostand;
+    double Kontostand = 0.0;
 	public BudgetPlanModel() {
 		this.ausgaben = new ArrayList<Posten>();
 		try {
@@ -64,8 +64,23 @@ public class BudgetPlanModel {
 		void Kontostand_nach_einzahlung (double e)
 		{ Kontostand+=e; }
 		
-		public double getKontostand()
-		{ return Kontostand;}
+		public double getKontostand()		{ 
+			double tmpKontostand = 0;
+			int size = ausgaben.size();
+			for ( int i=0; i< size ; i++) {
+				
+				if (ausgaben.get(i).getKategorie().equals("E") ){
+					tmpKontostand +=ausgaben.get(i).getBetrag();
+				}
+				
+				if (ausgaben.get(i).getKategorie().equals("A") ){
+					tmpKontostand -=ausgaben.get(i).getBetrag();
+					}
+			
+			}
+			
+			
+			return tmpKontostand;}
 	
 	
 }
