@@ -48,6 +48,9 @@ public class BudgetPlanGUI extends JFrame {
 	private JButton addPosten;
 	private JButton saveTable;
 	
+	 
+	
+	
 	
 	/**
 	 * Modell der Daten
@@ -106,6 +109,9 @@ public class BudgetPlanGUI extends JFrame {
 		
 		
 		
+		
+		
+		
 
 		// Kreisdiagramm
 		DefaultPieDataset pd = new DefaultPieDataset();
@@ -130,6 +136,10 @@ public class BudgetPlanGUI extends JFrame {
 		//SAve Table Button 
 		saveTable = new JButton("Save Table!");
 		saveTable.setBounds(300,110,100,30);
+		
+		
+	 
+		
 
 		// Elemente dem Fenster hinzufuegen:
 		getContentPane().add(scrollpane);
@@ -138,6 +148,8 @@ public class BudgetPlanGUI extends JFrame {
 		getContentPane().add(panel);
 		getContentPane().add(panel2);
 		getContentPane().add(button);
+		
+		
 		// Berechnet Layout mit geringstem Platzbedarf
 		pack();
 	}
@@ -155,6 +167,11 @@ public class BudgetPlanGUI extends JFrame {
 
 		});
 	}
+	
+	
+	
+	 
+			
 	
 	// Tabelle um eine Zeile Erweitern hinzufuegen
 		public void addRow(final DefaultTableModel tableModel) {
