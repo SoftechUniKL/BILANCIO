@@ -47,8 +47,9 @@ public class BudgetPlanGUI extends JFrame {
 	
 	private JButton addPosten;
 	private JButton saveTable;
+	private JButton deletePosten;
 	
-	 
+	private int row; 
 	
 	
 	
@@ -75,6 +76,8 @@ public class BudgetPlanGUI extends JFrame {
 		addBehavior(); 		// Verhalten der GUI Elemente dieses Frames
 		addRow(tableModel); 			// Die Tabelle um eine Zeile erweitern 
 		saveTable(tableModel, budget);
+		
+		deleteRow(tableModel);
 		setBounds(10, 10, 800, 800); // Groesse des Frames
 		setVisible(true); 		// Frame wird sichtbar
 	}
@@ -106,6 +109,8 @@ public class BudgetPlanGUI extends JFrame {
 		tableModel = new DefaultTableModel(data,new Object[]{"Datum", "Bezeichnung",
 				"Betrag" ,  "Eingabe/Ausgabe"});
 		table = new JTable(tableModel);
+		
+		table.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
 		scrollpane = new JScrollPane(table);
 		
 		
@@ -138,6 +143,10 @@ public class BudgetPlanGUI extends JFrame {
 		saveTable = new JButton("Save Table!");
 		saveTable.setBounds(300,110,100,30);
 		
+		//DeletePosten Button 
+				deletePosten = new JButton("Delete Posten!");
+				deletePosten.setBounds(300,110,100,30);
+		
 		
 	 
 		
@@ -145,6 +154,7 @@ public class BudgetPlanGUI extends JFrame {
 		// Elemente dem Fenster hinzufuegen:
 		getContentPane().add(scrollpane);
 		getContentPane().add(addPosten);
+		getContentPane().add(deletePosten);
 		getContentPane().add(saveTable);
 		getContentPane().add(panel);
 		getContentPane().add(panel2);
@@ -169,10 +179,7 @@ public class BudgetPlanGUI extends JFrame {
 		});
 	}
 	
-	
-	
-	 
-			
+		
 	
 	// Tabelle um eine Zeile Erweitern hinzufuegen
 		public void addRow(final DefaultTableModel tableModel) {
@@ -185,6 +192,57 @@ public class BudgetPlanGUI extends JFrame {
 
 			});
 		}
+		
+	// Eine Zeile in einer Tabelle löschen
+	public void deleteRow(final DefaultTableModel tableModel) {
+		// registriere den ActionListener fuer den Button als anonyme Klasse
+		deletePosten.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				int row = table.getSelectedRow();
+				 if (row!= -1) {
+					 System.out.println("Selecter row : " + row);
+			            // remove selected row from the model
+					 tableModel.removeRow(row);
+					 
+			        }
+				 budget.ausgaben.remove(row);
+				
+				 // 
+				 CSVWriter writer = null;
+					String[] line = new String[4];
+					String str;
+					try {
+						writer = new CSVWriter(new FileWriter("data/budget.csv"), '#', CSVWriter.NO_QUOTE_CHARACTER);
+						
+						int i = 0;
+						for (Posten p : budget.ausgaben) {
+							//
+
+							line[0] = new SimpleDateFormat("dd.MM.yyyy").format(p.getDatum());
+							line[1] = p.getBezeichnung() ;
+							line[2] = Double.toString( p.getBetrag());
+							//line[2] = String.format("%.2f", p.getBetrag());
+							line[3] = p.getKategorie().toString();
+							
+							writer.writeNext(line);
+							i++;
+
+						}
+
+						writer.close();
+						
+					} catch (IOException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+
+				 
+			}
+
+		});
+	}
+		
 		
 	// Tabelle speichern
 	public void saveTable(final DefaultTableModel tableModel, final BudgetPlanModel budget) {
@@ -222,7 +280,7 @@ public class BudgetPlanGUI extends JFrame {
 				String[] line = new String[4];
 				String str;
 				try {
-					writer = new CSVWriter(new FileWriter("data/myfile.csv"), '#', CSVWriter.NO_QUOTE_CHARACTER);
+					writer = new CSVWriter(new FileWriter("data/budget.csv"), '#', CSVWriter.NO_QUOTE_CHARACTER);
 					
 					int i = 0;
 					for (Posten p : budget.ausgaben) {
