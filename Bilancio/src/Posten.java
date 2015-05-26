@@ -57,7 +57,7 @@ public class Posten {
 	public String getKategorie() {
 		return kategorie;
 	}
-	//Anfangseingabe für aktuellen Kontostand 
+	//Anfangseingabe/betrag für aktuellen Kontostand 
 	
 	void setKontostand (double k ) {
 		Kontostand = k; 
