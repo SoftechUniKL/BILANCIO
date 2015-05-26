@@ -100,7 +100,7 @@ public class BudgetPlanGUI extends JFrame {
 		
 		// Add row to table
 		tableModel = new DefaultTableModel(data,new Object[]{"Datum", "Bezeichnung",
-				"Betrag" ,  "Fix/Variable"});
+				"Betrag" ,  "Eingabe/Ausgabe"});
 		table = new JTable(tableModel);
 		scrollpane = new JScrollPane(table);
 		
