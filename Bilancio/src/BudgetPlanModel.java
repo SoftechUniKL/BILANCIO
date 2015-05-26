@@ -19,6 +19,7 @@ import com.opencsv.CSVReader;
 public class BudgetPlanModel {
 	List<Posten> ausgaben;
     String filename = "data/budget.csv" ;
+    double Kontostand;
 	public BudgetPlanModel() {
 		this.ausgaben = new ArrayList<Posten>();
 		try {
@@ -49,5 +50,22 @@ public class BudgetPlanModel {
 					.println("Formatfehler: Die Datei konnte nicht eingelesen werden!");
 			System.exit(1);
 		}
+		
 	}
+	//Anfangseingabe/betrag für aktuellen Kontostand 
+	
+		void setKontostand (double k ) {
+			Kontostand = k; 
+		}
+		
+		void Kontostand_nach_ausgabe (double a)
+		{ Kontostand-=a; }
+		
+		void Kontostand_nach_einzahlung (double e)
+		{ Kontostand+=e; }
+		
+		public double getKontostand()
+		{ return Kontostand;}
+	
+	
 }
