@@ -230,8 +230,8 @@ public class BudgetPlanGUI extends JFrame {
 
 						line[0] = new SimpleDateFormat("dd.MM.yyyy").format(p.getDatum());
 						line[1] = p.getBezeichnung() ;
-						//line[2] = Double.toString( p.getBetrag());
-						line[2] = String.format("%.2f", p.getBetrag());
+						line[2] = Double.toString( p.getBetrag());
+						//line[2] = String.format("%.2f", p.getBetrag());
 						line[3] = p.getKategorie().toString();
 						
 						writer.writeNext(line);

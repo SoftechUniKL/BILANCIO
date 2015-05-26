@@ -23,7 +23,7 @@ public class BudgetPlanModel {
 		this.ausgaben = new ArrayList<Posten>();
 		try {
 			// Zeilenweises Einlesen der Daten
-			CSVReader reader = new CSVReader(new FileReader(filename));
+			CSVReader reader = new CSVReader(new FileReader(filename),'#');
 			String[] nextLine;
 			while ((nextLine = reader.readNext()) != null) {
 				DateFormat df = DateFormat.getDateInstance(DateFormat.SHORT, Locale.GERMAN);
