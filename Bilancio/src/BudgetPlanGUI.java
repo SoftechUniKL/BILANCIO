@@ -12,7 +12,9 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+import javax.swing.DefaultCellEditor;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
@@ -20,6 +22,7 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.UIManager;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumn;
 import javax.swing.table.TableRowSorter;
 
 import org.jfree.chart.ChartFactory;
@@ -54,6 +57,9 @@ public class BudgetPlanGUI extends JFrame {
 	private JButton saveTable;
 	private JButton deletePosten;
 	private JButton showkontostand;
+	
+	private TableColumn einAusgabeColumn;
+	private JComboBox einAusgabeCombobox;
 	
 	
 	private int row; 
@@ -120,16 +126,19 @@ public class BudgetPlanGUI extends JFrame {
 		// Add row to table
 		tableModel = new MyTableModel(data,new Object[]{"Datum", "Bezeichnung",
 				"Betrag" ,  "Eingabe/Ausgabe"});
+		
+		
 		table = new JTable(tableModel);
+		
+		einAusgabeColumn = table.getColumnModel().getColumn(3);
+		einAusgabeCombobox= new JComboBox();
+		 einAusgabeCombobox.addItem("Eingabe");
+		 einAusgabeCombobox.addItem("Ausgabe");
+		einAusgabeColumn.setCellEditor(new DefaultCellEditor(einAusgabeCombobox));
+		
 		
 		table.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
 		scrollpane = new JScrollPane(table);
-		
-		
-		
-		
-		
-		
 
 		// Kreisdiagramm
 		DefaultPieDataset pd = new DefaultPieDataset();
@@ -208,7 +217,8 @@ public class BudgetPlanGUI extends JFrame {
 			addPosten.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					tableModel.addRow(new Object[]{"dd/mm/yyyy", "Bezeichnung", "00.00","E/A"});
+					tableModel.addRow(new Object[]{"dd/mm/yyyy", "Bezeichnung", 00.00,"wähle"});
+					
 					table.putClientProperty("terminateEditOnFocusLost", true);
 				}
 
@@ -303,8 +313,8 @@ public class BudgetPlanGUI extends JFrame {
 				}
 				String bezeichnung = (String) tableModel.getValueAt(
 						lastRow - 1, 1);
-				double betrag = Double.parseDouble((String) tableModel
-						.getValueAt(lastRow - 1, 2));
+				//double betrag = Double.parseDouble( (String) tableModel.getValueAt(lastRow - 1, 2));
+				double betrag = (double) tableModel.getValueAt(lastRow - 1, 2);
 				String kategorie = (String) tableModel.getValueAt(lastRow - 1,
 						3);
 
@@ -355,8 +365,8 @@ public class BudgetPlanGUI extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				JOptionPane.showMessageDialog(BudgetPlanGUI.this,
-						" Kontostand:"+budget.getKontostand(),
-						"Hinweis", JOptionPane.PLAIN_MESSAGE);
+						"                             "+ String.format("%.2f", budget.getKontostand()) + " Euro",
+						"Kontostand", JOptionPane.PLAIN_MESSAGE);
 				
 			}
 		});
@@ -364,23 +374,23 @@ public class BudgetPlanGUI extends JFrame {
 	}
 	class MyTableModel extends DefaultTableModel {
 		 
-	    public MyTableModel(Object rowData[][], Object columnNames[]) {
+	    /**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
+
+		public MyTableModel(Object rowData[][], Object columnNames[]) {
 	         super(rowData, columnNames);
 	      }
 	    
 	    @Override
 	      public Class getColumnClass(int col) {
 	        if (col == 2)       //second column accepts only Integer values
-	            return Integer.class;
+	            return Double.class;
 	      
 	        else return String.class;  //other columns accept String values
 	    }
-	 
-	    @Override
-	      public boolean isCellEditable(int row, int col) {
-	        if (col == 0)       //first column will be uneditable
-	            return false;
-	        else return true;
-	      }
+	    
+	  
 	    }
 }
