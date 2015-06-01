@@ -60,8 +60,11 @@ public class BudgetPlanGUI extends JFrame {
 	
 	private TableColumn einAusgabeColumn;
 	private JComboBox einAusgabeCombobox;
-	
-	
+	private JComboBox DiagrammAuswahl; 
+	private DefaultPieDataset pdEinnahme; 
+	private DefaultPieDataset pdAusgabe;
+	private ChartPanel panelEinnahme;
+	private ChartPanel panelAusgabe;
 	private int row; 
 	
 	
@@ -91,7 +94,7 @@ public class BudgetPlanGUI extends JFrame {
 		saveTable(tableModel, budget);
 		
 		sorttable(tableModel, table);
-		
+		diagrammauswahl();
 		showKonto ();
 		deleteRow(tableModel);
 		setBounds(10, 10, 800, 800); // Groesse des Frames
@@ -141,24 +144,24 @@ public class BudgetPlanGUI extends JFrame {
 		scrollpane = new JScrollPane(table);
 
 		// Kreisdiagramm
-		DefaultPieDataset pdEinnahme = new DefaultPieDataset();
-		DefaultPieDataset pdausgabe = new DefaultPieDataset();
+		 pdEinnahme = new DefaultPieDataset();
+		 pdAusgabe = new DefaultPieDataset();
 		
 		for (Posten p : budget.ausgaben) {
 			if (p.getKategorie().equals("Einnahme"))
 			pdEinnahme.setValue(p.getBezeichnung(), p.getBetrag());
 			if (p.getKategorie().equals("Ausgabe"))
-				pdausgabe.setValue(p.getBezeichnung(), p.getBetrag());
+				pdAusgabe.setValue(p.getBezeichnung(), p.getBetrag());
 				}
 			
 		//Für Einnahmen
 		JFreeChart pie = ChartFactory.createPieChart("Einnahme", pdEinnahme);
-		ChartPanel panelEinnahme = new ChartPanel(pie);
+		 panelEinnahme = new ChartPanel(pie);
 		
 		
 		//Für Ausgaben
-		JFreeChart pie2 = ChartFactory.createPieChart("Ausgaben", pdausgabe);
-		ChartPanel panelausgabe = new ChartPanel(pie2);
+		JFreeChart pie2 = ChartFactory.createPieChart("Ausgaben", pdAusgabe);
+		 panelAusgabe = new ChartPanel(pie2);
 
 		// Button
 		button = new JButton("TestButton!");
@@ -181,7 +184,10 @@ public class BudgetPlanGUI extends JFrame {
 		
 				
 		
-		
+		//Dropliste für Diagramm
+			DiagrammAuswahl= new JComboBox();
+			 DiagrammAuswahl.addItem("Für Einnahmen");
+			DiagrammAuswahl.addItem("Für Ausgaben");
 	 
 		
 
@@ -190,10 +196,11 @@ public class BudgetPlanGUI extends JFrame {
 		getContentPane().add(addPosten);
 		getContentPane().add(deletePosten);
 		getContentPane().add(saveTable);
+		getContentPane().add(DiagrammAuswahl);
 		
 		getContentPane().add(showkontostand);
-		getContentPane().add(panelEinnahme);
-		getContentPane().add(panelausgabe);
+		//getContentPane().add(panelEinnahme);
+		//getContentPane().add(panelAusgabe);
 		getContentPane().add(button);
 		
 		
@@ -215,6 +222,37 @@ public class BudgetPlanGUI extends JFrame {
 			}
 
 		});
+	}
+	// Diagrammauswahl
+	
+	public void diagrammauswahl() {
+		// registriere den ActionListener fuer den Button als anonyme Klasse
+		DiagrammAuswahl.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				JComboBox cb = (JComboBox)e.getSource();
+				
+		if	(cb.getSelectedIndex()==0) {
+		
+			getContentPane().add(panelEinnahme);
+			getContentPane().repaint();
+			
+			pack();
+			
+		System.out.println("panelEinnahme");
+		}
+		if  (cb.getSelectedIndex()==1) {
+			getContentPane().add(panelAusgabe);
+			getContentPane().repaint();
+			
+			pack();
+		System.out.println("panelAusgabe");
+			
+		}
+			
+			}}
+
+		);
 	}
 	
 		
