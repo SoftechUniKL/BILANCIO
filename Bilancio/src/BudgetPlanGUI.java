@@ -20,6 +20,7 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.UIManager;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableRowSorter;
 
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
@@ -38,7 +39,7 @@ public class BudgetPlanGUI extends JFrame {
 	 * Tabelle mit Uebersicht der Ausgaben
 	 */
 	private JTable table;
-	private DefaultTableModel tableModel;
+	private MyTableModel tableModel;
 	private Object[][] data;
 	/**
 	 * Scrollelemente, das die Tabelle umfasst
@@ -83,10 +84,13 @@ public class BudgetPlanGUI extends JFrame {
 		addRow(tableModel); 			// Die Tabelle um eine Zeile erweitern 
 		saveTable(tableModel, budget);
 		
+		sorttable(tableModel, table);
+		
 		showKonto ();
 		deleteRow(tableModel);
 		setBounds(10, 10, 800, 800); // Groesse des Frames
 		setVisible(true); 		// Frame wird sichtbar
+		
 	}
 
 	// Initialisieren des Fensters
@@ -105,7 +109,8 @@ public class BudgetPlanGUI extends JFrame {
 			data[i][0] = new SimpleDateFormat("dd.MM.yyyy")
 					.format(p.getDatum());
 			data[i][1] = p.getBezeichnung();
-			data[i][2] = String.format("%.2f", p.getBetrag());
+			//data[i][2] = String.format("%.2f", p.getBetrag());
+			data[i][2] = p.getBetrag();
 			data[i][3] = p.getKategorie();
 			i++;
 			
@@ -113,7 +118,7 @@ public class BudgetPlanGUI extends JFrame {
 		
 		
 		// Add row to table
-		tableModel = new DefaultTableModel(data,new Object[]{"Datum", "Bezeichnung",
+		tableModel = new MyTableModel(data,new Object[]{"Datum", "Bezeichnung",
 				"Betrag" ,  "Eingabe/Ausgabe"});
 		table = new JTable(tableModel);
 		
@@ -263,6 +268,15 @@ public class BudgetPlanGUI extends JFrame {
 
 		});
 	}
+	
+	// Tabelle sortieren 
+	public void sorttable (final MyTableModel tableModel, final JTable table)
+	{
+		TableRowSorter<MyTableModel> sorter = new TableRowSorter<MyTableModel>();
+		table.setRowSorter( sorter );
+		sorter.setModel( tableModel );
+		
+	}
 		
 		
 	// Tabelle speichern
@@ -348,4 +362,25 @@ public class BudgetPlanGUI extends JFrame {
 		});
 
 	}
+	class MyTableModel extends DefaultTableModel {
+		 
+	    public MyTableModel(Object rowData[][], Object columnNames[]) {
+	         super(rowData, columnNames);
+	      }
+	    
+	    @Override
+	      public Class getColumnClass(int col) {
+	        if (col == 2)       //second column accepts only Integer values
+	            return Integer.class;
+	      
+	        else return String.class;  //other columns accept String values
+	    }
+	 
+	    @Override
+	      public boolean isCellEditable(int row, int col) {
+	        if (col == 0)       //first column will be uneditable
+	            return false;
+	        else return true;
+	      }
+	    }
 }
