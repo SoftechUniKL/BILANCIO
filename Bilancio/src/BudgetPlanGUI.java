@@ -1,9 +1,12 @@
+import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.text.DateFormat;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -202,7 +205,8 @@ public class BudgetPlanGUI extends JFrame {
 			addPosten.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					tableModel.addRow(new Object[]{"Column 1", "Column 2", "Column 3","Column 4"});
+					tableModel.addRow(new Object[]{"dd/mm/yyyy", "Bezeichnung", "00.00","E/A"});
+					table.putClientProperty("terminateEditOnFocusLost", true);
 				}
 
 			});
@@ -301,12 +305,14 @@ public class BudgetPlanGUI extends JFrame {
 				try {
 					writer = new CSVWriter(new FileWriter("data/budget.csv"), '#', CSVWriter.NO_QUOTE_CHARACTER);
 					
+					 NumberFormat nf = NumberFormat.getInstance(Locale.GERMAN);
 					int i = 0;
 					for (Posten p : budget.ausgaben) {
 						//
 
 						line[0] = new SimpleDateFormat("dd.MM.yyyy").format(p.getDatum());
 						line[1] = p.getBezeichnung() ;
+						//line[2] = ;
 						line[2] = Double.toString( p.getBetrag());
 						//line[2] = String.format("%.2f", p.getBetrag());
 						line[3] = p.getKategorie().toString();
