@@ -53,7 +53,7 @@ public class BudgetPlanGUI extends JFrame {
 	private JButton saveTable;
 	private JButton deletePosten;
 	private JButton showkontostand;
-	private JTextField initKontostand;
+	
 	
 	private int row; 
 	
@@ -82,7 +82,7 @@ public class BudgetPlanGUI extends JFrame {
 		addBehavior(); 		// Verhalten der GUI Elemente dieses Frames
 		addRow(tableModel); 			// Die Tabelle um eine Zeile erweitern 
 		saveTable(tableModel, budget);
-		initKonto ();
+		
 		showKonto ();
 		deleteRow(tableModel);
 		setBounds(10, 10, 800, 800); // Groesse des Frames
@@ -156,9 +156,7 @@ public class BudgetPlanGUI extends JFrame {
 		//DeletePosten Button 
 			showkontostand = new JButton("Kontostand zeigen!");
 			showkontostand.setBounds(300,110,100,30);
-		//Kontostand initialisieren 
-			initKontostand = new JTextField ("Kontostand eingeben");
-			initKontostand.setBounds(300,110,100,30);
+		
 				
 		
 		
@@ -170,7 +168,7 @@ public class BudgetPlanGUI extends JFrame {
 		getContentPane().add(addPosten);
 		getContentPane().add(deletePosten);
 		getContentPane().add(saveTable);
-		getContentPane().add(initKontostand);
+		
 		getContentPane().add(showkontostand);
 		getContentPane().add(panel);
 		getContentPane().add(panel2);
@@ -333,22 +331,7 @@ public class BudgetPlanGUI extends JFrame {
 
 		});
 	}
-	public void initKonto() {
-		// registriere den ActionListener fuer den Button als anonyme Klasse
-		initKontostand.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				String text = initKontostand.getText(); 
-				double k = Double.parseDouble(text);
-				budget.setKontostand(k);
-				System.out.println(k);
-				JOptionPane.showMessageDialog(BudgetPlanGUI.this,
-						"Ihr Kontostand beträgt: "+budget.getKontostand(),
-						"Hinweis", JOptionPane.PLAIN_MESSAGE);	
-			}
-
-		} ) ;
-	}
+	
 		
 	
 
