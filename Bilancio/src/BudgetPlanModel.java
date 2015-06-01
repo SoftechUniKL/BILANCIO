@@ -71,11 +71,11 @@ public class BudgetPlanModel {
 			int size = ausgaben.size();
 			for ( int i=0; i< size ; i++) {
 				
-				if (ausgaben.get(i).getKategorie().equals("E") ){
+				if (ausgaben.get(i).getKategorie().equals("Eingabe") ){
 					tmpKontostand +=ausgaben.get(i).getBetrag();
 				}
 				
-				if (ausgaben.get(i).getKategorie().equals("A") ){
+				if (ausgaben.get(i).getKategorie().equals("Ausgabe") ){
 					tmpKontostand -=ausgaben.get(i).getBetrag();
 					}
 			
