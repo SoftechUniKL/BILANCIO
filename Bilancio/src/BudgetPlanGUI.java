@@ -13,6 +13,7 @@ import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 import javax.swing.BoxLayout;
@@ -69,6 +70,8 @@ public class BudgetPlanGUI extends JFrame {
 	private JComboBox DiagrammAuswahl;
 	private DefaultPieDataset pdEinnahme;
 	private DefaultPieDataset pdAusgabe;
+	private JFreeChart pieChartEinnahme;
+	private JFreeChart pieChartAusgabe;
 	private ChartPanel panelEinnahme;
 	private ChartPanel panelAusgabe;
 	private int row;
@@ -144,7 +147,7 @@ public class BudgetPlanGUI extends JFrame {
 
 		table.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
 		scrollpane = new JScrollPane(table);
-		
+
 		// Kreisdiagramm
 		pdEinnahme = new DefaultPieDataset();
 		pdAusgabe = new DefaultPieDataset();
@@ -157,32 +160,34 @@ public class BudgetPlanGUI extends JFrame {
 		}
 
 		// Für Einnahmen
-		JFreeChart pie = ChartFactory.createPieChart("Einnahme", pdEinnahme);
-		panelEinnahme = new ChartPanel(pie);
+		pieChartEinnahme = ChartFactory.createPieChart("Einnahme", pdEinnahme);
+		panelEinnahme = new ChartPanel(pieChartEinnahme);
 
 		// Für Ausgaben
-		JFreeChart pie2 = ChartFactory.createPieChart("Ausgaben", pdAusgabe);
-		panelAusgabe = new ChartPanel(pie2);
+		pieChartAusgabe = ChartFactory.createPieChart("Ausgaben", pdAusgabe);
+		panelAusgabe = new ChartPanel(pieChartAusgabe);
 
 		// Button
 		button = new JButton("TestButton!");
 		button.setBounds(300, 110, 150, 40);
 
 		// AddPosten Button
-		addPosten = new JButton("+ Add Posten!");
+		addPosten = new JButton(" +    Add Posten       ");			
 		addPosten.setBounds(300, 110, 150, 40);
 
 		// SAve Table Button
-		saveTable = new JButton("Save Table!");
+		saveTable = new JButton("       Save Table        ");
 		saveTable.setBounds(300, 110, 150, 40);
 
 		// DeletePosten Button
-		deletePosten = new JButton("- Delete Posten!");
+		deletePosten = new JButton(" -     Delete Posten   ");
+								      
 		deletePosten.setBounds(300, 110, 150, 40);
 		// DeletePosten Button
-		showkontostand = new JButton("Kontostand zeigen!");
-		showkontostand.setBounds(300, 110, 150, 100);
+		showkontostand = new JButton("    Kontostand zeigen   ");
+		showkontostand.setBounds(300, 110, 150, 40);
 
+		
 		// Dropliste für Diagramm
 		DiagrammAuswahl = new JComboBox();
 		DiagrammAuswahl.addItem("Diagramm auswählen");
@@ -192,8 +197,9 @@ public class BudgetPlanGUI extends JFrame {
 		// Elemente dem Fenster hinzufuegen:
 		getContentPane().add(scrollpane);
 		JPanel buttonContailer = new JPanel();
-		buttonContailer.setLayout(new BoxLayout(buttonContailer,BoxLayout.PAGE_AXIS));
-		
+		buttonContailer.setLayout(new BoxLayout(buttonContailer,
+				BoxLayout.PAGE_AXIS));
+
 		buttonContailer.add(addPosten);
 		buttonContailer.add(deletePosten);
 		buttonContailer.add(saveTable);
@@ -201,15 +207,15 @@ public class BudgetPlanGUI extends JFrame {
 		buttonContailer.add(showkontostand);
 		buttonContailer.add(button);
 		getContentPane().add(buttonContailer);
-		
-//		getContentPane().add(addPosten);
-//		getContentPane().add(deletePosten);
-//		getContentPane().add(saveTable);
-//		getContentPane().add(DiagrammAuswahl);
-//		getContentPane().add(showkontostand);
+
+		// getContentPane().add(addPosten);
+		// getContentPane().add(deletePosten);
+		// getContentPane().add(saveTable);
+		// getContentPane().add(DiagrammAuswahl);
+		// getContentPane().add(showkontostand);
 		// getContentPane().add(panelEinnahme);
 		// getContentPane().add(panelAusgabe);
-//		getContentPane().add(button);
+		// getContentPane().add(button);
 
 		// Berechnet Layout mit geringstem Platzbedarf
 		pack();
@@ -223,16 +229,14 @@ public class BudgetPlanGUI extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				JOptionPane.showMessageDialog(BudgetPlanGUI.this,
 						"Add Posten!", "Hinweis", JOptionPane.PLAIN_MESSAGE);
-
 			}
-
 		});
 	}
 
 	// Diagrammauswahl
-/**
- * DiagramAuswahl: 
- */
+	/**
+	 * DiagramAuswahl:
+	 */
 	public void diagrammAuswahl() {
 		// registriere den ActionListener fuer den Button als anonyme Klasse
 		DiagrammAuswahl.addActionListener(new ActionListener() {
@@ -241,13 +245,13 @@ public class BudgetPlanGUI extends JFrame {
 				JComboBox cb = (JComboBox) e.getSource();
 
 				if (cb.getSelectedIndex() == 1) {
-					if ( getContentPane().getComponentCount()>0)
+					if (getContentPane().getComponentCount() > 0)
 						getContentPane().remove(panelAusgabe);
 					getContentPane().add(panelEinnahme);
 					printAll(getGraphics());
 				}
 				if (cb.getSelectedIndex() == 2) {
-					if ( getContentPane().getComponentCount()>0)
+					if (getContentPane().getComponentCount() > 0)
 						getContentPane().remove(panelEinnahme);
 					getContentPane().add(panelAusgabe);
 					printAll(getGraphics());
@@ -271,6 +275,8 @@ public class BudgetPlanGUI extends JFrame {
 		});
 	}
 
+	String removedPosten;
+
 	// Eine Zeile in einer Tabelle löschen
 	public void deleteRow(final DefaultTableModel tableModel) {
 		// registriere den ActionListener fuer den Button als anonyme Klasse
@@ -280,42 +286,94 @@ public class BudgetPlanGUI extends JFrame {
 				int row = table.getSelectedRow();
 				if (row != -1) {
 					System.out.println("Selecter row : " + row);
+					// was wurde gelöscht: einnahme ode ausgabe
+					removedPosten = (String) tableModel.getValueAt(row, 3);
+					System.out.println("removedPosten   "+removedPosten);
 					// remove selected row from the model
 					tableModel.removeRow(row);
 
 				}
+
+				// PieChart für Einnahme
+				// pdEinnahme-inhalt vor löschen
+				System.out.println("Vor dem Löschen: ");
+				System.out.println("Einnahmen= " + pdEinnahme.getKeys());
+				System.out.println("Ausgaben= " + pdAusgabe.getKeys());
+
+				// Posten aus der Liste löschen
 				budget.ausgaben.remove(row);
 
-				//
-				CSVWriter writer = null;
-				String[] line = new String[4];
-				String str;
-				try {
-					writer = new CSVWriter(new FileWriter("data/budget.csv"),
-							'#', CSVWriter.NO_QUOTE_CHARACTER);
+				// TODO: bessere Lösung finden
+				// PieChart leeren
+				if (removedPosten.equals("Einnahme")) {
 
-					int i = 0;
+					pdEinnahme.clear();
+					panelEinnahme.removeAll();
+					panelEinnahme.revalidate();
+
+					// Daten für PieChart aus der Tabelle lesen
 					for (Posten p : budget.ausgaben) {
-						//
-
-						line[0] = new SimpleDateFormat("dd.MM.yyyy").format(p
-								.getDatum());
-						line[1] = p.getBezeichnung();
-						line[2] = Double.toString(p.getBetrag());
-						// line[2] = String.format("%.2f", p.getBetrag());
-						line[3] = p.getKategorie().toString();
-
-						writer.writeNext(line);
-						i++;
-
+						if (p.getKategorie().equals("Einnahme"))
+							pdEinnahme.setValue(p.getBezeichnung(),
+									p.getBetrag());
 					}
 
-					writer.close();
-
-				} catch (IOException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
+					panelEinnahme.repaint();
 				}
+
+				if (removedPosten.equals("Ausgabe")) {
+					pdAusgabe.clear();
+					panelAusgabe.removeAll();
+					panelAusgabe.revalidate();
+
+					// Daten für PieChart aus der Tabelle lesen
+					for (Posten p : budget.ausgaben) {
+						if (p.getKategorie().equals("Ausgabe"))
+							pdAusgabe.setValue(p.getBezeichnung(),
+									p.getBetrag());
+					}
+
+					panelAusgabe.repaint();
+
+				}
+
+				// TODO: nach dem Test löschen
+				// pdEinnahme-inhalt nach löschen
+				System.out.println("Nach dem Löschen: ");
+				System.out.println("Einahmen: " + pdEinnahme.getKeys());
+				System.out.println("Ausgaben: " + pdAusgabe.getKeys());
+
+				// in einer datei schreiben
+				budget.writeDataIntoFile();
+				// CSVWriter writer = null;
+				// String[] line = new String[4];
+				// String str;
+				// try {
+				// writer = new CSVWriter(new FileWriter("data/budget.csv"),
+				// '#', CSVWriter.NO_QUOTE_CHARACTER);
+				//
+				// int i = 0;
+				// for (Posten p : budget.ausgaben) {
+				// //
+				//
+				// line[0] = new SimpleDateFormat("dd.MM.yyyy").format(p
+				// .getDatum());
+				// line[1] = p.getBezeichnung();
+				// line[2] = Double.toString(p.getBetrag());
+				// // line[2] = String.format("%.2f", p.getBetrag());
+				// line[3] = p.getKategorie().toString();
+				//
+				// writer.writeNext(line);
+				// i++;
+				//
+				// }
+				//
+				// writer.close();
+				//
+				// } catch (IOException e1) {
+				// // TODO Auto-generated catch block
+				// e1.printStackTrace();
+				// }
 
 			}
 
