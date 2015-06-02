@@ -119,7 +119,7 @@ public class BudgetPlanGUI extends JFrame {
 		data = new Object[budget.ausgaben.size()][4];
 		int i = 0;
 		for (Posten p : budget.ausgaben) {
-			data[i][0] = new SimpleDateFormat("dd.MM.yyyy")
+			data[i][0] = new SimpleDateFormat("yyyy.MM.dd")
 					.format(p.getDatum());
 			data[i][1] = p.getBezeichnung();
 			// data[i][2] = String.format("%.2f", p.getBetrag());
@@ -262,7 +262,7 @@ public class BudgetPlanGUI extends JFrame {
 		addPosten.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				tableModel.addRow(new Object[] { "dd/mm/yyyy", "Bezeichnung",
+				tableModel.addRow(new Object[] { "YYYY/MM/DD", "Bezeichnung",
 						00.00, "wähle" });
 
 				table.putClientProperty("terminateEditOnFocusLost", true);
