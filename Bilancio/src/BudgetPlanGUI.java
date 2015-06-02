@@ -187,6 +187,7 @@ public class BudgetPlanGUI extends JFrame {
 		showkontostand = new JButton("    Kontostand zeigen   ");
 		showkontostand.setBounds(300, 110, 150, 40);
 
+		
 		// Dropliste für Diagramm
 		DiagrammAuswahl = new JComboBox();
 		DiagrammAuswahl.addItem("Diagramm auswählen");
@@ -317,8 +318,6 @@ public class BudgetPlanGUI extends JFrame {
 									p.getBetrag());
 					}
 
-//					pieChartEinnahme = ChartFactory.createPieChart("Einnahme",pdEinnahme);
-//					panelEinnahme = new ChartPanel(pieChartEinnahme);
 					panelEinnahme.repaint();
 				}
 
@@ -334,8 +333,6 @@ public class BudgetPlanGUI extends JFrame {
 									p.getBetrag());
 					}
 
-//					pieChartAusgabe = ChartFactory.createPieChart("Ausgabe", pdAusgabe);
-//					panelAusgabe = new ChartPanel(pieChartAusgabe);
 					panelAusgabe.repaint();
 
 				}
