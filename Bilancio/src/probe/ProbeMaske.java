@@ -1,0 +1,205 @@
+package probe;
+
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import javax.swing.JButton;
+import javax.swing.JFormattedTextField;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JLabel;
+import javax.swing.text.MaskFormatter;
+
+public class ProbeMaske extends JFrame {
+	
+	private static final long serialVersionUID = 1L;
+
+	private static SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy",
+			Locale.GERMANY);
+	private static Date today;
+	static String todayFormated = "";
+
+	static JButton saveButton;
+	static JButton deleteButton;
+
+	static JFormattedTextField tfDatum;
+	static JFormattedTextField tfBezeichnung;
+	static JFormattedTextField tfBetrag;
+	static JFormattedTextField tfKategorie;
+	static JFormattedTextField tfEinnahmeAusgabe;
+
+	static JLabel nameDatum;
+	static JLabel nameBezeichnung;
+	static JLabel nameBetrag;
+	static JLabel nameKategorie;
+	static JLabel nameEinnahmeAusgabe;
+
+	public static void main(String[] args) {
+
+		Dimension eingabeSize = new Dimension(150, 20);
+
+		today = new Date();
+		todayFormated = df.format(today.getTime());
+		System.out.println("Heute ist der "+todayFormated);
+
+		JFrame frame = new JFrame("Eingabe");
+		frame.getContentPane().setPreferredSize(new Dimension(400, 300));
+		frame.setResizable(false);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+		// Hauptcontainer
+		JPanel mainPanel = new JPanel();
+		mainPanel.setLayout(new GridLayout(6, 1));
+
+		// Container und Elemente der Datum-Eingabe
+		JPanel panel1 = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		tfDatum = new JFormattedTextField(df);
+		tfDatum.setColumns(10);
+		nameDatum = new JLabel("Datum");
+		nameDatum.setPreferredSize(eingabeSize);
+		panel1.add(nameDatum);
+		panel1.add(tfDatum);
+
+		// Container und Elemente der Bezeichnung-Eingabe
+		JPanel panel2 = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		nameBezeichnung = new JLabel("Bezeichnung");
+		nameBezeichnung.setPreferredSize(eingabeSize);
+		tfBezeichnung = new JFormattedTextField();
+		tfBezeichnung.setColumns(20);
+		panel2.add(nameBezeichnung);
+		panel2.add(tfBezeichnung);
+
+		// Container und Elemente der Betrag-Eingabe
+		JPanel panel3 = new JPanel();
+		panel3.setLayout(new FlowLayout(FlowLayout.LEFT));
+		nameBetrag = new JLabel("Betrag");
+		nameBetrag.setPreferredSize(eingabeSize);
+		tfBetrag = new JFormattedTextField();
+		tfBetrag.setColumns(5);
+		panel3.add(nameBetrag);
+		panel3.add(tfBetrag);
+
+		// Container und Elemente der Kategorie-Eingabe
+		JPanel panel4 = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		nameKategorie = new JLabel("Kategorie");
+		nameKategorie.setPreferredSize(eingabeSize);
+		tfKategorie = new JFormattedTextField();
+		tfKategorie.setColumns(10);
+		panel4.add(nameKategorie);
+		panel4.add(tfKategorie);
+
+		// Container und Elemente der Einnahme.Aisgabe-Eingabe
+		//TODO : Eingabe / Ausgabe durch Radio buttons ersetzen 
+		JPanel panel5 = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		nameEinnahmeAusgabe = new JLabel("Einnahme / Ausgabe");
+		nameEinnahmeAusgabe.setPreferredSize(eingabeSize);
+		tfEinnahmeAusgabe = new JFormattedTextField();
+		tfEinnahmeAusgabe.setColumns(10);
+		panel5.add(nameEinnahmeAusgabe);
+		panel5.add(tfEinnahmeAusgabe);
+
+		// Container für Save und Delete Buttons
+		JPanel panel6 = new JPanel(new FlowLayout(FlowLayout.CENTER));
+		saveButton = new JButton("Speichern");
+		deleteButton = new JButton("Löschen");
+		panel6.add(saveButton);
+		panel6.add(deleteButton);
+
+		mainPanel.add(panel1);
+		mainPanel.add(panel2);
+		mainPanel.add(panel3);
+		mainPanel.add(panel4);
+		mainPanel.add(panel5);
+		mainPanel.add(panel6);
+
+		mainPanel.setBackground(Color.CYAN);
+		frame.getContentPane().add(mainPanel);
+
+		
+		// Aktionen um eingegebene Daten zu speichern oder zu löschen
+		saveInput();
+		deleteInput();
+
+		frame.pack();
+		frame.setVisible(true);
+
+		try {
+			MaskFormatter dateMask = new MaskFormatter("##/##/####");
+			dateMask.install(tfDatum);
+			tfDatum.setText(todayFormated);
+			
+
+		} catch (ParseException ex) {
+			Logger.getLogger(ProbeMaske.class.getName()).log(
+					Level.SEVERE, null, ex);
+		}
+
+		String str = tfDatum.getText();
+
+		Date date = null;
+		try {
+			date = df.parse(str);
+			//TODO: Datumeingabe validieren. Prüfe ob die Datumeingabe sinn macht
+			// Fehler durch POP-Up Fenster anzeigen
+		} catch (ParseException e) {
+			System.out.println("Date invalid");
+		}
+
+		try {
+			MaskFormatter betragMask = new MaskFormatter("#.###,##");
+			betragMask.install(tfBetrag);
+			tfBetrag.setText("00,00");
+			//TODO: Eingabe des Betrages validieren. Prüfe ob die Eingabe sinn macht
+			// Fehler durch POP-Up Fenster anzeigen
+
+		} catch (ParseException ex) {
+			Logger.getLogger(ProbeMaske.class.getName()).log(
+					Level.SEVERE, null, ex);
+		}
+
+	}
+
+	public static void saveInput() {
+		// Wenn der saveButton gedruckt wird, dann werden alle Werte der Textfelder gespeichert
+		saveButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				System.out.println("Datum:       " + tfDatum.getText());
+				System.out.println("Bezeichnung: " + tfBezeichnung.getText());
+				System.out.println("Betrag:      " + tfBetrag.getText());
+				System.out.println("Kategorie:   " + tfKategorie.getText());
+				System.out.println("Ein.Ausgabe: "
+						+ tfEinnahmeAusgabe.getText());
+	
+			}
+		});
+	}
+
+	public static void deleteInput() {
+		// Wenn der deleteButton gedruckt wird, dann werden alle Textfelder gelöscht
+		deleteButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				tfDatum.setText(todayFormated);
+				tfBezeichnung.setText("");
+				tfBetrag.setText("0.000,00");
+				tfKategorie.setText("");
+				tfEinnahmeAusgabe.setText("");
+
+				System.out.println("Alle Eingaben gelöscht.");
+
+			}
+		});
+	}
+
+}
