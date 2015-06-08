@@ -101,7 +101,7 @@ public class ProbeMaske extends JFrame {
 		nameBetrag.setPreferredSize(eingabeSize);
 		tfBetrag = new JFormattedTextField();
 		tfBetrag.setColumns(5);
-		tfBetrag.setText("0.00");
+		tfBetrag.setText("0,00");
 		panel3.add(nameBetrag);
 		panel3.add(tfBetrag);
 
@@ -189,12 +189,16 @@ public class ProbeMaske extends JFrame {
 			System.out.println("Date invalid");
 		}
 		
-		try {
-			Betrag = (Long) nf.parse(tfBetrag.getText());
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+//		String strBetrag = tfBetrag.getText();
+//		
+//		try {
+//			System.out.println(nf.parse(strBetrag));
+//		} catch (ParseException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+		
+		//Betrag =  Double.valueOf(strBetrag).doubleValue();
 
 		//try {
 			//MaskFormatter betragMask = new MaskFormatter("###.###,##");
@@ -262,7 +266,14 @@ public class ProbeMaske extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				System.out.println("Datum:       " + tfDatum.getText());
 				System.out.println("Bezeichnung: " + tfBezeichnung.getText());
-				double Betrag = Double.parseDouble(tfBetrag.getText());
+				
+				try {
+					Betrag = (double) nf.parse(tfBetrag.getText());
+				} catch (ParseException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				
 				System.out.println("Betrag:" +Betrag);
 	
 			}
