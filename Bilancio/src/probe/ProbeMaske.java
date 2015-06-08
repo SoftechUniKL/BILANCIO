@@ -7,6 +7,7 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -30,6 +31,7 @@ public class ProbeMaske extends JFrame {
 
 	private static SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy",
 			Locale.GERMANY);
+	private static NumberFormat nf = NumberFormat.getInstance(Locale.GERMANY);
 	private static Date today;
 	static String todayFormated = "";
 
@@ -55,6 +57,7 @@ public class ProbeMaske extends JFrame {
 	static JPanel panel4;
 	static JPanel mainPanel;
 	static JFrame frame;
+	static double Betrag;
 
 	public static void main(String[] args) {
 
@@ -98,6 +101,7 @@ public class ProbeMaske extends JFrame {
 		nameBetrag.setPreferredSize(eingabeSize);
 		tfBetrag = new JFormattedTextField();
 		tfBetrag.setColumns(5);
+		tfBetrag.setText("0.00");
 		panel3.add(nameBetrag);
 		panel3.add(tfBetrag);
 
@@ -184,13 +188,21 @@ public class ProbeMaske extends JFrame {
 		} catch (ParseException e) {
 			System.out.println("Date invalid");
 		}
+		
+		try {
+			Betrag = (Long) nf.parse(tfBetrag.getText());
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 		//try {
 			//MaskFormatter betragMask = new MaskFormatter("###.###,##");
 			//betragMask.install(tfBetrag);
 			//tfBetrag.setText("00,00");
+			
 			//TODO: Eingabe des Betrages validieren. Prüfe ob die Eingabe sinn macht
-			// Fehler durch POP-Up Fenster anzeigen
+			 //Fehler durch POP-Up Fenster anzeigen
 
 		//} catch (ParseException ex) {
 			//Logger.getLogger(ProbeMaske.class.getName()).log(
