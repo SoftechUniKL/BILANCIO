@@ -6,6 +6,7 @@ import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -13,11 +14,14 @@ import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.swing.ButtonGroup;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JLabel;
+import javax.swing.JRadioButton;
 import javax.swing.text.MaskFormatter;
 
 public class ProbeMaske extends JFrame {
@@ -35,14 +39,22 @@ public class ProbeMaske extends JFrame {
 	static JFormattedTextField tfDatum;
 	static JFormattedTextField tfBezeichnung;
 	static JFormattedTextField tfBetrag;
-	static JFormattedTextField tfKategorie;
-	static JFormattedTextField tfEinnahmeAusgabe;
+	static JComboBox cbKategorieEinnahme;
+	static JComboBox cbKategorieAusgabe;
+	
+	static JRadioButton RButtonEinnahme;
+	static JRadioButton RButtonAusgabe; 
 
 	static JLabel nameDatum;
 	static JLabel nameBezeichnung;
 	static JLabel nameBetrag;
 	static JLabel nameKategorie;
 	static JLabel nameEinnahmeAusgabe;
+	static String [] Einnahmeliste;
+	static String [] Ausgabeliste;
+	static JPanel panel4;
+	static JPanel mainPanel;
+	static JFrame frame;
 
 	public static void main(String[] args) {
 
@@ -50,15 +62,15 @@ public class ProbeMaske extends JFrame {
 
 		today = new Date();
 		todayFormated = df.format(today.getTime());
-		System.out.println("Heute ist der "+todayFormated);
+		//System.out.println("Heute ist der "+todayFormated);
 
-		JFrame frame = new JFrame("Eingabe");
+		frame = new JFrame("Eingabe");
 		frame.getContentPane().setPreferredSize(new Dimension(400, 300));
 		frame.setResizable(false);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		// Hauptcontainer
-		JPanel mainPanel = new JPanel();
+		mainPanel = new JPanel();
 		mainPanel.setLayout(new GridLayout(6, 1));
 
 		// Container und Elemente der Datum-Eingabe
@@ -90,23 +102,39 @@ public class ProbeMaske extends JFrame {
 		panel3.add(tfBetrag);
 
 		// Container und Elemente der Kategorie-Eingabe
-		JPanel panel4 = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		panel4 = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		nameKategorie = new JLabel("Kategorie");
 		nameKategorie.setPreferredSize(eingabeSize);
-		tfKategorie = new JFormattedTextField();
-		tfKategorie.setColumns(10);
+		
+		//tfKategorie.setColumns(10);
 		panel4.add(nameKategorie);
-		panel4.add(tfKategorie);
+		//panel4.add(tfKategorie);
+		
+		Einnahmeliste = new String[] { "Gehalt", "Geschenk" , "Kapitalerträge", "sonstige"};
+		Ausgabeliste = new String[] { "Miete", "Lebensmittel" , "Versicherungen", "Freizeit", "Hobbys", "Bildung", "Zins- und Tilgungszahlungen"};
 
 		// Container und Elemente der Einnahme.Aisgabe-Eingabe
 		//TODO : Eingabe / Ausgabe durch Radio buttons ersetzen 
+		
+
+	    RButtonEinnahme = new JRadioButton("Einnahme");
+	    RButtonEinnahme.setMnemonic(KeyEvent.VK_C);
+	    RButtonEinnahme.setActionCommand("Einnahme");
+
+	    RButtonAusgabe = new JRadioButton("Ausgabe");
+	    RButtonAusgabe.setMnemonic(KeyEvent.VK_D);
+	    RButtonAusgabe.setActionCommand("Ausgabe");
+	    
+	    ButtonGroup group = new ButtonGroup();
+	    group.add(RButtonEinnahme);
+	    group.add(RButtonAusgabe);
 		JPanel panel5 = new JPanel(new FlowLayout(FlowLayout.LEFT));
-		nameEinnahmeAusgabe = new JLabel("Einnahme / Ausgabe");
+		nameEinnahmeAusgabe = new JLabel("Wählen Sie");
 		nameEinnahmeAusgabe.setPreferredSize(eingabeSize);
-		tfEinnahmeAusgabe = new JFormattedTextField();
-		tfEinnahmeAusgabe.setColumns(10);
+		
 		panel5.add(nameEinnahmeAusgabe);
-		panel5.add(tfEinnahmeAusgabe);
+		panel5.add(RButtonEinnahme);
+		panel5.add(RButtonAusgabe);
 
 		// Container für Save und Delete Buttons
 		JPanel panel6 = new JPanel(new FlowLayout(FlowLayout.CENTER));
@@ -115,11 +143,11 @@ public class ProbeMaske extends JFrame {
 		panel6.add(saveButton);
 		panel6.add(deleteButton);
 
+		mainPanel.add(panel5);
 		mainPanel.add(panel1);
+		mainPanel.add(panel4);
 		mainPanel.add(panel2);
 		mainPanel.add(panel3);
-		mainPanel.add(panel4);
-		mainPanel.add(panel5);
 		mainPanel.add(panel6);
 
 		mainPanel.setBackground(Color.CYAN);
@@ -129,6 +157,8 @@ public class ProbeMaske extends JFrame {
 		// Aktionen um eingegebene Daten zu speichern oder zu löschen
 		saveInput();
 		deleteInput();
+		OnClickEinnahme();
+		OnClickAusgabe();
 
 		frame.pack();
 		frame.setVisible(true);
@@ -155,20 +185,64 @@ public class ProbeMaske extends JFrame {
 			System.out.println("Date invalid");
 		}
 
-		try {
-			MaskFormatter betragMask = new MaskFormatter("#.###,##");
-			betragMask.install(tfBetrag);
-			tfBetrag.setText("00,00");
+		//try {
+			//MaskFormatter betragMask = new MaskFormatter("###.###,##");
+			//betragMask.install(tfBetrag);
+			//tfBetrag.setText("00,00");
 			//TODO: Eingabe des Betrages validieren. Prüfe ob die Eingabe sinn macht
 			// Fehler durch POP-Up Fenster anzeigen
 
-		} catch (ParseException ex) {
-			Logger.getLogger(ProbeMaske.class.getName()).log(
-					Level.SEVERE, null, ex);
-		}
+		//} catch (ParseException ex) {
+			//Logger.getLogger(ProbeMaske.class.getName()).log(
+					//Level.SEVERE, null, ex);
+		//}
 
 	}
+	
+	public static void OnClickEinnahme () {
+		// Wenn beim Radiobutton Einnahme angeklickt wird
+		RButtonEinnahme.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				
+				
+				cbKategorieEinnahme = new JComboBox (Einnahmeliste);
+				if (panel4.getComponentCount()==1){
+					panel4.add(cbKategorieEinnahme);
+				}
+				if (panel4.getComponentCount()==2){
+					panel4.remove(1);
+					panel4.add(cbKategorieEinnahme);}
+				
+				frame.printAll(frame.getGraphics());
+				
+			}
+		});
+	}
+	
+	public static void OnClickAusgabe () {
+		// Wenn beim Radiobutton Ausgabe angeklickt wird
+		RButtonAusgabe.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				
+				
+				cbKategorieAusgabe = new JComboBox (Ausgabeliste);
+				
+				if (panel4.getComponentCount()==1){
+					panel4.add(cbKategorieAusgabe);
+				}
+				if (panel4.getComponentCount()==2){
+					panel4.remove(1);
+					panel4.add(cbKategorieAusgabe);}
+				
+				frame.printAll(frame.getGraphics());
+				
+			}
+		});
+	}
 
+	
 	public static void saveInput() {
 		// Wenn der saveButton gedruckt wird, dann werden alle Werte der Textfelder gespeichert
 		saveButton.addActionListener(new ActionListener() {
@@ -176,10 +250,8 @@ public class ProbeMaske extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				System.out.println("Datum:       " + tfDatum.getText());
 				System.out.println("Bezeichnung: " + tfBezeichnung.getText());
-				System.out.println("Betrag:      " + tfBetrag.getText());
-				System.out.println("Kategorie:   " + tfKategorie.getText());
-				System.out.println("Ein.Ausgabe: "
-						+ tfEinnahmeAusgabe.getText());
+				double Betrag = Double.parseDouble(tfBetrag.getText());
+				System.out.println("Betrag:" +Betrag);
 	
 			}
 		});
@@ -193,8 +265,8 @@ public class ProbeMaske extends JFrame {
 				tfDatum.setText(todayFormated);
 				tfBezeichnung.setText("");
 				tfBetrag.setText("0.000,00");
-				tfKategorie.setText("");
-				tfEinnahmeAusgabe.setText("");
+				
+				
 
 				System.out.println("Alle Eingaben gelöscht.");
 
