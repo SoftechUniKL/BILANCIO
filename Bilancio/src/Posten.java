@@ -21,6 +21,8 @@ public class Posten {
 	 */
 	private String kategorie;
 	
+	private String Transaktionsart;
+	
 	double Kontostand; 
 
 	/**
@@ -35,11 +37,12 @@ public class Posten {
 	 * @param kategorie
 	 *            Art der Ausgabe
 	 */
-	public Posten(Date datum, String bezeichnung, double betrag, String kategorie) {
+	public Posten(Date datum,String kategorie, String bezeichnung, double betrag, String Transaktionsart) {
 		this.bezeichnung = bezeichnung;
 		this.datum = datum;
 		this.betrag = betrag;
 		this.kategorie = kategorie;
+		this.Transaktionsart = Transaktionsart; 
 	}
 
 	public Date getDatum() {
@@ -58,6 +61,10 @@ public class Posten {
 		return kategorie;
 	}
 	
+	public String getTransaktionsart () {
+		return Transaktionsart;
+		
+	}
 
 
 }

@@ -61,7 +61,7 @@ public class ProbeMaske2 extends JFrame {
 	static Number Betrag;
 
 	//public static void main(String[] args) {
-ProbeMaske2(){
+public ProbeMaske2(){
 		Dimension eingabeSize = new Dimension(150, 20);
 
 		today = new Date();

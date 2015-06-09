@@ -38,11 +38,12 @@ public class BudgetPlanModel {
 			while ((nextLine = reader.readNext()) != null) {
 				DateFormat df = DateFormat.getDateInstance(DateFormat.SHORT, Locale.GERMAN);
 				Date datum = df.parse(nextLine[0]);
-				String bezeichnung = nextLine[1];
-				double betrag = Double.parseDouble(nextLine[2]);
-				String kategorie = nextLine[3];
+				String bezeichnung = nextLine[2];
+				double betrag = Double.parseDouble(nextLine[3]);
+				String kategorie = nextLine[1];
+				String Transaktionsart = nextLine[4];
 				
-				ausgaben.add(new Posten(datum, bezeichnung, betrag,kategorie));
+				ausgaben.add(new Posten(datum, kategorie, bezeichnung, betrag, Transaktionsart));
 			}
 			reader.close();
 
@@ -64,7 +65,7 @@ public class BudgetPlanModel {
 	void writeDataIntoFile(){
 		
 		 CSVWriter writer = null;
-			String[] line = new String[4];
+			String[] line = new String[5];
 			String str;
 			try {
 				writer = new CSVWriter(new FileWriter("data/budget.csv"), '#', CSVWriter.NO_QUOTE_CHARACTER);
@@ -75,10 +76,11 @@ public class BudgetPlanModel {
 					//
 
 					line[0] = new SimpleDateFormat("dd.MM.yyyy").format(p.getDatum());
-					line[1] = p.getBezeichnung() ;
-					line[2] = Double.toString( p.getBetrag());
+					line[2] = p.getBezeichnung() ;
+					line[3] = Double.toString( p.getBetrag());
 					//line[2] = String.format("%.2f", p.getBetrag());
-					line[3] = p.getKategorie().toString();
+					line[1] = p.getKategorie().toString();
+					line[4] = p.getTransaktionsart().toString();
 					
 					writer.writeNext(line);
 					i++;
@@ -109,11 +111,11 @@ public class BudgetPlanModel {
 			int size = ausgaben.size();
 			for ( int i=0; i< size ; i++) {
 				
-				if (ausgaben.get(i).getKategorie().equals("Einnahme") ){
+				if (ausgaben.get(i).getTransaktionsart().equals("Einnahme") ){
 					tmpKontostand +=ausgaben.get(i).getBetrag();
 				}
 				
-				if (ausgaben.get(i).getKategorie().equals("Ausgabe") ){
+				if (ausgaben.get(i).getTransaktionsart().equals("Ausgabe") ){
 					tmpKontostand -=ausgaben.get(i).getBetrag();
 					}
 			

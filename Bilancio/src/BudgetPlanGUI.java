@@ -37,6 +37,9 @@ import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.data.general.DefaultPieDataset;
 
+import probe.ProbeMaske;
+import probe.ProbeMaske2;
+
 import com.opencsv.CSVWriter;
 
 /**
@@ -119,26 +122,27 @@ public class BudgetPlanGUI extends JFrame {
 		}
 
 		// Tabelle mit Uebersicht der Ausgaben
-		data = new Object[budget.ausgaben.size()][4];
+		data = new Object[budget.ausgaben.size()][5];
 		int i = 0;
 		for (Posten p : budget.ausgaben) {
 			data[i][0] = new SimpleDateFormat("yyyy.MM.dd")
 					.format(p.getDatum());
-			data[i][1] = p.getBezeichnung();
+			data[i][2] = p.getBezeichnung();
 			// data[i][2] = String.format("%.2f", p.getBetrag());
-			data[i][2] = p.getBetrag();
-			data[i][3] = p.getKategorie();
+			data[i][3] = p.getBetrag();
+			data[i][1] = p.getKategorie();
+			data[i][4]= p.getTransaktionsart();
 			i++;
 
 		}
 
 		// Add row to table
-		tableModel = new MyTableModel(data, new Object[] { "Datum",
-				"Bezeichnung", "Betrag", "Einnahme/Ausgabe" });
+		tableModel = new MyTableModel(data, new Object[] { "Datum", "Kategorie",
+				"Bezeichnung", "Betrag", "Transaktionsart" });
 
 		table = new JTable(tableModel);
 
-		einAusgabeColumn = table.getColumnModel().getColumn(3);
+		einAusgabeColumn = table.getColumnModel().getColumn(4);
 		einAusgabeCombobox = new JComboBox();
 		einAusgabeCombobox.addItem("Einnahme");
 		einAusgabeCombobox.addItem("Ausgabe");
@@ -153,9 +157,9 @@ public class BudgetPlanGUI extends JFrame {
 		pdAusgabe = new DefaultPieDataset();
 
 		for (Posten p : budget.ausgaben) {
-			if (p.getKategorie().equals("Einnahme"))
+			if (p.getTransaktionsart().equals("Einnahme"))
 				pdEinnahme.setValue(p.getBezeichnung(), p.getBetrag());
-			if (p.getKategorie().equals("Ausgabe"))
+			if (p.getTransaktionsart().equals("Ausgabe"))
 				pdAusgabe.setValue(p.getBezeichnung(), p.getBetrag());
 		}
 
@@ -266,10 +270,12 @@ public class BudgetPlanGUI extends JFrame {
 		addPosten.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				tableModel.addRow(new Object[] { "YYYY/MM/DD", "Bezeichnung",
-						00.00, "wähle" });
-
-				table.putClientProperty("terminateEditOnFocusLost", true);
+//				tableModel.addRow(new Object[] { "YYYY/MM/DD", "Kategorie", "Bezeichnung",
+//						00.00, "wähle" });
+//
+//				table.putClientProperty("terminateEditOnFocusLost", true);
+				
+				ProbeMaske2 pMaske = new ProbeMaske2 ();
 			}
 
 		});
@@ -313,7 +319,7 @@ public class BudgetPlanGUI extends JFrame {
 
 					// Daten für PieChart aus der Tabelle lesen
 					for (Posten p : budget.ausgaben) {
-						if (p.getKategorie().equals("Einnahme"))
+						if (p.getTransaktionsart().equals("Einnahme"))
 							pdEinnahme.setValue(p.getBezeichnung(),
 									p.getBetrag());
 					}
@@ -328,7 +334,7 @@ public class BudgetPlanGUI extends JFrame {
 
 					// Daten für PieChart aus der Tabelle lesen
 					for (Posten p : budget.ausgaben) {
-						if (p.getKategorie().equals("Ausgabe"))
+						if (p.getTransaktionsart().equals("Ausgabe"))
 							pdAusgabe.setValue(p.getBezeichnung(),
 									p.getBetrag());
 					}
@@ -412,18 +418,20 @@ public class BudgetPlanGUI extends JFrame {
 					e1.printStackTrace();
 				}
 				String bezeichnung = (String) tableModel.getValueAt(
-						lastRow - 1, 1);
+						lastRow - 1, 2);
 				// double betrag = Double.parseDouble( (String)
 				// tableModel.getValueAt(lastRow - 1, 2));
-				double betrag = (double) tableModel.getValueAt(lastRow - 1, 2);
+				double betrag = (double) tableModel.getValueAt(lastRow - 1, 3);
 				String kategorie = (String) tableModel.getValueAt(lastRow - 1,
-						3);
+						1);
+				String Transaktionsart = (String) tableModel.getValueAt(lastRow - 1,
+						4);
 
-				budget.ausgaben.add(new Posten(datum, bezeichnung, betrag,
-						kategorie));
+				budget.ausgaben.add(new Posten(datum, kategorie, bezeichnung, betrag,
+						Transaktionsart));
 
 				CSVWriter writer = null;
-				String[] line = new String[4];
+				String[] line = new String[5];
 				String str;
 				try {
 					writer = new CSVWriter(new FileWriter("data/budget.csv"),
@@ -436,11 +444,12 @@ public class BudgetPlanGUI extends JFrame {
 
 						line[0] = new SimpleDateFormat("dd.MM.yyyy").format(p
 								.getDatum());
-						line[1] = p.getBezeichnung();
+						line[2] = p.getBezeichnung();
 						// line[2] = ;
-						line[2] = Double.toString(p.getBetrag());
+						line[3] = Double.toString(p.getBetrag());
 						// line[2] = String.format("%.2f", p.getBetrag());
-						line[3] = p.getKategorie().toString();
+						line[1] = p.getKategorie().toString();
+						line [4]= p.getTransaktionsart();
 
 						writer.writeNext(line);
 						i++;
@@ -489,7 +498,7 @@ public class BudgetPlanGUI extends JFrame {
 
 		@Override
 		public Class getColumnClass(int col) {
-			if (col == 2) // second column accepts only Integer values
+			if (col == 3) // second column accepts only Integer values
 				return Double.class;
 
 			else
