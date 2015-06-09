@@ -71,7 +71,7 @@ public ProbeMaske2(){
 		frame = new JFrame("Eingabe");
 		frame.getContentPane().setPreferredSize(new Dimension(400, 300));
 		frame.setResizable(false);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
 		// Hauptcontainer
 		mainPanel = new JPanel();

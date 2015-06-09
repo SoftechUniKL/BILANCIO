@@ -254,17 +254,15 @@ public class ProbeMaske extends JFrame {
 				try {
 					 Betrag =   nf.parse(tfBetrag.getText());
 					//TODO: Eingabe des Betrages validieren. Prüfe ob die Eingabe sinn macht
-					 //Fehler durch POP-Up Fenster anzeigen
+					 //TODO: 10.0 wird als 100 gebucht
+					 System.out.println("Betrag:" +Betrag.doubleValue());
 				} catch (ParseException e1) {
 					// TODO Auto-generated catch block
-					
+					//Fehler durch POP-Up Fenster anzeigen
 					 JOptionPane.showMessageDialog(null, "Eingabe darf nur Dezimalzahl sein. (123,56)", "Error",
                              JOptionPane.ERROR_MESSAGE);
 				}
-				
-				
-				System.out.println("Betrag:" +Betrag.doubleValue());
-				
+			
 				if  (panel4.getComponentCount()>1 && RButtonEinnahme.isSelected()) {
 					System.out.println("Kategorie: " + cbKategorieEinnahme.getSelectedItem());
 				}
