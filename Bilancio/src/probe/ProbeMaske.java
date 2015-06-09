@@ -20,6 +20,7 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JLabel;
 import javax.swing.JRadioButton;
@@ -41,8 +42,8 @@ public class ProbeMaske extends JFrame {
 	static JFormattedTextField tfDatum;
 	static JFormattedTextField tfBezeichnung;
 	static JFormattedTextField tfBetrag;
-	static JComboBox cbKategorieEinnahme;
-	static JComboBox cbKategorieAusgabe;
+	static JComboBox<String> cbKategorieEinnahme;
+	static JComboBox<String> cbKategorieAusgabe;
 	
 	static JRadioButton RButtonEinnahme;
 	static JRadioButton RButtonAusgabe; 
@@ -57,7 +58,7 @@ public class ProbeMaske extends JFrame {
 	static JPanel panel4;
 	static JPanel mainPanel;
 	static JFrame frame;
-	static double Betrag;
+	static Number Betrag;
 
 	public static void main(String[] args) {
 
@@ -116,17 +117,19 @@ public class ProbeMaske extends JFrame {
 		
 		Einnahmeliste = new String[] { "Gehalt", "Geschenk" , "Kapitalerträge", "sonstige"};
 		Ausgabeliste = new String[] { "Miete", "Lebensmittel" , "Versicherungen", "Freizeit", "Hobbys", "Bildung", "Zins- und Tilgungszahlungen"};
+		
+		
 
 		// Container und Elemente der Einnahme.Aisgabe-Eingabe
 		//TODO : Eingabe / Ausgabe durch Radio buttons ersetzen 
 		
 
 	    RButtonEinnahme = new JRadioButton("Einnahme");
-	    RButtonEinnahme.setMnemonic(KeyEvent.VK_C);
+	    RButtonEinnahme.setMnemonic(KeyEvent.VK_E);
 	    RButtonEinnahme.setActionCommand("Einnahme");
 
 	    RButtonAusgabe = new JRadioButton("Ausgabe");
-	    RButtonAusgabe.setMnemonic(KeyEvent.VK_D);
+	    RButtonAusgabe.setMnemonic(KeyEvent.VK_A);
 	    RButtonAusgabe.setActionCommand("Ausgabe");
 	    
 	    ButtonGroup group = new ButtonGroup();
@@ -189,29 +192,7 @@ public class ProbeMaske extends JFrame {
 			System.out.println("Date invalid");
 		}
 		
-//		String strBetrag = tfBetrag.getText();
-//		
-//		try {
-//			System.out.println(nf.parse(strBetrag));
-//		} catch (ParseException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-		
-		//Betrag =  Double.valueOf(strBetrag).doubleValue();
 
-		//try {
-			//MaskFormatter betragMask = new MaskFormatter("###.###,##");
-			//betragMask.install(tfBetrag);
-			//tfBetrag.setText("00,00");
-			
-			//TODO: Eingabe des Betrages validieren. Prüfe ob die Eingabe sinn macht
-			 //Fehler durch POP-Up Fenster anzeigen
-
-		//} catch (ParseException ex) {
-			//Logger.getLogger(ProbeMaske.class.getName()).log(
-					//Level.SEVERE, null, ex);
-		//}
 
 	}
 	
@@ -222,7 +203,9 @@ public class ProbeMaske extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				
 				
-				cbKategorieEinnahme = new JComboBox (Einnahmeliste);
+				cbKategorieEinnahme = new JComboBox<String> (Einnahmeliste);
+				
+				
 				if (panel4.getComponentCount()==1){
 					panel4.add(cbKategorieEinnahme);
 				}
@@ -242,8 +225,8 @@ public class ProbeMaske extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				
+				cbKategorieAusgabe = new JComboBox<String> (Ausgabeliste);
 				
-				cbKategorieAusgabe = new JComboBox (Ausgabeliste);
 				
 				if (panel4.getComponentCount()==1){
 					panel4.add(cbKategorieAusgabe);
@@ -265,17 +248,31 @@ public class ProbeMaske extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				System.out.println("Datum:       " + tfDatum.getText());
+				
 				System.out.println("Bezeichnung: " + tfBezeichnung.getText());
 				
 				try {
-					Betrag = (double) nf.parse(tfBetrag.getText());
+					 Betrag =   nf.parse(tfBetrag.getText());
+					//TODO: Eingabe des Betrages validieren. Prüfe ob die Eingabe sinn macht
+					 //Fehler durch POP-Up Fenster anzeigen
 				} catch (ParseException e1) {
 					// TODO Auto-generated catch block
-					e1.printStackTrace();
+					
+					 JOptionPane.showMessageDialog(null, "Eingabe darf nur Dezimalzahl sein. (123,56)", "Error",
+                             JOptionPane.ERROR_MESSAGE);
 				}
 				
-				System.out.println("Betrag:" +Betrag);
-	
+				
+				System.out.println("Betrag:" +Betrag.doubleValue());
+				
+				if  (panel4.getComponentCount()>1 && RButtonEinnahme.isSelected()) {
+					System.out.println("Kategorie: " + cbKategorieEinnahme.getSelectedItem());
+				}
+				
+				if  (panel4.getComponentCount()>1 && RButtonAusgabe.isSelected()) {
+					System.out.println("Kategorie: " + cbKategorieAusgabe.getSelectedItem());
+				}
+				
 			}
 		});
 	}
@@ -287,10 +284,8 @@ public class ProbeMaske extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				tfDatum.setText(todayFormated);
 				tfBezeichnung.setText("");
-				tfBetrag.setText("0.000,00");
+				tfBetrag.setText("0,00");
 				
-				
-
 				System.out.println("Alle Eingaben gelöscht.");
 
 			}
