@@ -1,3 +1,4 @@
+package gui;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
@@ -31,6 +32,9 @@ import javax.swing.UIManager;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableRowSorter;
+
+import model.BudgetPlanModel;
+import model.Posten;
 
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
@@ -100,13 +104,13 @@ public class BudgetPlanGUI extends JFrame {
 		this.budget = budget;
 		initWindow(); // Initialisierung des Frameinhalts
 		addBehavior(); // Verhalten der GUI Elemente dieses Frames
-		addRow(tableModel); // Die Tabelle um eine Zeile erweitern
+		addPosten(tableModel); // Die Tabelle um eine Zeile erweitern
 		saveTable(tableModel, budget);
 
 		sorttable(tableModel, table);
 		diagrammAuswahl();
 		showKonto();
-		deleteRow(tableModel);
+		deletePosten(tableModel);
 		setBounds(10, 10, 800, 800); // Groesse des Frames
 		setVisible(true); // Frame wird sichtbar
 
@@ -265,7 +269,7 @@ public class BudgetPlanGUI extends JFrame {
 	}
 
 	// Tabelle um eine Zeile Erweitern hinzufuegen
-	public void addRow(final DefaultTableModel tableModel) {
+	public void addPosten(final DefaultTableModel tableModel) {
 		// registriere den ActionListener fuer den Button als anonyme Klasse
 		addPosten.addActionListener(new ActionListener() {
 			@Override
@@ -275,7 +279,7 @@ public class BudgetPlanGUI extends JFrame {
 //
 //				table.putClientProperty("terminateEditOnFocusLost", true);
 				
-				ProbeMaske2 pMaske = new ProbeMaske2 ();
+				EingabeMaske pMaske = new EingabeMaske (budget);
 			}
 
 		});
@@ -284,7 +288,7 @@ public class BudgetPlanGUI extends JFrame {
 	String removedPosten;
 
 	// Eine Zeile in einer Tabelle löschen
-	public void deleteRow(final DefaultTableModel tableModel) {
+	public void deletePosten(final DefaultTableModel tableModel) {
 		// registriere den ActionListener fuer den Button als anonyme Klasse
 		deletePosten.addActionListener(new ActionListener() {
 			@Override

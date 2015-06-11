@@ -1,3 +1,4 @@
+package model;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -21,7 +22,7 @@ import com.opencsv.CSVWriter;
  * 
  */
 public class BudgetPlanModel {
-	List<Posten> ausgaben;
+	public List<Posten> ausgaben;
     String filename = "data/budget.csv" ;
     double Kontostand = 0.0;
 	public BudgetPlanModel() {
@@ -62,7 +63,7 @@ public class BudgetPlanModel {
 		}
 	}
 	
-	void writeDataIntoFile(){
+	public void writeDataIntoFile(){
 		
 		 CSVWriter writer = null;
 			String[] line = new String[5];

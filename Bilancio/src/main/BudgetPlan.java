@@ -1,3 +1,7 @@
+package main;
+import gui.BudgetPlanGUI;
+import model.BudgetPlanModel;
+
 /**
  * Anwendung BudgetPlan
  * 
