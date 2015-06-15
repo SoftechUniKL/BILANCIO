@@ -297,7 +297,7 @@ public class BudgetPlanGUI extends JFrame {
 				if (row != -1) {
 					System.out.println("Selecter row : " + row);
 					// was wurde gelöscht: einnahme ode ausgabe
-					removedPosten = (String) tableModel.getValueAt(row, 3);
+					removedPosten = (String) tableModel.getValueAt(row, 4);
 					System.out.println("removedPosten   "+removedPosten);
 					// remove selected row from the model
 					tableModel.removeRow(row);
