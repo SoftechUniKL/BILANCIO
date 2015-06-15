@@ -56,7 +56,7 @@ public class BudgetPlanGUI extends JFrame {
 	 * Tabelle mit Uebersicht der Ausgaben
 	 */
 	private JTable table;
-	private MyTableModel tableModel;
+	public static MyTableModel tableModel;
 	private Object[][] data;
 	/**
 	 * Scrollelemente, das die Tabelle umfasst
@@ -279,7 +279,34 @@ public class BudgetPlanGUI extends JFrame {
 //
 //				table.putClientProperty("terminateEditOnFocusLost", true);
 				
-				EingabeMaske pMaske = new EingabeMaske (budget);
+				System.out.println("Anzahl der Zeilen vor update = "+table.getRowCount());
+				System.out.println("Anzahl der Liste vor update = "+budget.ausgaben.size());
+				final EingabeMaske pMaske = new EingabeMaske (budget);
+				
+				tableModel.addRow(new Object[5]);
+				int lastRow =tableModel.getRowCount();
+				
+				/*
+				pMaske.tfDatum.getText();
+//				pMaske.cbKategorieAusgabe.getSelectedIndex();
+				pMaske.tfBezeichnung.getText();
+				pMaske.Betrag.doubleValue();
+				pMaske.transaktionsArt.toString();
+				*/
+				
+				table.getModel().setValueAt(55, lastRow-1, 0);
+				tableModel.setValueAt(55, lastRow-1, 3);
+				
+				
+//
+				table.putClientProperty("terminateEditOnFocusLost", true);
+				
+				updateTable( pMaske);
+				
+				System.out.println("Anzahl der Zeilen nach update = "+table.getRowCount());
+				System.out.println("Anzahl der Liste nach update = "+budget.ausgaben.size());
+				
+				getContentPane().repaint();
 			}
 
 		});
@@ -489,25 +516,41 @@ public class BudgetPlanGUI extends JFrame {
 
 	}
 
-	class MyTableModel extends DefaultTableModel {
 
-		/**
-		 * 
-		 */
-		private static final long serialVersionUID = 1L;
+	private void updateTable(EingabeMaske pMaske){
+		
+		// Tabelle mit Uebersicht der Ausgaben
+		BudgetPlanModel budget = EingabeMaske.budget;
+				data = new Object[budget.ausgaben.size()][5];
+				int i = 0;
+				for (Posten p : budget.ausgaben) {
+					data[i][0] = new SimpleDateFormat("yyyy.MM.dd")
+							.format(p.getDatum());
+					data[i][2] = p.getBezeichnung();
+					// data[i][2] = String.format("%.2f", p.getBetrag());
+					data[i][3] = p.getBetrag();
+					data[i][1] = p.getKategorie();
+					data[i][4]= p.getTransaktionsart();
+					i++;
 
-		public MyTableModel(Object rowData[][], Object columnNames[]) {
-			super(rowData, columnNames);
-		}
+				}
 
-		@Override
-		public Class getColumnClass(int col) {
-			if (col == 3) // second column accepts only Integer values
-				return Double.class;
+				// Add row to table
+				tableModel = new MyTableModel(data, new Object[] { "Datum", "Kategorie",
+						"Bezeichnung", "Betrag", "Transaktionsart" });
 
-			else
-				return String.class; // other columns accept String values
-		}
+				table = new JTable(tableModel);
 
+				einAusgabeColumn = table.getColumnModel().getColumn(4);
+				einAusgabeCombobox = new JComboBox();
+				einAusgabeCombobox.addItem("Einnahme");
+				einAusgabeCombobox.addItem("Ausgabe");
+				einAusgabeColumn
+						.setCellEditor(new DefaultCellEditor(einAusgabeCombobox));
+
+				table.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+				scrollpane = new JScrollPane(table);
+				System.out.println("Tabele wurde gerade geupdatet: Zeilenanzahl = " + tableModel.getRowCount());
 	}
+	
 }

@@ -22,6 +22,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.swing.ButtonGroup;
+import javax.swing.DefaultCellEditor;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFormattedTextField;
@@ -30,6 +31,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JLabel;
 import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.text.MaskFormatter;
 
@@ -75,10 +78,14 @@ public class EingabeMaske extends JFrame {
 	static String transaktionsArt;
 	
 	static BudgetPlanModel budget;
+	static JScrollPane scrollpane; 
+	static MyTableModel tableModel ;
 
 	//public static void main(String[] args) {
 public EingabeMaske(BudgetPlanModel budget){
 	this.budget = budget;
+	
+	
 		Dimension eingabeSize = new Dimension(150, 20);
 
 		today = new Date();
@@ -291,7 +298,8 @@ public EingabeMaske(BudgetPlanModel budget){
 				}
 				
 				
-				saveEingabe();
+			
+				 saveEingabe();		
 				
 				frame.dispose();
 				
