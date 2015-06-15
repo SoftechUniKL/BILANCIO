@@ -293,6 +293,8 @@ public EingabeMaske(BudgetPlanModel budget){
 				
 				saveEingabe();
 				
+				frame.dispose();
+				
 				
 			}
 		});
