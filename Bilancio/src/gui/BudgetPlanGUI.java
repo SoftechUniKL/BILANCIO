@@ -66,12 +66,12 @@ public class BudgetPlanGUI extends JFrame {
 	 * Schaltflaeche, die beim Klicken einen Dialog anzeigt
 	 */
 	private JButton button;
-
+	
 	private JButton addPosten;
 	private JButton saveTable;
 	private JButton deletePosten;
 	private JButton showkontostand;
-
+	private JButton prognose;
 	private TableColumn einAusgabeColumn;
 	private JComboBox einAusgabeCombobox;
 	private JComboBox DiagrammAuswahl;
@@ -202,6 +202,7 @@ public class BudgetPlanGUI extends JFrame {
 		DiagrammAuswahl.addItem("Diagramm für Einnahmen");
 		DiagrammAuswahl.addItem("Diagramm für Ausgaben");
 
+		prognose = new JButton("Prognose");
 		// Elemente dem Fenster hinzufuegen:
 		getContentPane().add(scrollpane);
 		JPanel buttonContailer = new JPanel();
@@ -214,6 +215,7 @@ public class BudgetPlanGUI extends JFrame {
 		buttonContailer.add(DiagrammAuswahl);
 		buttonContailer.add(showkontostand);
 		buttonContailer.add(button);
+		buttonContailer.add(prognose);
 		getContentPane().add(buttonContailer);
 
 		// getContentPane().add(addPosten);
