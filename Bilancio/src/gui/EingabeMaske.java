@@ -82,8 +82,9 @@ public class EingabeMaske extends JFrame {
 	static MyTableModel tableModel ;
 
 	//public static void main(String[] args) {
-public EingabeMaske(BudgetPlanModel budget){
+public EingabeMaske(BudgetPlanModel budget, MyTableModel tableModel){
 	this.budget = budget;
+	this.tableModel = tableModel;
 	
 	
 		Dimension eingabeSize = new Dimension(150, 20);
@@ -300,6 +301,37 @@ public EingabeMaske(BudgetPlanModel budget){
 				
 			
 				 saveEingabe();		
+				 
+				 
+				 tableModel.addRow(new Object[5]);
+					int lastRow =tableModel.getRowCount();
+					
+					
+					/*
+					pMaske.tfDatum.getText();
+//					pMaske.cbKategorieAusgabe.getSelectedIndex();
+					pMaske.tfBezeichnung.getText();
+					pMaske.Betrag.doubleValue();
+					pMaske.transaktionsArt.toString();
+					*/
+					
+					/*
+					tableModel.setValueAt(55, lastRow-1, 3);
+					tableModel.setValueAt(55, lastRow-1, 3);
+					tableModel.setValueAt(55, lastRow-1, 3); */
+					
+					tableModel.setValueAt(tfDatum.getText(), lastRow-1,0);
+					if (RButtonEinnahme.isSelected()){
+						tableModel.setValueAt(cbKategorieEinnahme.getSelectedItem(), lastRow-1,1);
+						tableModel.setValueAt( "Einnahme", lastRow-1,4);
+					}
+					if (RButtonAusgabe.isSelected()){
+						tableModel.setValueAt(cbKategorieAusgabe.getSelectedItem(), lastRow-1,1);
+						tableModel.setValueAt( "Ausgabe", lastRow-1,4);
+					}
+					tableModel.setValueAt( tfBezeichnung.getText(), lastRow-1,2);
+					tableModel.setValueAt( Betrag.doubleValue(), lastRow-1,3);
+					
 				
 				frame.dispose();
 				

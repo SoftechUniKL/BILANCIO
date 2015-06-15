@@ -281,10 +281,11 @@ public class BudgetPlanGUI extends JFrame {
 				
 				System.out.println("Anzahl der Zeilen vor update = "+table.getRowCount());
 				System.out.println("Anzahl der Liste vor update = "+budget.ausgaben.size());
-				final EingabeMaske pMaske = new EingabeMaske (budget);
+				final EingabeMaske pMaske = new EingabeMaske (budget, (MyTableModel) tableModel);
 				
-				tableModel.addRow(new Object[5]);
+				/*tableModel.addRow(new Object[5]);
 				int lastRow =tableModel.getRowCount();
+				*/
 				
 				/*
 				pMaske.tfDatum.getText();
@@ -294,9 +295,12 @@ public class BudgetPlanGUI extends JFrame {
 				pMaske.transaktionsArt.toString();
 				*/
 				
-				table.getModel().setValueAt(55, lastRow-1, 0);
+				/*
+				tableModel.setValueAt(55, lastRow-1, 3);
+				tableModel.setValueAt(55, lastRow-1, 3);
 				tableModel.setValueAt(55, lastRow-1, 3);
 				
+				*/
 				
 //
 				table.putClientProperty("terminateEditOnFocusLost", true);
