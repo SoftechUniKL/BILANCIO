@@ -29,6 +29,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.UIManager;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableRowSorter;
@@ -110,6 +112,7 @@ public class BudgetPlanGUI extends JFrame {
 		sorttable(tableModel, table);
 		diagrammAuswahl();
 		showKonto();
+		saveTableChange ();
 		deletePosten(tableModel);
 		setBounds(10, 10, 800, 800); // Groesse des Frames
 		setVisible(true); // Frame wird sichtbar
@@ -243,6 +246,26 @@ public class BudgetPlanGUI extends JFrame {
 		});
 	}
 
+	public void saveTableChange () {
+		// Änderung der einzelnen Zeilen in der Tabelle werden direkt übernommen 
+		table.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+		    public void valueChanged(ListSelectionEvent event) {
+		     boolean evt =	event.getValueIsAdjusting();
+		        if (table.getSelectedRow() >= 0 && evt==false) {
+		            // print first column value from selected row
+		        	System.out.println("Ausgewählte Zeile:" + table.getSelectedRow());
+		            System.out.print(table.getValueAt(table.getSelectedRow(), 0).toString());
+		            System.out.print("\t"+ table.getValueAt(table.getSelectedRow(), 1).toString());
+		            System.out.print("\t"+table.getValueAt(table.getSelectedRow(), 2).toString());
+		            System.out.print("\t"+table.getValueAt(table.getSelectedRow(), 3).toString());
+		            System.out.println("\t"+table.getValueAt(table.getSelectedRow(), 4).toString());
+		        }
+		    }
+		});
+			
+	}
+	
+	
 	// Diagrammauswahl
 	/**
 	 * DiagramAuswahl:
