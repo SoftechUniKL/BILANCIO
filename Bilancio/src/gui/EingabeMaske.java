@@ -97,6 +97,8 @@ public class EingabeMaske extends JFrame {
 
 		// Container und Elemente der Datum-Eingabe
 		JPanel datePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		datePanel.setBackground(Color.LIGHT_GRAY);
+		//datePanel.setAlignmentX(CENTER_ALIGNMENT);
 		tfDatum = new JFormattedTextField(df);
 		tfDatum.setColumns(10);
 		nameDatum = new JLabel("Datum");
@@ -106,6 +108,7 @@ public class EingabeMaske extends JFrame {
 
 		// Container und Elemente der Bezeichnung-Eingabe
 		JPanel bezeichnungPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		bezeichnungPanel.setBackground(Color.LIGHT_GRAY);
 		nameBezeichnung = new JLabel("Bezeichnung");
 		nameBezeichnung.setPreferredSize(eingabeSize);
 		tfBezeichnung = new JFormattedTextField();
@@ -159,6 +162,7 @@ public class EingabeMaske extends JFrame {
 
 		// Container für Save und Delete Buttons
 		JPanel panelForButtonSpeicherUndLoeschen = new JPanel(new FlowLayout(FlowLayout.CENTER));
+		panelForButtonSpeicherUndLoeschen.setBackground(Color.LIGHT_GRAY);
 		saveButton = new JButton("Speichern");
 		deleteButton = new JButton("Löschen");
 		panelForButtonSpeicherUndLoeschen.add(saveButton);
