@@ -169,7 +169,11 @@ public class BudgetPlanGUI extends JFrame {
 			}
 			
 		};
-	
+		
+		table.getTableHeader().setOpaque(false);
+		table.getTableHeader().setBackground(Color.GRAY);
+		table.getTableHeader().setForeground(Color.WHITE);
+		
 		einAusgabeColumn = table.getColumnModel().getColumn(4);
 		einAusgabeCombobox = new JComboBox();
 		einAusgabeCombobox.addItem("Einnahme");
