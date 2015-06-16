@@ -7,6 +7,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -26,6 +27,7 @@ public class BudgetPlanModel {
     String filename = "data/budget.csv" ;
     double Kontostand = 0.0;
 	public BudgetPlanModel() {
+		
 		this.ausgaben = new ArrayList<Posten>();
 		readDatafromFile();
 	
@@ -107,7 +109,9 @@ public class BudgetPlanModel {
 		void Kontostand_nach_einzahlung (double e)
 		{ Kontostand+=e; }
 		
+		
 		public double getKontostand()		{ 
+			
 			double tmpKontostand = 0;
 			int size = ausgaben.size();
 			for ( int i=0; i< size ; i++) {
@@ -123,7 +127,51 @@ public class BudgetPlanModel {
 			}
 			
 			
-			return tmpKontostand;}
+			return tmpKontostand;
+			
+		}
 	
 	
+		public double getPrognose (List<Posten> transaktionen, int prognoseMonat){
+			
+			double prognose = 0;
+			 Calendar stichTag = Calendar.getInstance(); 
+			 int month = stichTag.get(Calendar.MONTH);
+		     int day = stichTag.get(Calendar.DAY_OF_MONTH);
+		     int year = stichTag.get(Calendar.YEAR) - 1;
+		     stichTag.set(Calendar.YEAR,year - 1);
+		     
+		     List<Posten> transaktionenCopy = transaktionen;
+		     
+		  // Alle Transaktionen holen, die max 365 tag zurück liegen 
+		    for (int i=0; i<transaktionen.size();i++){
+		    	
+		    	Date transaktDatum = transaktionenCopy.get(i).getDatum();
+		    	if (transaktDatum.before(stichTag.getTime())){
+		    		
+		    		transaktionenCopy.remove(i);
+		    		
+		    	}
+		    
+		    
+		    }
+			
+		    double tmpKontostand=0;;
+		    int size = transaktionenCopy.size();
+			for ( int i=0; i< size ; i++) {
+				
+				if (transaktionenCopy.get(i).getTransaktionsart().equals("Einnahme") ){
+					tmpKontostand +=transaktionenCopy.get(i).getBetrag();
+				}
+				
+				if (transaktionenCopy.get(i).getTransaktionsart().equals("Ausgabe") ){
+					tmpKontostand -=transaktionenCopy.get(i).getBetrag();
+					}
+			
+			}
+			
+			prognose = tmpKontostand*prognoseMonat;
+			
+			return prognose;
+		}
 }

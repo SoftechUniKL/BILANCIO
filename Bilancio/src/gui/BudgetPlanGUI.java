@@ -660,6 +660,8 @@ public class BudgetPlanGUI extends JFrame {
 						getContentPane().remove(panelEinnahme);
 					getContentPane().add(panelPrognose);
 					printAll(getGraphics());
+					
+					System.out.println("Prognose für die nächste 12 Monate : "+ budget.getPrognose(budget.ausgaben, 12));
 				
 			}
 		});
