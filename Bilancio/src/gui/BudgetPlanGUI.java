@@ -43,7 +43,11 @@ import model.Posten;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
+import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.chart.renderer.xy.DefaultXYItemRenderer;
+import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.data.general.DefaultPieDataset;
+import org.jfree.data.xy.DefaultXYDataset;
 
 import probe.ProbeMaske;
 import probe.ProbeMaske2;
@@ -85,6 +89,7 @@ public class BudgetPlanGUI extends JFrame {
 	private JFreeChart pieChartAusgabe;
 	private ChartPanel panelEinnahme;
 	private ChartPanel panelAusgabe;
+	private   ChartPanel panelPrognose;
 	private int row;
 
 	/**
@@ -114,6 +119,7 @@ public class BudgetPlanGUI extends JFrame {
 		sorttable(tableModel, table);
 		diagrammAuswahl();
 		showKonto();
+		showPrognose();
 		saveTableChange ();
 		deletePosten(tableModel);
 		setBounds(10, 10, 800, 800); // Groesse des Frames
@@ -217,6 +223,7 @@ public class BudgetPlanGUI extends JFrame {
 
 		// DeletePosten Button
 		deletePosten = new JButton(" -     Delete Posten   ");
+		
 								      
 		deletePosten.setBounds(300, 110, 150, 40);
 		// DeletePosten Button
@@ -230,7 +237,25 @@ public class BudgetPlanGUI extends JFrame {
 		DiagrammAuswahl.addItem("Diagramm für Einnahmen");
 		DiagrammAuswahl.addItem("Diagramm für Ausgaben");
 
-		prognose = new JButton("Prognose");
+		// Button für Prognose
+	    prognose = new JButton("       Prognose        ");
+	    
+	    // Chart für Prognose
+	    DefaultCategoryDataset dataset = new DefaultCategoryDataset( );
+	    dataset.addValue( -30 , "Kontostand" , "1. Mon" );
+	    dataset.addValue( -60 , "Kontostand" , "2. Mon" );
+	    dataset.addValue( -90 , "Kontostand" , "3. Mon" );
+	    dataset.addValue( -120 , "Kontostand" , "4. Mon" );
+	    JFreeChart lineChart = ChartFactory.createLineChart(
+	            "Prognose",
+	            "Monate","EURO",
+	            dataset,
+	            PlotOrientation.VERTICAL,
+	            true,true,false);
+	            
+	          panelPrognose = new ChartPanel( lineChart );
+	         panelPrognose.setPreferredSize( new java.awt.Dimension( 560 , 367 ) );
+		
 		// Elemente dem Fenster hinzufuegen:
 		getContentPane().add(scrollpane);
 		JPanel buttonContailer = new JPanel();
@@ -245,6 +270,8 @@ public class BudgetPlanGUI extends JFrame {
 		buttonContailer.add(button);
 		buttonContailer.add(prognose);
 		getContentPane().add(buttonContailer);
+	
+		//getContentPane().add(prognosePanel);
 
 		// getContentPane().add(addPosten);
 		// getContentPane().add(deletePosten);
@@ -306,14 +333,18 @@ public class BudgetPlanGUI extends JFrame {
 				JComboBox cb = (JComboBox) e.getSource();
 
 				if (cb.getSelectedIndex() == 1) {
-					if (getContentPane().getComponentCount() > 0)
+					if (getContentPane().getComponentCount() > 0){
 						getContentPane().remove(panelAusgabe);
+						getContentPane().remove(panelPrognose);
+					}
 					getContentPane().add(panelEinnahme);
 					printAll(getGraphics());
 				}
 				if (cb.getSelectedIndex() == 2) {
-					if (getContentPane().getComponentCount() > 0)
+					if (getContentPane().getComponentCount() > 0){
 						getContentPane().remove(panelEinnahme);
+						getContentPane().remove(panelPrognose);
+					}
 					getContentPane().add(panelAusgabe);
 					printAll(getGraphics());
 				}
@@ -611,6 +642,27 @@ public class BudgetPlanGUI extends JFrame {
 				
 				scrollpane = new JScrollPane(table);
 				System.out.println("Tabele wurde gerade geupdatet: Zeilenanzahl = " + tableModel.getRowCount());
+	}
+	
+	public void showPrognose() {
+		// registriere den ActionListener fuer den Button als anonyme Klasse
+		prognose.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				
+					if (getContentPane().getComponentCount() > 0)
+						getContentPane().remove(panelAusgabe);
+					getContentPane().add(panelPrognose);
+					printAll(getGraphics());
+			
+				
+					if (getContentPane().getComponentCount() > 0)
+						getContentPane().remove(panelEinnahme);
+					getContentPane().add(panelPrognose);
+					printAll(getGraphics());
+				
+			}
+		});
 	}
 	
 }
