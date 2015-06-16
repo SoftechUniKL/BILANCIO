@@ -81,6 +81,7 @@ public class EingabeMaske extends JFrame {
 		this.tableModel = tableModel;
 
 		Dimension eingabeSize = new Dimension(150, 20);
+		FlowLayout fl = new FlowLayout(FlowLayout.LEFT,1,15);
 
 		today = new Date();
 		todayFormated = df.format(today.getTime());
@@ -96,7 +97,8 @@ public class EingabeMaske extends JFrame {
 		mainPanel.setLayout(new GridLayout(6, 1));
 
 		// Container und Elemente der Datum-Eingabe
-		JPanel datePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		
+		JPanel datePanel = new JPanel(fl);
 		datePanel.setBackground(Color.LIGHT_GRAY);
 		//datePanel.setAlignmentX(CENTER_ALIGNMENT);
 		tfDatum = new JFormattedTextField(df);
@@ -107,7 +109,7 @@ public class EingabeMaske extends JFrame {
 		datePanel.add(tfDatum);
 
 		// Container und Elemente der Bezeichnung-Eingabe
-		JPanel bezeichnungPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		JPanel bezeichnungPanel = new JPanel(fl);
 		bezeichnungPanel.setBackground(Color.LIGHT_GRAY);
 		nameBezeichnung = new JLabel("Bezeichnung");
 		nameBezeichnung.setPreferredSize(eingabeSize);
@@ -117,8 +119,8 @@ public class EingabeMaske extends JFrame {
 		bezeichnungPanel.add(tfBezeichnung);
 
 		// Container und Elemente der Betrag-Eingabe
-		JPanel betragPanel = new JPanel();
-		betragPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+		JPanel betragPanel = new JPanel(fl);
+		//betragPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
 		nameBetrag = new JLabel("Betrag");
 		nameBetrag.setPreferredSize(eingabeSize);
 		tfBetrag = new JFormattedTextField();
@@ -128,7 +130,7 @@ public class EingabeMaske extends JFrame {
 		betragPanel.add(tfBetrag);
 
 		// Container und Elemente der Kategorie-Eingabe
-		kategoriePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		kategoriePanel = new JPanel(fl);
 		nameKategorie = new JLabel("Kategorie");
 		nameKategorie.setPreferredSize(eingabeSize);
 		kategoriePanel.add(nameKategorie);
@@ -152,7 +154,7 @@ public class EingabeMaske extends JFrame {
 		ButtonGroup group = new ButtonGroup();
 		group.add(RButtonEinnahme);
 		group.add(RButtonAusgabe);
-		JPanel panelEinnameAusgabe = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		JPanel panelEinnameAusgabe = new JPanel(fl);
 		nameEinnahmeAusgabe = new JLabel("Wählen Sie");
 		nameEinnahmeAusgabe.setPreferredSize(eingabeSize);
 
@@ -161,7 +163,8 @@ public class EingabeMaske extends JFrame {
 		panelEinnameAusgabe.add(RButtonAusgabe);
 
 		// Container für Save und Delete Buttons
-		JPanel panelForButtonSpeicherUndLoeschen = new JPanel(new FlowLayout(FlowLayout.CENTER));
+		FlowLayout flForButtons = new FlowLayout(FlowLayout.LEFT,80,15);
+		JPanel panelForButtonSpeicherUndLoeschen = new JPanel(flForButtons);
 		panelForButtonSpeicherUndLoeschen.setBackground(Color.LIGHT_GRAY);
 		saveButton = new JButton("Speichern");
 		deleteButton = new JButton("Löschen");
