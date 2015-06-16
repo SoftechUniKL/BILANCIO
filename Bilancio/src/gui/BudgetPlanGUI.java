@@ -1,6 +1,7 @@
 package gui;
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -32,6 +33,7 @@ import javax.swing.UIManager;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableRowSorter;
 
@@ -147,8 +149,27 @@ public class BudgetPlanGUI extends JFrame {
 		tableModel = new MyTableModel(data, new Object[] { "Datum", "Kategorie",
 				"Bezeichnung", "Betrag", "Transaktionsart" });
 
-		table = new JTable(tableModel);
+		table = new JTable(tableModel){
 
+			/**
+			 *  Tabelle für die Liste der Transaktionenen
+			 */
+			private static final long serialVersionUID = 1L;
+			
+			public Component prepareRenderer(TableCellRenderer renderer, int row, int column)
+			{
+				Component c = super.prepareRenderer(renderer, row, column);
+
+				//  Alternate row color
+
+				if (!isRowSelected(row))
+					c.setBackground(row % 2 == 0 ? getBackground() : Color.LIGHT_GRAY);
+
+				return c;
+			}
+			
+		};
+	
 		einAusgabeColumn = table.getColumnModel().getColumn(4);
 		einAusgabeCombobox = new JComboBox();
 		einAusgabeCombobox.addItem("Einnahme");
@@ -251,7 +272,8 @@ public class BudgetPlanGUI extends JFrame {
 		table.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
 		    public void valueChanged(ListSelectionEvent event) {
 		     boolean evt =	event.getValueIsAdjusting();
-		        if (table.getSelectedRow() >= 0 && evt==false) {
+		     int selectedRow = table.getSelectedRow();
+		        if ( selectedRow >-1 && evt==false) {
 		            // print first column value from selected row
 		        	System.out.println("Ausgewählte Zeile:" + table.getSelectedRow());
 		            System.out.print(table.getValueAt(table.getSelectedRow(), 0).toString());
@@ -259,7 +281,9 @@ public class BudgetPlanGUI extends JFrame {
 		            System.out.print("\t"+table.getValueAt(table.getSelectedRow(), 2).toString());
 		            System.out.print("\t"+table.getValueAt(table.getSelectedRow(), 3).toString());
 		            System.out.println("\t"+table.getValueAt(table.getSelectedRow(), 4).toString());
+		            
 		        }
+		        
 		    }
 		});
 			
@@ -578,6 +602,9 @@ public class BudgetPlanGUI extends JFrame {
 						.setCellEditor(new DefaultCellEditor(einAusgabeCombobox));
 
 				table.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+				
+				
+				
 				scrollpane = new JScrollPane(table);
 				System.out.println("Tabele wurde gerade geupdatet: Zeilenanzahl = " + tableModel.getRowCount());
 	}
