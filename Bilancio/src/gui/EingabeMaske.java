@@ -53,7 +53,9 @@ public class EingabeMaske extends JFrame {
 	static JFormattedTextField tfBetrag;
 	static JComboBox<String> cbKategorieEinnahme;
 	static JComboBox<String> cbKategorieAusgabe;
-
+	static JComboBox<String> cbMonate;
+	static JComboBox<String> cbTag;
+	static JComboBox<String> cbJahr;
 	static JRadioButton RButtonEinnahme;
 	static JRadioButton RButtonAusgabe;
 
@@ -62,6 +64,9 @@ public class EingabeMaske extends JFrame {
 	static JLabel nameBetrag;
 	static JLabel nameKategorie;
 	static JLabel nameEinnahmeAusgabe;
+	static String[] listeMonate;
+	static String[] listeTag;
+	static String[] listeJahre;
 	static String[] listeEinnahmen;
 	static String[] listeAusgaben;
 	static JPanel kategoriePanel;
@@ -103,11 +108,36 @@ public class EingabeMaske extends JFrame {
 		//datePanel.setAlignmentX(CENTER_ALIGNMENT);
 		tfDatum = new JFormattedTextField(df);
 		tfDatum.setColumns(10);
+		
 		nameDatum = new JLabel("Datum");
 		nameDatum.setPreferredSize(eingabeSize);
 		datePanel.add(nameDatum);
-		datePanel.add(tfDatum);
-
+		listeMonate = new String[] { "Januar", "Februar", "März","April","Mai","Juni","Juli"
+		,"August","September","Oktober","November","Dezember" };
+		
+		cbMonate= new JComboBox<String>(listeMonate);
+		//datePanel.add(tfDatum);
+		datePanel.add(cbMonate);
+		
+		listeTag = new String[] { "1", "2", "3","4","5","6","7"
+				,"8","9","10","11","12","13","14","15","16","17","18",
+				"19","20","21","22","23","24","25","26","27",
+				"28","29","30","31"};
+				
+				cbTag= new JComboBox<String>(listeTag);
+				//datePanel.add(tfDatum);
+				datePanel.add(cbTag);
+				
+		listeJahre= new String[] { "2010", "2011","2012","2013","2014","2015","2016"
+						,"2017","2018","2018","2019","2020","2021","2022","2023","2024","2025","2026",
+						"2027","2028","2029","2030","2031","2032","2033","2034","2035",
+						"2036","2037","2038","2039","2040"};
+						
+						cbJahr= new JComboBox<String>(listeJahre);
+						//datePanel.add(tfDatum);
+						datePanel.add(cbJahr);
+		
+		
 		// Container und Elemente der Bezeichnung-Eingabe
 		JPanel bezeichnungPanel = new JPanel(fl);
 		bezeichnungPanel.setBackground(Color.LIGHT_GRAY);
