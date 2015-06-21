@@ -81,9 +81,10 @@ public class EingabeMaske extends JFrame {
 	static MyTableModel tableModel;
 
 	// public static void main(String[] args) {
-	public EingabeMaske(BudgetPlanModel budget, MyTableModel tableModel) {
-		this.budget = budget;
-		this.tableModel = tableModel;
+	//public EingabeMaske(BudgetPlanModel budget, MyTableModel tableModel) {
+	public EingabeMaske(){
+//		this.budget = budget;
+//		this.tableModel = tableModel;
 
 		Dimension eingabeSize = new Dimension(150, 20);
 		FlowLayout fl = new FlowLayout(FlowLayout.LEFT,1,15);
@@ -354,6 +355,8 @@ public class EingabeMaske extends JFrame {
 
 	// Eingabe speichern
 	public static void saveEingabe() {
+		
+		
 
 		Date datum = null;
 		String dat = tfDatum.getText();
@@ -395,6 +398,10 @@ public class EingabeMaske extends JFrame {
 		budget.ausgaben.add(new Posten(datum, kategorie, bezeichnung, betrag
 				.doubleValue(), transaktionsArt));
 
+		
+		budget.tell("New Transaction has been added.");
+		
+		/*
 		CSVWriter writer = null;
 		String[] line = new String[5];
 		String str;
@@ -424,6 +431,7 @@ public class EingabeMaske extends JFrame {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
+		*/
 	}
 
 	public static void deleteInput() {
