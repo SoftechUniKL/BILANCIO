@@ -280,8 +280,6 @@ public class BudgetPlanGUI extends JFrame {
 		buttonContailer.add(button);
 		buttonContailer.add(prognose);
 		
-		buttonContailer.add(testTextField);
-		
 		getContentPane().add(buttonContailer);
 	
 		//getContentPane().add(prognosePanel);
