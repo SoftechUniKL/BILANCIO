@@ -40,9 +40,7 @@ public class BudgetPlanModel extends  Observable{
 		ReadFile rFile = new ReadFile(filename, ausgaben);
 		rFile.readDatafromFile();
 		
-
 		WriteFile wFile = new WriteFile(filename, ausgaben);
-		
 		
 		this.addObserver(wFile);
 		tell("Model has changed.");

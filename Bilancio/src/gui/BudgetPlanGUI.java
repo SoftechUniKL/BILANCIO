@@ -14,9 +14,12 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.temporal.JulianFields;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Observable;
+import java.util.Observer;
 
 import javax.swing.BoxLayout;
 import javax.swing.DefaultCellEditor;
@@ -51,6 +54,7 @@ import org.jfree.data.xy.DefaultXYDataset;
 
 import probe.ProbeMaske;
 import probe.ProbeMaske2;
+import utility.WriteFile;
 
 import com.opencsv.CSVWriter;
 
@@ -91,11 +95,13 @@ public class BudgetPlanGUI extends JFrame {
 	private ChartPanel panelAusgabe;
 	private   ChartPanel panelPrognose;
 	private int row;
+	
+	static private JTextField  testTextField;
 
 	/**
 	 * Modell der Daten
 	 */
-	private BudgetPlanModel budget;
+	static public BudgetPlanModel budget;
 
 	/**
 	 * Konstruktor fuer die GUI.
@@ -106,11 +112,14 @@ public class BudgetPlanGUI extends JFrame {
 	 *            Modell der Daten
 	 */
 	public BudgetPlanGUI(BudgetPlanModel budget) {
+	
 		super("BILANCIO");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		getContentPane().setLayout(new FlowLayout());
 
-		this.budget = budget;
+		BudgetPlanGUI.budget = budget;
+//		 this.budget = new BudgetPlanModel();
+		
 		initWindow(); // Initialisierung des Frameinhalts
 		addBehavior(); // Verhalten der GUI Elemente dieses Frames
 		addPosten(tableModel); // Die Tabelle um eine Zeile erweitern
@@ -241,6 +250,7 @@ public class BudgetPlanGUI extends JFrame {
 	    prognose = new JButton("       Prognose        ");
 	    
 	    // Chart für Prognose
+	    //TODO: Durch Werte aus der Datei ersetzen.
 	    DefaultCategoryDataset dataset = new DefaultCategoryDataset( );
 	    dataset.addValue( -30 , "Kontostand" , "1. Mon" );
 	    dataset.addValue( -60 , "Kontostand" , "2. Mon" );
@@ -269,6 +279,9 @@ public class BudgetPlanGUI extends JFrame {
 		buttonContailer.add(showkontostand);
 		buttonContailer.add(button);
 		buttonContailer.add(prognose);
+		
+		buttonContailer.add(testTextField);
+		
 		getContentPane().add(buttonContailer);
 	
 		//getContentPane().add(prognosePanel);
@@ -365,7 +378,10 @@ public class BudgetPlanGUI extends JFrame {
 				
 				System.out.println("Anzahl der Zeilen vor update = "+table.getRowCount());
 				System.out.println("Anzahl der Liste vor update = "+budget.ausgaben.size());
-				final EingabeMaske pMaske = new EingabeMaske (budget, (MyTableModel) tableModel);
+				//final EingabeMaske pMaske = new EingabeMaske (budget, (MyTableModel) tableModel);
+				final EingabeMaske pMaske = new EingabeMaske ();
+				pMaske.budget = budget;
+				pMaske.tableModel = BudgetPlanGUI.tableModel;
 				
 				/*tableModel.addRow(new Object[5]);
 				int lastRow =tableModel.getRowCount();
@@ -469,7 +485,10 @@ public class BudgetPlanGUI extends JFrame {
 				System.out.println("Ausgaben: " + pdAusgabe.getKeys());
 
 				// in einer datei schreiben
-				budget.writeDataIntoFile();
+				//();budget.writeDataIntoFile
+				//WriteFile wFile = new WriteFile(budget.filename, budget.ausgaben);
+				
+				budget.tell("A Transaction has been deleted.");
 				// CSVWriter writer = null;
 				// String[] line = new String[4];
 				// String str;
@@ -548,39 +567,41 @@ public class BudgetPlanGUI extends JFrame {
 
 				budget.ausgaben.add(new Posten(datum, kategorie, bezeichnung, betrag,
 						Transaktionsart));
+				
+				budget.tell("Save Table.");
 
-				CSVWriter writer = null;
-				String[] line = new String[5];
-				String str;
-				try {
-					writer = new CSVWriter(new FileWriter("data/budget.csv"),
-							'#', CSVWriter.NO_QUOTE_CHARACTER);
-
-					NumberFormat nf = NumberFormat.getInstance(Locale.GERMAN);
-					int i = 0;
-					for (Posten p : budget.ausgaben) {
-						//
-
-						line[0] = new SimpleDateFormat("dd.MM.yyyy").format(p
-								.getDatum());
-						line[2] = p.getBezeichnung();
-						// line[2] = ;
-						line[3] = Double.toString(p.getBetrag());
-						// line[2] = String.format("%.2f", p.getBetrag());
-						line[1] = p.getKategorie().toString();
-						line [4]= p.getTransaktionsart();
-
-						writer.writeNext(line);
-						i++;
-
-					}
-
-					writer.close();
-
-				} catch (IOException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
+//				CSVWriter writer = null;
+//				String[] line = new String[5];
+//				String str;
+//				try {
+//					writer = new CSVWriter(new FileWriter("data/budget.csv"),
+//							'#', CSVWriter.NO_QUOTE_CHARACTER);
+//
+//					NumberFormat nf = NumberFormat.getInstance(Locale.GERMAN);
+//					int i = 0;
+//					for (Posten p : budget.ausgaben) {
+//						//
+//
+//						line[0] = new SimpleDateFormat("dd.MM.yyyy").format(p
+//								.getDatum());
+//						line[2] = p.getBezeichnung();
+//						// line[2] = ;
+//						line[3] = Double.toString(p.getBetrag());
+//						// line[2] = String.format("%.2f", p.getBetrag());
+//						line[1] = p.getKategorie().toString();
+//						line [4]= p.getTransaktionsart();
+//
+//						writer.writeNext(line);
+//						i++;
+//
+//					}
+//
+//					writer.close();
+//
+//				} catch (IOException e1) {
+//					// TODO Auto-generated catch block
+//					e1.printStackTrace();
+//				}
 
 			}
 
@@ -666,5 +687,6 @@ public class BudgetPlanGUI extends JFrame {
 			}
 		});
 	}
+
 	
 }
