@@ -45,11 +45,14 @@ public class EingabeMaske extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 
-	private static SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy",
+	private static SimpleDateFormat df = new SimpleDateFormat("dd.MM.yyyy",
 			Locale.GERMANY);
 	private static NumberFormat nf = NumberFormat.getInstance(Locale.GERMANY);
 	private static Date today;
 	static String todayFormated = "";
+	
+	static Date selectedDate ;
+	static JDatePickerImpl datePicker;
 
 	static JButton saveButton;
 	static JButton deleteButton;
@@ -121,7 +124,7 @@ public class EingabeMaske extends JFrame {
 		datePanel.add(nameDatum);
 		
 		UtilDateModel model = new UtilDateModel();
-		//model.setDate(20,04,2014);
+		//model.setDate(22,05,2015);
 		// Need this...
 		Properties p = new Properties();
 		p.put("text.today", "Today");
@@ -129,9 +132,12 @@ public class EingabeMaske extends JFrame {
 		p.put("text.year", "Year");
 		JDatePanelImpl datePane = new JDatePanelImpl(model, p);
 		// Don't know about the formatter, but there it is...
-		JDatePickerImpl datePicker = new JDatePickerImpl(datePane, new DateLabelFormatter());
+		 datePicker = new JDatePickerImpl(datePane, new DateLabelFormatter());
 		
 		
+		
+		selectedDate = new Date();
+		todayFormated = df.format(selectedDate.getTime());
 		 
 		
 		
@@ -249,10 +255,11 @@ public class EingabeMaske extends JFrame {
 		frame.setVisible(true);
 
 		try {
-			MaskFormatter dateMask = new MaskFormatter("##/##/####");
+			MaskFormatter dateMask = new MaskFormatter("##.##.####");
 			dateMask.install(tfDatum);
-			tfDatum.setText(todayFormated);
-
+		tfDatum.setText(todayFormated);
+			
+			
 		} catch (ParseException ex) {
 			Logger.getLogger(EingabeMaske.class.getName()).log(Level.SEVERE,
 					null, ex);
@@ -323,8 +330,16 @@ public class EingabeMaske extends JFrame {
 		saveButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				System.out.println("Datum:       " + tfDatum.getText());
+				//System.out.println("Datum:       " + tfDatum.getText());
 
+				selectedDate  =  (Date) datePicker.getModel().getValue();
+				String dDate = new SimpleDateFormat("dd.MM.yyyy").format(selectedDate);
+				System.out.println("Datum: Picker :       " + dDate);
+				
+				tfDatum.setText(dDate);
+				System.out.println("Datum:       " + tfDatum.getText());
+				
+				
 				System.out.println("Bezeichnung: " + tfBezeichnung.getText());
 
 				try {
