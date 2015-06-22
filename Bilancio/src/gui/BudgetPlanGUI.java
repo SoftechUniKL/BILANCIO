@@ -70,7 +70,7 @@ public class BudgetPlanGUI extends JFrame {
 	/**
 	 * Tabelle mit Uebersicht der Ausgaben
 	 */
-	private JTable table;
+	private static JTable table;
 	public static MyTableModel tableModel;
 	private Object[][] data;
 	/**
@@ -134,7 +134,7 @@ public class BudgetPlanGUI extends JFrame {
 		showKonto();
 		showPrognose();
 		saveTableChange ();
-		deletePosten(tableModel);
+		deletePosten();
 		setBounds(10, 10, 800, 800); // Groesse des Frames
 		setVisible(true); // Frame wird sichtbar
 
@@ -175,16 +175,30 @@ public class BudgetPlanGUI extends JFrame {
 		JMenu posten = new JMenu ("Posten");
 		addPostenMenu = new JMenuItem ("Posten hinzufügen");
 		JMenuItem deletePostenMenu = new JMenuItem ("Posten löschen");
-		
 		posten.add(addPostenMenu);
 		posten.add(deletePostenMenu);
-		
-		
 		menubar.add(posten);
 		
 		
+		JMenu prognosebutton = new JMenu ("Prognose");
+		menubar.add(prognosebutton);
+		
 		JMenu hilfe = new JMenu ("Hilfe");
+		JMenuItem about = new JMenuItem ("Über uns");
+		JMenuItem kontakt = new JMenuItem ("Kontakt");
+		hilfe.add(about);
+		hilfe.add(kontakt);
 		menubar.add(hilfe);
+		
+		
+		class exitaction implements ActionListener {
+			public void actionPerformed (ActionEvent e){
+				System.exit(0); 
+				
+			}
+		}
+		
+		exit.addActionListener(new exitaction());
 		
 		
 		class addPosten implements ActionListener {
@@ -590,7 +604,7 @@ public class BudgetPlanGUI extends JFrame {
 	String removedPosten;
 
 	// Eine Zeile in einer Tabelle löschen
-	public void deletePosten(final DefaultTableModel tableModel) {
+	public void deletePosten() {
 		// registriere den ActionListener fuer den Button als anonyme Klasse
 		deletePosten.addActionListener(new ActionListener() {
 			@Override
