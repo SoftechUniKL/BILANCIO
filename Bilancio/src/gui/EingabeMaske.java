@@ -15,6 +15,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -30,6 +31,11 @@ import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.text.MaskFormatter;
 
+import org.jdatepicker.impl.JDatePanelImpl;
+import org.jdatepicker.impl.JDatePickerImpl;
+import org.jdatepicker.impl.UtilDateModel;
+
+import utility.DateLabelFormatter;
 import model.BudgetPlanModel;
 import model.Posten;
 
@@ -113,31 +119,52 @@ public class EingabeMaske extends JFrame {
 		nameDatum = new JLabel("Datum");
 		nameDatum.setPreferredSize(eingabeSize);
 		datePanel.add(nameDatum);
-		listeMonate = new String[] { "Januar", "Februar", "März","April","Mai","Juni","Juli"
-		,"August","September","Oktober","November","Dezember" };
 		
-		cbMonate= new JComboBox<String>(listeMonate);
+		UtilDateModel model = new UtilDateModel();
+		//model.setDate(20,04,2014);
+		// Need this...
+		Properties p = new Properties();
+		p.put("text.today", "Today");
+		p.put("text.month", "Month");
+		p.put("text.year", "Year");
+		JDatePanelImpl datePane = new JDatePanelImpl(model, p);
+		// Don't know about the formatter, but there it is...
+		JDatePickerImpl datePicker = new JDatePickerImpl(datePane, new DateLabelFormatter());
+		
+		
+		 
+		
+		
+		
+		datePanel.add(datePicker);
+		
+		
+		
+//		listeMonate = new String[] { "Januar", "Februar", "März","April","Mai","Juni","Juli"
+//		,"August","September","Oktober","November","Dezember" };
+//		
+//		cbMonate= new JComboBox<String>(listeMonate);
 		//datePanel.add(tfDatum);
-		datePanel.add(cbMonate);
-		
-		listeTag = new String[] { "1", "2", "3","4","5","6","7"
-				,"8","9","10","11","12","13","14","15","16","17","18",
-				"19","20","21","22","23","24","25","26","27",
-				"28","29","30","31"};
-				
-				cbTag= new JComboBox<String>(listeTag);
-				//datePanel.add(tfDatum);
-				datePanel.add(cbTag);
-				
-		listeJahre= new String[] { "2010", "2011","2012","2013","2014","2015","2016"
-						,"2017","2018","2018","2019","2020","2021","2022","2023","2024","2025","2026",
-						"2027","2028","2029","2030","2031","2032","2033","2034","2035",
-						"2036","2037","2038","2039","2040"};
-						
-						cbJahr= new JComboBox<String>(listeJahre);
-						//datePanel.add(tfDatum);
-						datePanel.add(cbJahr);
-		
+//		datePanel.add(cbMonate);
+//		
+//		listeTag = new String[] { "1", "2", "3","4","5","6","7"
+//				,"8","9","10","11","12","13","14","15","16","17","18",
+//				"19","20","21","22","23","24","25","26","27",
+//				"28","29","30","31"};
+//				
+//				cbTag= new JComboBox<String>(listeTag);
+//				//datePanel.add(tfDatum);
+//				datePanel.add(cbTag);
+//				
+//		listeJahre= new String[] { "2010", "2011","2012","2013","2014","2015","2016"
+//						,"2017","2018","2018","2019","2020","2021","2022","2023","2024","2025","2026",
+//						"2027","2028","2029","2030","2031","2032","2033","2034","2035",
+//						"2036","2037","2038","2039","2040"};
+//						
+//						cbJahr= new JComboBox<String>(listeJahre);
+//						//datePanel.add(tfDatum);
+//						datePanel.add(cbJahr);
+//		
 		
 		// Container und Elemente der Bezeichnung-Eingabe
 		JPanel bezeichnungPanel = new JPanel(fl);
@@ -400,38 +427,7 @@ public class EingabeMaske extends JFrame {
 
 		
 		budget.tell("New Transaction has been added.");
-		
-		/*
-		CSVWriter writer = null;
-		String[] line = new String[5];
-		String str;
-		try {
-			writer = new CSVWriter(new FileWriter("data/budget.csv"), '#',
-					CSVWriter.NO_QUOTE_CHARACTER);
 
-			NumberFormat nf = NumberFormat.getInstance(Locale.GERMAN);
-			int i = 0;
-			for (Posten p : budget.ausgaben) {
-
-				line[0] = new SimpleDateFormat("dd.MM.yyyy").format(p
-						.getDatum());
-				line[2] = p.getBezeichnung();
-				line[3] = Double.toString(p.getBetrag());
-				line[1] = p.getKategorie().toString();
-				line[4] = p.getTransaktionsart();
-
-				writer.writeNext(line);
-				i++;
-
-			}
-
-			writer.close();
-
-		} catch (IOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-		*/
 	}
 
 	public static void deleteInput() {
