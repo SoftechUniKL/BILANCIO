@@ -27,6 +27,9 @@ import javax.swing.GroupLayout;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -95,6 +98,7 @@ public class BudgetPlanGUI extends JFrame {
 	private ChartPanel panelAusgabe;
 	private   ChartPanel panelPrognose;
 	private int row;
+	static JMenuItem addPostenMenu;
 	
 	static private JTextField  testTextField;
 
@@ -144,6 +148,193 @@ public class BudgetPlanGUI extends JFrame {
 					.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
 		} catch (Exception e) {
 		}
+		
+		
+		
+		
+		JMenuBar menubar = new JMenuBar();
+		
+		this.setJMenuBar(menubar);
+	
+		
+		JMenu datei = new JMenu ("Datei");
+		JMenuItem dateiOeffnen = new JMenuItem ("Datei öffnen");
+		JMenuItem dateiSpeichern = new JMenuItem ("Datei speichern");
+		JMenuItem exit = new JMenuItem ("Programm beenden");
+		datei.add(dateiOeffnen);
+		datei.add(dateiSpeichern);
+		datei.add(exit);
+		
+		menubar.add(datei);
+		
+		
+		JMenu ansicht = new JMenu ("Ansicht");
+		menubar.add(ansicht);
+		
+		
+		JMenu posten = new JMenu ("Posten");
+		addPostenMenu = new JMenuItem ("Posten hinzufügen");
+		JMenuItem deletePostenMenu = new JMenuItem ("Posten löschen");
+		
+		posten.add(addPostenMenu);
+		posten.add(deletePostenMenu);
+		
+		
+		menubar.add(posten);
+		
+		
+		JMenu hilfe = new JMenu ("Hilfe");
+		menubar.add(hilfe);
+		
+		
+		class addPosten implements ActionListener {
+			public void actionPerformed (ActionEvent e)
+			{
+				
+				System.out.println("Anzahl der Zeilen vor update = "+table.getRowCount());
+				System.out.println("Anzahl der Liste vor update = "+budget.ausgaben.size());
+				//final EingabeMaske pMaske = new EingabeMaske (budget, (MyTableModel) tableModel);
+				final EingabeMaske pMaske = new EingabeMaske ();
+				pMaske.budget = budget;
+				pMaske.tableModel = BudgetPlanGUI.tableModel;
+				
+				
+
+				table.putClientProperty("terminateEditOnFocusLost", true);
+				
+				updateTable( pMaske);
+				
+				System.out.println("Anzahl der Zeilen nach update = "+table.getRowCount());
+				System.out.println("Anzahl der Liste nach update = "+budget.ausgaben.size());
+				
+				getContentPane().repaint();
+			
+				
+				
+			}
+			
+		}
+		
+			addPostenMenu.addActionListener(new addPosten());
+		 
+		// addPostenMenu.setEnabled(false);
+		
+		
+		class deletePosten implements ActionListener {
+			public void actionPerformed (ActionEvent e)
+			{
+				
+				int row = table.getSelectedRow();
+				if (row != -1) {
+					System.out.println("Selecter row : " + row);
+					// was wurde gelöscht: einnahme ode ausgabe
+					removedPosten = (String) tableModel.getValueAt(row, 4);
+					System.out.println("removedPosten   "+removedPosten);
+					// remove selected row from the model
+					tableModel.removeRow(row);
+
+				}
+
+				// PieChart für Einnahme
+				// pdEinnahme-inhalt vor löschen
+				System.out.println("Vor dem Löschen: ");
+				System.out.println("Einnahmen= " + pdEinnahme.getKeys());
+				System.out.println("Ausgaben= " + pdAusgabe.getKeys());
+
+				// Posten aus der Liste löschen
+				budget.ausgaben.remove(row);
+
+				// TODO: bessere Lösung finden
+				// PieChart leeren
+				if (removedPosten.equals("Einnahme")) {
+
+					pdEinnahme.clear();
+					panelEinnahme.removeAll();
+					panelEinnahme.revalidate();
+
+					// Daten für PieChart aus der Tabelle lesen
+					for (Posten p : budget.ausgaben) {
+						if (p.getTransaktionsart().equals("Einnahme"))
+							pdEinnahme.setValue(p.getBezeichnung(),
+									p.getBetrag());
+					}
+
+					panelEinnahme.repaint();
+				}
+
+				if (removedPosten.equals("Ausgabe")) {
+					pdAusgabe.clear();
+					panelAusgabe.removeAll();
+					panelAusgabe.revalidate();
+
+					// Daten für PieChart aus der Tabelle lesen
+					for (Posten p : budget.ausgaben) {
+						if (p.getTransaktionsart().equals("Ausgabe"))
+							pdAusgabe.setValue(p.getBezeichnung(),
+									p.getBetrag());
+					}
+
+					panelAusgabe.repaint();
+
+				}
+
+				// TODO: nach dem Test löschen
+				// pdEinnahme-inhalt nach löschen
+				System.out.println("Nach dem Löschen: ");
+				System.out.println("Einahmen: " + pdEinnahme.getKeys());
+				System.out.println("Ausgaben: " + pdAusgabe.getKeys());
+
+				// in einer datei schreiben
+				//();budget.writeDataIntoFile
+				//WriteFile wFile = new WriteFile(budget.filename, budget.ausgaben);
+				
+				budget.tell("A Transaction has been deleted.");
+				// CSVWriter writer = null;
+				// String[] line = new String[4];
+				// String str;
+				// try {
+				// writer = new CSVWriter(new FileWriter("data/budget.csv"),
+				// '#', CSVWriter.NO_QUOTE_CHARACTER);
+				//
+				// int i = 0;
+				// for (Posten p : budget.ausgaben) {
+				// //
+				//
+				// line[0] = new SimpleDateFormat("dd.MM.yyyy").format(p
+				// .getDatum());
+				// line[1] = p.getBezeichnung();
+				// line[2] = Double.toString(p.getBetrag());
+				// // line[2] = String.format("%.2f", p.getBetrag());
+				// line[3] = p.getKategorie().toString();
+				//
+				// writer.writeNext(line);
+				// i++;
+				//
+				// }
+				//
+				// writer.close();
+				//
+				// } catch (IOException e1) {
+				// // TODO Auto-generated catch block
+				// e1.printStackTrace();
+				// }
+
+			}
+			
+				
+				
+			}
+			
+		
+		deletePostenMenu.addActionListener(new deletePosten());
+		 
+		// deletePostenMenu.setEnabled(false);
+		
+		
+		
+		 
+		 
+		
 
 		// Tabelle mit Uebersicht der Ausgaben
 		data = new Object[budget.ausgaben.size()][5];
@@ -381,26 +572,8 @@ public class BudgetPlanGUI extends JFrame {
 				pMaske.budget = budget;
 				pMaske.tableModel = BudgetPlanGUI.tableModel;
 				
-				/*tableModel.addRow(new Object[5]);
-				int lastRow =tableModel.getRowCount();
-				*/
 				
-				/*
-				pMaske.tfDatum.getText();
-//				pMaske.cbKategorieAusgabe.getSelectedIndex();
-				pMaske.tfBezeichnung.getText();
-				pMaske.Betrag.doubleValue();
-				pMaske.transaktionsArt.toString();
-				*/
-				
-				/*
-				tableModel.setValueAt(55, lastRow-1, 3);
-				tableModel.setValueAt(55, lastRow-1, 3);
-				tableModel.setValueAt(55, lastRow-1, 3);
-				
-				*/
-				
-//
+
 				table.putClientProperty("terminateEditOnFocusLost", true);
 				
 				updateTable( pMaske);
@@ -685,6 +858,11 @@ public class BudgetPlanGUI extends JFrame {
 			}
 		});
 	}
+	
+	
+	
+	
 
+	
 	
 }
