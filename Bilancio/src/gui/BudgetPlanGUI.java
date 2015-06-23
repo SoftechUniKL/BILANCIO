@@ -36,6 +36,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
 import javax.swing.UIManager;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -177,7 +178,8 @@ public class BudgetPlanGUI extends JFrame {
 
 		JMenu posten = new JMenu("Posten");
 		addPostenMenu = new JMenuItem("Posten hinzufügen");
-		JMenuItem deletePostenMenu = new JMenuItem("Posten löschen");
+		final JMenuItem deletePostenMenu = new JMenuItem("Posten löschen");
+		deletePostenMenu.setEnabled(false);
 		posten.add(addPostenMenu);
 		posten.add(deletePostenMenu);
 		menubar.add(posten);
@@ -476,7 +478,16 @@ public class BudgetPlanGUI extends JFrame {
 
 		addPostenMenu.addActionListener(new addPosten());
 
-		// addPostenMenu.setEnabled(false);
+		class enableDeletePosten implements ActionListener {
+			public void actionPerformed(ActionEvent e) {
+				
+
+			}
+		}
+
+		
+		
+		
 
 		class deletePosten implements ActionListener {
 			public void actionPerformed(ActionEvent e) {
@@ -589,6 +600,27 @@ public class BudgetPlanGUI extends JFrame {
 			}
 
 		};
+		
+
+		 table.setRowSelectionAllowed(true);
+
+		    table.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+		      public void valueChanged(ListSelectionEvent e) {
+		        String selectedData = null;
+
+		        int selectedRow = table.getSelectedRow();
+		        if (selectedRow > -1) {
+		        	deletePostenMenu.setEnabled(true);
+		        }
+		        	else 
+		        		
+		        		deletePostenMenu.setEnabled(false);
+		        	
+		        
+		        System.out.println("Selected: " + selectedData);
+		      } 
+
+		    });
 
 		table.setRowHeight(25);
 
