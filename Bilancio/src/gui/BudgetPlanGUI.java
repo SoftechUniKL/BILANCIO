@@ -221,7 +221,7 @@ public class BudgetPlanGUI extends JFrame {
 				// double prognose = budget.getPrognose(budget.ausgaben, zeit);
 				double kontostand = budget.getKontostand();
 
-				System.out.println("Prognose für die nächste 12 Monate : "
+				System.out.println("Prognose für die nächste "+zeit+" Monate : "
 						+ (kontostand + zeit * kontostand / zeit));
 
 				// Chart für Prognose
@@ -270,7 +270,7 @@ public class BudgetPlanGUI extends JFrame {
 					// double prognose = budget.getPrognose(budget.ausgaben, zeit);
 					double kontostand = budget.getKontostand();
 
-					System.out.println("Prognose für die nächste 12 Monate : "
+					System.out.println("Prognose für die nächste"+ zeit+" Monate : "
 							+ (kontostand + zeit * kontostand / zeit));
 
 					// Chart für Prognose
@@ -319,7 +319,7 @@ public class BudgetPlanGUI extends JFrame {
 						// double prognose = budget.getPrognose(budget.ausgaben, zeit);
 						double kontostand = budget.getKontostand();
 
-						System.out.println("Prognose für die nächste 12 Monate : "
+						System.out.println("Prognose für die nächste" +zeit+ " Monate : "
 								+ (kontostand + zeit * kontostand / zeit));
 
 						// Chart für Prognose
@@ -368,7 +368,7 @@ public class BudgetPlanGUI extends JFrame {
 							// double prognose = budget.getPrognose(budget.ausgaben, zeit);
 							double kontostand = budget.getKontostand();
 
-							System.out.println("Prognose für die nächste 12 Monate : "
+							System.out.println("Prognose für die nächste"+zeit+" Monate : "
 									+ (kontostand + zeit * kontostand / zeit));
 
 							// Chart für Prognose
