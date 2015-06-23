@@ -8,38 +8,32 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JLabel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
-import javax.swing.text.MaskFormatter;
+
+import model.BudgetPlanModel;
+import model.Posten;
 
 import org.jdatepicker.impl.JDatePanelImpl;
 import org.jdatepicker.impl.JDatePickerImpl;
 import org.jdatepicker.impl.UtilDateModel;
 
 import utility.DateLabelFormatter;
-import model.BudgetPlanModel;
-import model.Posten;
-
-import com.opencsv.CSVWriter;
 
 public class EingabeMaske extends JFrame {
 
@@ -89,15 +83,28 @@ public class EingabeMaske extends JFrame {
 	static JScrollPane scrollpane;
 	static MyTableModel tableModel;
 
-	// public static void main(String[] args) {
-	//public EingabeMaske(BudgetPlanModel budget, MyTableModel tableModel) {
+	
 	public EingabeMaske(){
-//		this.budget = budget;
-//		this.tableModel = tableModel;
+	
+		initWindow();
 
+		// Aktionen um eingegebene Daten zu speichern oder zu löschen
+		saveInput();
+		deleteInput();
+		OnClickEinnahme();
+		OnClickAusgabe();
+
+		frame.pack();
+		frame.setVisible(true);
+
+
+	}
+	
+	void initWindow(){
+		
 		Dimension eingabeSize = new Dimension(150, 20);
 		FlowLayout fl = new FlowLayout(FlowLayout.LEFT,1,15);
-
+		
 		today = new Date();
 		todayFormated = df.format(today.getTime());
 		// System.out.println("Heute ist der "+todayFormated);
@@ -112,10 +119,8 @@ public class EingabeMaske extends JFrame {
 		mainPanel.setLayout(new GridLayout(6, 1));
 
 		// Container und Elemente der Datum-Eingabe
-		
 		JPanel datePanel = new JPanel(fl);
 		datePanel.setBackground(Color.LIGHT_GRAY);
-		//datePanel.setAlignmentX(CENTER_ALIGNMENT);
 		tfDatum = new JFormattedTextField(df);
 		tfDatum.setColumns(10);
 		
@@ -123,54 +128,20 @@ public class EingabeMaske extends JFrame {
 		nameDatum.setPreferredSize(eingabeSize);
 		datePanel.add(nameDatum);
 		
+		// Container und Elemente der DatePicker
 		UtilDateModel model = new UtilDateModel();
-		//model.setDate(22,05,2015);
-		// Need this...
 		Properties p = new Properties();
 		p.put("text.today", "Today");
 		p.put("text.month", "Month");
 		p.put("text.year", "Year");
 		JDatePanelImpl datePane = new JDatePanelImpl(model, p);
-		// Don't know about the formatter, but there it is...
-		 datePicker = new JDatePickerImpl(datePane, new DateLabelFormatter());
-		
-		
-		
+		datePicker = new JDatePickerImpl(datePane, new DateLabelFormatter());
+	
 		selectedDate = new Date();
 		todayFormated = df.format(selectedDate.getTime());
-		 
-		
-		
 		
 		datePanel.add(datePicker);
-		
-		
-		
-//		listeMonate = new String[] { "Januar", "Februar", "März","April","Mai","Juni","Juli"
-//		,"August","September","Oktober","November","Dezember" };
-//		
-//		cbMonate= new JComboBox<String>(listeMonate);
-		//datePanel.add(tfDatum);
-//		datePanel.add(cbMonate);
-//		
-//		listeTag = new String[] { "1", "2", "3","4","5","6","7"
-//				,"8","9","10","11","12","13","14","15","16","17","18",
-//				"19","20","21","22","23","24","25","26","27",
-//				"28","29","30","31"};
-//				
-//				cbTag= new JComboBox<String>(listeTag);
-//				//datePanel.add(tfDatum);
-//				datePanel.add(cbTag);
-//				
-//		listeJahre= new String[] { "2010", "2011","2012","2013","2014","2015","2016"
-//						,"2017","2018","2018","2019","2020","2021","2022","2023","2024","2025","2026",
-//						"2027","2028","2029","2030","2031","2032","2033","2034","2035",
-//						"2036","2037","2038","2039","2040"};
-//						
-//						cbJahr= new JComboBox<String>(listeJahre);
-//						//datePanel.add(tfDatum);
-//						datePanel.add(cbJahr);
-//		
+
 		
 		// Container und Elemente der Bezeichnung-Eingabe
 		JPanel bezeichnungPanel = new JPanel(fl);
@@ -184,7 +155,6 @@ public class EingabeMaske extends JFrame {
 
 		// Container und Elemente der Betrag-Eingabe
 		JPanel betragPanel = new JPanel(fl);
-		//betragPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
 		nameBetrag = new JLabel("Betrag");
 		nameBetrag.setPreferredSize(eingabeSize);
 		tfBetrag = new JFormattedTextField();
@@ -244,40 +214,6 @@ public class EingabeMaske extends JFrame {
 
 		mainPanel.setBackground(Color.BLACK);
 		frame.getContentPane().add(mainPanel);
-
-		// Aktionen um eingegebene Daten zu speichern oder zu löschen
-		saveInput();
-		deleteInput();
-		OnClickEinnahme();
-		OnClickAusgabe();
-
-		frame.pack();
-		frame.setVisible(true);
-
-		try {
-			MaskFormatter dateMask = new MaskFormatter("##.##.####");
-			dateMask.install(tfDatum);
-		tfDatum.setText(todayFormated);
-			
-			
-		} catch (ParseException ex) {
-			Logger.getLogger(EingabeMaske.class.getName()).log(Level.SEVERE,
-					null, ex);
-		}
-
-		String str = tfDatum.getText();
-
-		Date date = null;
-		try {
-			date = df.parse(str);
-			// TODO: Datumeingabe validieren. Prüfe ob die Datumeingabe sinn
-			// macht
-			// Fehler durch POP-Up Fenster anzeigen
-		} catch (ParseException e) {
-			System.out.println("Date invalid");
-			e.printStackTrace();
-		}
-
 	}
 
 	public static void OnClickEinnahme() {
@@ -323,15 +259,17 @@ public class EingabeMaske extends JFrame {
 			}
 		});
 	}
+	
+	/**
+	 *   Wenn der saveButton gedruckt wird, dann werden alle Werte der Textfelder gespeichert
+	 */
 
 	public static void saveInput() {
-		// Wenn der saveButton gedruckt wird, dann werden alle Werte der
-		// Textfelder gespeichert
+		
 		saveButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				//System.out.println("Datum:       " + tfDatum.getText());
-
+				
 				selectedDate  =  (Date) datePicker.getModel().getValue();
 				String dDate = new SimpleDateFormat("dd.MM.yyyy").format(selectedDate);
 				System.out.println("Datum: Picker :       " + dDate);
@@ -397,8 +335,6 @@ public class EingabeMaske extends JFrame {
 
 	// Eingabe speichern
 	public static void saveEingabe() {
-		
-		
 
 		Date datum = null;
 		String dat = tfDatum.getText();
@@ -444,14 +380,16 @@ public class EingabeMaske extends JFrame {
 		budget.tell("New Transaction has been added.");
 
 	}
-
+	
+	/**
+	 * Wenn der deleteButton gedruckt wird, dann werden alle Textfelder gelöscht
+	 */
 	public static void deleteInput() {
-		// Wenn der deleteButton gedruckt wird, dann werden alle Textfelder
-		// gelöscht
+		
 		deleteButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				tfDatum.setText(todayFormated);
+				
 				tfBezeichnung.setText("");
 				tfBetrag.setText("0,00");
 
