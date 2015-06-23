@@ -468,17 +468,17 @@ public class BudgetPlanGUI extends JFrame {
 
 		// Chart für Prognose
 		// TODO: Durch Werte aus der Datei ersetzen.
-		DefaultCategoryDataset dataset = new DefaultCategoryDataset();
-		dataset.addValue(-30, "Kontostand", "1. Mon");
-		dataset.addValue(-60, "Kontostand", "2. Mon");
-		dataset.addValue(-90, "Kontostand", "3. Mon");
-		dataset.addValue(-120, "Kontostand", "4. Mon");
-		JFreeChart lineChart = ChartFactory.createLineChart("Prognose",
-				"Monate", "EURO", dataset, PlotOrientation.VERTICAL, true,
-				true, false);
-
-		panelPrognose = new ChartPanel(lineChart);
-		panelPrognose.setPreferredSize(new java.awt.Dimension(560, 367));
+//		DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+//		dataset.addValue(-30, "Kontostand", "1. Mon");
+//		dataset.addValue(-60, "Kontostand", "2. Mon");
+//		dataset.addValue(-90, "Kontostand", "3. Mon");
+//		dataset.addValue(-120, "Kontostand", "4. Mon");
+//		JFreeChart lineChart = ChartFactory.createLineChart("Prognose",
+//				"Monate", "EURO", dataset, PlotOrientation.VERTICAL, true,
+//				true, false);
+//
+//		panelPrognose = new ChartPanel(lineChart);
+//		panelPrognose.setPreferredSize(new java.awt.Dimension(560, 367));
 
 		// Elemente dem Fenster hinzufuegen:
 		getContentPane().add(scrollpane);
@@ -798,19 +798,45 @@ public class BudgetPlanGUI extends JFrame {
 		prognose.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				
+				int zeit = 12; // monate
+				//double prognose = budget.getPrognose(budget.ausgaben, zeit);
+				double kontostand = budget.getKontostand();
+				
+				System.out.println("Prognose für die nächste 12 Monate : " + (kontostand + zeit*kontostand/zeit ) );
+				
+				// Chart für Prognose
+				// TODO: Durch Werte aus der Datei ersetzen.
+				DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+				for(int i=0; i< zeit;i++){
+					
+					dataset.addValue(kontostand+(i+1)*kontostand/zeit, "Kontostand", i+1 + ".");
+				
+				}
+				
+				JFreeChart lineChart = ChartFactory.createLineChart("Prognose",
+						"Monate", "EURO", dataset, PlotOrientation.VERTICAL, true,
+						true, false);
+
+				panelPrognose = new ChartPanel(lineChart);
+				panelPrognose.setPreferredSize(new java.awt.Dimension(700, 367));
 
 				if (getContentPane().getComponentCount() > 0)
 					getContentPane().remove(panelAusgabe);
-				getContentPane().add(panelPrognose);
-				printAll(getGraphics());
-
+				
 				if (getContentPane().getComponentCount() > 0)
 					getContentPane().remove(panelEinnahme);
+				
+				if (getContentPane().getComponent(0).equals(panelPrognose) )
+						getContentPane().remove(panelPrognose);
+					
 				getContentPane().add(panelPrognose);
 				printAll(getGraphics());
 
-				System.out.println("Prognose für die nächste 12 Monate : "
-						+ budget.getPrognose(budget.ausgaben, 4));
+				
+				
+				
+				
 
 			}
 		});
