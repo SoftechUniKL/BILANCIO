@@ -163,17 +163,22 @@ public class BudgetPlanGUI extends JFrame {
 		datei.add(exit);
 
 		menubar.add(datei);
+		
 
 		JMenu ansicht = new JMenu("Ansicht");
+		JMenuItem diagrammAusgaben = new JMenuItem("Ausgabendiagramm anzeigen");
+		JMenuItem diagrammEinnahmen = new JMenuItem("Einnahmendiagramm anzeigen");
+	    ansicht.add(diagrammEinnahmen);
+	    ansicht.add(diagrammAusgaben);
+	    
 		menubar.add(ansicht);
+		
 
 		JMenu posten = new JMenu("Posten");
 		addPostenMenu = new JMenuItem("Posten hinzufügen");
 		JMenuItem deletePostenMenu = new JMenuItem("Posten löschen");
-
 		posten.add(addPostenMenu);
 		posten.add(deletePostenMenu);
-
 		menubar.add(posten);
 
 		JMenu prognosebutton = new JMenu("Prognose");
@@ -194,6 +199,66 @@ public class BudgetPlanGUI extends JFrame {
 		}
 
 		exit.addActionListener(new exitaction());
+		
+		
+		
+		
+		
+		class eingabenDiagramm implements ActionListener {
+			public void actionPerformed(ActionEvent e) {
+				
+				
+
+				
+					if (getContentPane().getComponentCount() > 0) {
+						getContentPane().remove(panelAusgabe);
+						getContentPane().remove(panelPrognose);
+					}
+					getContentPane().add(panelEinnahme);
+					printAll(getGraphics());
+				}
+				
+				
+			
+			}
+		
+		diagrammEinnahmen.addActionListener(new eingabenDiagramm());
+		
+		class ausgabenDiagramm implements ActionListener {
+			public void actionPerformed(ActionEvent e) {
+				
+				
+
+				
+					if (getContentPane().getComponentCount() > 0) {
+						getContentPane().remove(panelEinnahme);
+						getContentPane().remove(panelPrognose);
+					}
+					getContentPane().add(panelAusgabe);
+					printAll(getGraphics());
+				}
+				
+				
+			
+			}
+				
+				
+
+				
+
+			
+
+		
+		
+		diagrammAusgaben.addActionListener(new ausgabenDiagramm());
+
+		
+		
+		
+		
+		
+		
+		
 
 		class addPosten implements ActionListener {
 			public void actionPerformed(ActionEvent e) {

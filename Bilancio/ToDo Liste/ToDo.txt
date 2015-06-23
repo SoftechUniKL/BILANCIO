@@ -1,0 +1,8 @@
+ Prognose-Algorithmus bearbeiten
+ Zur Zeit in einem Durchgang nur einmal "Posten hinzufügen" möglich
+ "Posten Löschen" nach "Posten hinzufügen" nicht mehr möglich
+ "Transaktionsart" sollte in der Tabellenansicht nicht mehr auswählbar sein
+ Unnötige Buttons löschen
+ Die Option "Posten löschen" grau färben, wenn keine Transaktion ausgewählt ist
+ 
+ 
