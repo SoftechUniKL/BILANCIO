@@ -163,16 +163,17 @@ public class BudgetPlanGUI extends JFrame {
 		datei.add(exit);
 
 		menubar.add(datei);
-		
 
 		JMenu ansicht = new JMenu("Ansicht");
+		JMenuItem tabellenÜbersicht = new JMenuItem("Tabellenansicht");
 		JMenuItem diagrammAusgaben = new JMenuItem("Ausgabendiagramm anzeigen");
-		JMenuItem diagrammEinnahmen = new JMenuItem("Einnahmendiagramm anzeigen");
-	    ansicht.add(diagrammEinnahmen);
-	    ansicht.add(diagrammAusgaben);
-	    
+		JMenuItem diagrammEinnahmen = new JMenuItem(
+				"Einnahmendiagramm anzeigen");
+		ansicht.add(diagrammEinnahmen);
+		ansicht.add(diagrammAusgaben);
+		ansicht.add(tabellenÜbersicht);
+
 		menubar.add(ansicht);
-		
 
 		JMenu posten = new JMenu("Posten");
 		addPostenMenu = new JMenuItem("Posten hinzufügen");
@@ -182,6 +183,15 @@ public class BudgetPlanGUI extends JFrame {
 		menubar.add(posten);
 
 		JMenu prognosebutton = new JMenu("Prognose");
+		JMenuItem dreiMonate = new JMenuItem("3 Monate");
+		JMenuItem sechsMonate = new JMenuItem("6 Monate");
+		JMenuItem neunMonate = new JMenuItem("9 Monate");
+		JMenuItem zwölfMonate = new JMenuItem("12 Monate");
+		prognosebutton.add(dreiMonate);
+		prognosebutton.add(sechsMonate);
+		prognosebutton.add(neunMonate);
+		prognosebutton.add(zwölfMonate);
+		
 		menubar.add(prognosebutton);
 
 		JMenu hilfe = new JMenu("Hilfe");
@@ -199,66 +209,45 @@ public class BudgetPlanGUI extends JFrame {
 		}
 
 		exit.addActionListener(new exitaction());
-		
-		
-		
-		
-		
+
 		class eingabenDiagramm implements ActionListener {
 			public void actionPerformed(ActionEvent e) {
-				
-				
 
-				
-					if (getContentPane().getComponentCount() > 0) {
-						getContentPane().remove(panelAusgabe);
+				if (getContentPane().getComponentCount() > 0) {
+					getContentPane().remove(panelAusgabe);
+					if (panelPrognose != null)
 						getContentPane().remove(panelPrognose);
-					}
-					getContentPane().add(panelEinnahme);
-					printAll(getGraphics());
 				}
-				
-				
-			
+				getContentPane().add(panelEinnahme);
+				printAll(getGraphics());
 			}
-		
+
+		}
+
 		diagrammEinnahmen.addActionListener(new eingabenDiagramm());
-		
+
+		// class übersichtTabelle implements ActionListener {
+		// public void actionPerformed(ActionEvent e) {
+
+		// }
+
+		// tabellenÜbersicht.addActionListener(new übersichtTabelle());
+
 		class ausgabenDiagramm implements ActionListener {
 			public void actionPerformed(ActionEvent e) {
-				
-				
 
-				
-					if (getContentPane().getComponentCount() > 0) {
-						getContentPane().remove(panelEinnahme);
+				if (getContentPane().getComponentCount() > 0) {
+					getContentPane().remove(panelEinnahme);
+					if (panelPrognose != null)
 						getContentPane().remove(panelPrognose);
-					}
-					getContentPane().add(panelAusgabe);
-					printAll(getGraphics());
 				}
-				
-				
-			
+				getContentPane().add(panelAusgabe);
+				printAll(getGraphics());
 			}
-				
-				
 
-				
+		}
 
-			
-
-		
-		
 		diagrammAusgaben.addActionListener(new ausgabenDiagramm());
-
-		
-		
-		
-		
-		
-		
-		
 
 		class addPosten implements ActionListener {
 			public void actionPerformed(ActionEvent e) {
@@ -356,7 +345,7 @@ public class BudgetPlanGUI extends JFrame {
 				System.out.println("Ausgaben: " + pdAusgabe.getKeys());
 
 				budget.tell("A Transaction has been deleted.");
-			
+
 			}
 
 		}
@@ -403,6 +392,8 @@ public class BudgetPlanGUI extends JFrame {
 			}
 
 		};
+
+		table.setRowHeight(25);
 
 		table.getTableHeader().setOpaque(false);
 		table.getTableHeader().setBackground(Color.GRAY);
@@ -468,17 +459,17 @@ public class BudgetPlanGUI extends JFrame {
 
 		// Chart für Prognose
 		// TODO: Durch Werte aus der Datei ersetzen.
-//		DefaultCategoryDataset dataset = new DefaultCategoryDataset();
-//		dataset.addValue(-30, "Kontostand", "1. Mon");
-//		dataset.addValue(-60, "Kontostand", "2. Mon");
-//		dataset.addValue(-90, "Kontostand", "3. Mon");
-//		dataset.addValue(-120, "Kontostand", "4. Mon");
-//		JFreeChart lineChart = ChartFactory.createLineChart("Prognose",
-//				"Monate", "EURO", dataset, PlotOrientation.VERTICAL, true,
-//				true, false);
-//
-//		panelPrognose = new ChartPanel(lineChart);
-//		panelPrognose.setPreferredSize(new java.awt.Dimension(560, 367));
+		// DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+		// dataset.addValue(-30, "Kontostand", "1. Mon");
+		// dataset.addValue(-60, "Kontostand", "2. Mon");
+		// dataset.addValue(-90, "Kontostand", "3. Mon");
+		// dataset.addValue(-120, "Kontostand", "4. Mon");
+		// JFreeChart lineChart = ChartFactory.createLineChart("Prognose",
+		// "Monate", "EURO", dataset, PlotOrientation.VERTICAL, true,
+		// true, false);
+		//
+		// panelPrognose = new ChartPanel(lineChart);
+		// panelPrognose.setPreferredSize(new java.awt.Dimension(560, 367));
 
 		// Elemente dem Fenster hinzufuegen:
 		getContentPane().add(scrollpane);
@@ -513,32 +504,29 @@ public class BudgetPlanGUI extends JFrame {
 	}
 
 	/*
-	 public void saveTableChange () {
-	 // Änderung der einzelnen Zeilen in der Tabelle werden direkt übernommen
-	 table.getSelectionModel().addListSelectionListener(new
-	 ListSelectionListener() {
-	 public void valueChanged(ListSelectionEvent event) {
-	 boolean evt = event.getValueIsAdjusting();
-	 int selectedRow = table.getSelectedRow();
-	 if ( selectedRow >-1 && evt==false) {
-	 // print first column value from selected row
-	 System.out.println("Ausgewählte Zeile:" + table.getSelectedRow());
-	 System.out.print(table.getValueAt(table.getSelectedRow(), 0).toString());
-	 System.out.print("\t"+ table.getValueAt(table.getSelectedRow(),
-	 1).toString());
-	 System.out.print("\t"+table.getValueAt(table.getSelectedRow(),
-	 2).toString());
-	 System.out.print("\t"+table.getValueAt(table.getSelectedRow(),
-	 3).toString());
-	 System.out.println("\t"+table.getValueAt(table.getSelectedRow(),
-	 4).toString());
-	
-	 }
-	
-	 }
-	 });
-	
-	 }
+	 * public void saveTableChange () { // Änderung der einzelnen Zeilen in der
+	 * Tabelle werden direkt übernommen
+	 * table.getSelectionModel().addListSelectionListener(new
+	 * ListSelectionListener() { public void valueChanged(ListSelectionEvent
+	 * event) { boolean evt = event.getValueIsAdjusting(); int selectedRow =
+	 * table.getSelectedRow(); if ( selectedRow >-1 && evt==false) { // print
+	 * first column value from selected row
+	 * System.out.println("Ausgewählte Zeile:" + table.getSelectedRow());
+	 * System.out.print(table.getValueAt(table.getSelectedRow(), 0).toString());
+	 * System.out.print("\t"+ table.getValueAt(table.getSelectedRow(),
+	 * 1).toString());
+	 * System.out.print("\t"+table.getValueAt(table.getSelectedRow(),
+	 * 2).toString());
+	 * System.out.print("\t"+table.getValueAt(table.getSelectedRow(),
+	 * 3).toString());
+	 * System.out.println("\t"+table.getValueAt(table.getSelectedRow(),
+	 * 4).toString());
+	 * 
+	 * }
+	 * 
+	 * } });
+	 * 
+	 * }
 	 */
 
 	// Diagrammauswahl
@@ -555,7 +543,9 @@ public class BudgetPlanGUI extends JFrame {
 				if (cb.getSelectedIndex() == 1) {
 					if (getContentPane().getComponentCount() > 0) {
 						getContentPane().remove(panelAusgabe);
-						getContentPane().remove(panelPrognose);
+						if (panelPrognose != null)
+							getContentPane().remove(panelPrognose);
+
 					}
 					getContentPane().add(panelEinnahme);
 					printAll(getGraphics());
@@ -563,7 +553,8 @@ public class BudgetPlanGUI extends JFrame {
 				if (cb.getSelectedIndex() == 2) {
 					if (getContentPane().getComponentCount() > 0) {
 						getContentPane().remove(panelEinnahme);
-						getContentPane().remove(panelPrognose);
+						if (panelPrognose != null)
+							getContentPane().remove(panelPrognose);
 					}
 					getContentPane().add(panelAusgabe);
 					printAll(getGraphics());
@@ -582,7 +573,7 @@ public class BudgetPlanGUI extends JFrame {
 				// "Bezeichnung",
 				// 00.00, "wähle" });
 				//
-				//table.putClientProperty("terminateEditOnFocusLost", true);
+				// table.putClientProperty("terminateEditOnFocusLost", true);
 
 				System.out.println("Anzahl der Zeilen vor update = "
 						+ table.getRowCount());
@@ -594,7 +585,7 @@ public class BudgetPlanGUI extends JFrame {
 				pMaske.budget = budget;
 				pMaske.tableModel = BudgetPlanGUI.tableModel;
 
-				//table.putClientProperty("terminateEditOnFocusLost", true);
+				// table.putClientProperty("terminateEditOnFocusLost", true);
 
 				updateTable(pMaske);
 
@@ -625,53 +616,49 @@ public class BudgetPlanGUI extends JFrame {
 					System.out.println("removedPosten   " + removedPosten);
 					// remove selected row from the model
 					tableModel.removeRow(row);
-					
+
 					// Posten aus der Liste löschen
 					budget.ausgaben.remove(row);
 
-				
+					// PieChart für Einnahme
+					// pdEinnahme-inhalt vor löschen
+					System.out.println("Vor dem Löschen: ");
+					System.out.println("Einnahmen= " + pdEinnahme.getKeys());
+					System.out.println("Ausgaben= " + pdAusgabe.getKeys());
 
-				// PieChart für Einnahme
-				// pdEinnahme-inhalt vor löschen
-				System.out.println("Vor dem Löschen: ");
-				System.out.println("Einnahmen= " + pdEinnahme.getKeys());
-				System.out.println("Ausgaben= " + pdAusgabe.getKeys());
+					// TODO: bessere Lösung finden
+					// PieChart leeren
+					if (removedPosten.equals("Einnahme")) {
 
-				
+						pdEinnahme.clear();
+						panelEinnahme.removeAll();
+						panelEinnahme.revalidate();
 
-				// TODO: bessere Lösung finden
-				// PieChart leeren
-				if (removedPosten.equals("Einnahme")) {
+						// Daten für PieChart aus der Tabelle lesen
+						for (Posten p : budget.ausgaben) {
+							if (p.getTransaktionsart().equals("Einnahme"))
+								pdEinnahme.setValue(p.getBezeichnung(),
+										p.getBetrag());
+						}
 
-					pdEinnahme.clear();
-					panelEinnahme.removeAll();
-					panelEinnahme.revalidate();
-
-					// Daten für PieChart aus der Tabelle lesen
-					for (Posten p : budget.ausgaben) {
-						if (p.getTransaktionsart().equals("Einnahme"))
-							pdEinnahme.setValue(p.getBezeichnung(),
-									p.getBetrag());
+						panelEinnahme.repaint();
 					}
 
-					panelEinnahme.repaint();
-				}
+					if (removedPosten.equals("Ausgabe")) {
+						pdAusgabe.clear();
+						panelAusgabe.removeAll();
+						panelAusgabe.revalidate();
 
-				if (removedPosten.equals("Ausgabe")) {
-					pdAusgabe.clear();
-					panelAusgabe.removeAll();
-					panelAusgabe.revalidate();
+						// Daten für PieChart aus der Tabelle lesen
+						for (Posten p : budget.ausgaben) {
+							if (p.getTransaktionsart().equals("Ausgabe"))
+								pdAusgabe.setValue(p.getBezeichnung(),
+										p.getBetrag());
+						}
 
-					// Daten für PieChart aus der Tabelle lesen
-					for (Posten p : budget.ausgaben) {
-						if (p.getTransaktionsart().equals("Ausgabe"))
-							pdAusgabe.setValue(p.getBezeichnung(),
-									p.getBetrag());
+						panelAusgabe.repaint();
+
 					}
-
-					panelAusgabe.repaint();
-
-				}
 				}
 
 				// TODO: nach dem Test löschen
@@ -681,7 +668,7 @@ public class BudgetPlanGUI extends JFrame {
 				System.out.println("Ausgaben: " + pdAusgabe.getKeys());
 
 				budget.tell("A Transaction has been deleted.");
-			
+
 			}
 
 		});
@@ -798,45 +785,43 @@ public class BudgetPlanGUI extends JFrame {
 		prognose.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				
+
 				int zeit = 12; // monate
-				//double prognose = budget.getPrognose(budget.ausgaben, zeit);
+				// double prognose = budget.getPrognose(budget.ausgaben, zeit);
 				double kontostand = budget.getKontostand();
-				
-				System.out.println("Prognose für die nächste 12 Monate : " + (kontostand + zeit*kontostand/zeit ) );
-				
+
+				System.out.println("Prognose für die nächste 12 Monate : "
+						+ (kontostand + zeit * kontostand / zeit));
+
 				// Chart für Prognose
 				// TODO: Durch Werte aus der Datei ersetzen.
 				DefaultCategoryDataset dataset = new DefaultCategoryDataset();
-				for(int i=0; i< zeit;i++){
-					
-					dataset.addValue(kontostand+(i+1)*kontostand/zeit, "Kontostand", i+1 + ".");
-				
+				for (int i = 0; i < zeit; i++) {
+
+					dataset.addValue(kontostand + (i + 1) * kontostand / zeit,
+							"Kontostand", i + 1 + ".");
+
 				}
-				
+
 				JFreeChart lineChart = ChartFactory.createLineChart("Prognose",
-						"Monate", "EURO", dataset, PlotOrientation.VERTICAL, true,
-						true, false);
+						"Monate", "EURO", dataset, PlotOrientation.VERTICAL,
+						true, true, false);
 
 				panelPrognose = new ChartPanel(lineChart);
-				panelPrognose.setPreferredSize(new java.awt.Dimension(700, 367));
+				panelPrognose
+						.setPreferredSize(new java.awt.Dimension(700, 367));
 
 				if (getContentPane().getComponentCount() > 0)
 					getContentPane().remove(panelAusgabe);
-				
+
 				if (getContentPane().getComponentCount() > 0)
 					getContentPane().remove(panelEinnahme);
-				
-				if (getContentPane().getComponent(0).equals(panelPrognose) )
-						getContentPane().remove(panelPrognose);
-					
+
+				if (getContentPane().getComponent(0).equals(panelPrognose))
+					getContentPane().remove(panelPrognose);
+
 				getContentPane().add(panelPrognose);
 				printAll(getGraphics());
-
-				
-				
-				
-				
 
 			}
 		});

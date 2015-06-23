@@ -25,7 +25,15 @@ public class MyTableModel extends DefaultTableModel{
 			else
 				return String.class; // other columns accept String values
 		}
+		
+		
+		    public boolean isCellEditable(int row, int column)      //override isCellEditable
+		    //PRE:  row > 0, column > 0
+		    //POST: FCTVAL == false always
+		    {
+		        return false;
+		    }
+		}
 
-	}
-
+	
 
