@@ -41,6 +41,7 @@ public class BudgetPlanModel extends  Observable{
 		WriteFile wFile = new WriteFile(filename, ausgaben);
 		
 		this.addObserver(wFile);
+		
 		tell("Model has changed.");
 	}
 		

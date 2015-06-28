@@ -8,6 +8,7 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.text.DateFormat;
@@ -27,6 +28,7 @@ import javax.swing.DefaultCellEditor;
 import javax.swing.GroupLayout;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -67,7 +69,7 @@ import com.opencsv.CSVWriter;
  * Graphische Benutzeroberflaeche des BudgetPlaners
  * 
  */
-public class BudgetPlanGUI extends JFrame {
+public class BudgetPlanGUI extends JFrame implements Observer {
 	private static final long serialVersionUID = 1L;
 	/**
 	 * Tabelle mit Uebersicht der Ausgaben
@@ -117,13 +119,16 @@ public class BudgetPlanGUI extends JFrame {
 	 * @param budget
 	 *            Modell der Daten
 	 */
-	public BudgetPlanGUI(BudgetPlanModel budget) {
+	public BudgetPlanGUI(BudgetPlanModel budget)  {
 
 		super("BILANCIO");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		getContentPane().setLayout(new FlowLayout());
+		
+		getContentPane().setBackground(Color.WHITE);
 
 		BudgetPlanGUI.budget = budget;
+		budget.addObserver(this);
 		// this.budget = new BudgetPlanModel();
 
 		initWindow(); // Initialisierung des Frameinhalts
@@ -193,7 +198,7 @@ public class BudgetPlanGUI extends JFrame {
 		prognosebutton.add(sechsMonate);
 		prognosebutton.add(neunMonate);
 		prognosebutton.add(zwölfMonate);
-		
+
 		menubar.add(prognosebutton);
 
 		JMenu hilfe = new JMenu("Hilfe");
@@ -211,19 +216,22 @@ public class BudgetPlanGUI extends JFrame {
 		}
 
 		exit.addActionListener(new exitaction());
-		
+
 		class prognoseDrei implements ActionListener {
 			int k;
-			public prognoseDrei (int k){
-			this.k = k;	
+
+			public prognoseDrei(int k) {
+				this.k = k;
 			}
+
 			public void actionPerformed(ActionEvent e) {
-				
+
 				int zeit = k; // monate
 				// double prognose = budget.getPrognose(budget.ausgaben, zeit);
 				double kontostand = budget.getKontostand();
 
-				System.out.println("Prognose für die nächste "+zeit+" Monate : "
+				System.out.println("Prognose für die nächste " + zeit
+						+ " Monate : "
 						+ (kontostand + zeit * kontostand / zeit));
 
 				// Chart für Prognose
@@ -255,160 +263,164 @@ public class BudgetPlanGUI extends JFrame {
 
 				getContentPane().add(panelPrognose);
 				printAll(getGraphics());
-				
 
 			}
 		}
-			dreiMonate.addActionListener(new prognoseDrei(3));
+		dreiMonate.addActionListener(new prognoseDrei(3));
 
-			class prognoseSechs implements ActionListener {
-				int k;
-				public prognoseSechs (int k){
-				this.k = k;	
-				}
-				public void actionPerformed(ActionEvent e) {
-					
-					int zeit = k; // monate
-					// double prognose = budget.getPrognose(budget.ausgaben, zeit);
-					double kontostand = budget.getKontostand();
+		class prognoseSechs implements ActionListener {
+			int k;
 
-					System.out.println("Prognose für die nächste"+ zeit+" Monate : "
-							+ (kontostand + zeit * kontostand / zeit));
-
-					// Chart für Prognose
-					// TODO: Durch Werte aus der Datei ersetzen.
-					DefaultCategoryDataset dataset = new DefaultCategoryDataset();
-					for (int i = 0; i < zeit; i++) {
-
-						dataset.addValue(kontostand + (i + 1) * kontostand / zeit,
-								"Kontostand", i + 1 + ".");
-
-					}
-
-					JFreeChart lineChart = ChartFactory.createLineChart("Prognose",
-							"Monate", "EURO", dataset, PlotOrientation.VERTICAL,
-							true, true, false);
-
-					panelPrognose = new ChartPanel(lineChart);
-					panelPrognose
-							.setPreferredSize(new java.awt.Dimension(700, 367));
-
-					if (getContentPane().getComponentCount() > 0)
-						getContentPane().remove(panelAusgabe);
-
-					if (getContentPane().getComponentCount() > 0)
-						getContentPane().remove(panelEinnahme);
-
-					if (getContentPane().getComponent(0).equals(panelPrognose))
-						getContentPane().remove(panelPrognose);
-
-					getContentPane().add(panelPrognose);
-					printAll(getGraphics());
-					
-
-				}
+			public prognoseSechs(int k) {
+				this.k = k;
 			}
-				sechsMonate.addActionListener(new prognoseSechs(6));
-				
-				class prognoseNeun implements ActionListener {
-					int k;
-					public prognoseNeun (int k){
-					this.k = k;	
-					}
-					public void actionPerformed(ActionEvent e) {
-						
-						int zeit = k; // monate
-						// double prognose = budget.getPrognose(budget.ausgaben, zeit);
-						double kontostand = budget.getKontostand();
 
-						System.out.println("Prognose für die nächste" +zeit+ " Monate : "
-								+ (kontostand + zeit * kontostand / zeit));
+			public void actionPerformed(ActionEvent e) {
 
-						// Chart für Prognose
-						// TODO: Durch Werte aus der Datei ersetzen.
-						DefaultCategoryDataset dataset = new DefaultCategoryDataset();
-						for (int i = 0; i < zeit; i++) {
+				int zeit = k; // monate
+				// double prognose = budget.getPrognose(budget.ausgaben, zeit);
+				double kontostand = budget.getKontostand();
 
-							dataset.addValue(kontostand + (i + 1) * kontostand / zeit,
-									"Kontostand", i + 1 + ".");
+				System.out.println("Prognose für die nächste" + zeit
+						+ " Monate : "
+						+ (kontostand + zeit * kontostand / zeit));
 
-						}
+				// Chart für Prognose
+				// TODO: Durch Werte aus der Datei ersetzen.
+				DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+				for (int i = 0; i < zeit; i++) {
 
-						JFreeChart lineChart = ChartFactory.createLineChart("Prognose",
-								"Monate", "EURO", dataset, PlotOrientation.VERTICAL,
-								true, true, false);
+					dataset.addValue(kontostand + (i + 1) * kontostand / zeit,
+							"Kontostand", i + 1 + ".");
 
-						panelPrognose = new ChartPanel(lineChart);
-						panelPrognose
-								.setPreferredSize(new java.awt.Dimension(700, 367));
-
-						if (getContentPane().getComponentCount() > 0)
-							getContentPane().remove(panelAusgabe);
-
-						if (getContentPane().getComponentCount() > 0)
-							getContentPane().remove(panelEinnahme);
-
-						if (getContentPane().getComponent(0).equals(panelPrognose))
-							getContentPane().remove(panelPrognose);
-
-						getContentPane().add(panelPrognose);
-						printAll(getGraphics());
-						
-
-					}
 				}
-					neunMonate.addActionListener(new prognoseNeun(9));
+
+				JFreeChart lineChart = ChartFactory.createLineChart("Prognose",
+						"Monate", "EURO", dataset, PlotOrientation.VERTICAL,
+						true, true, false);
+
+				panelPrognose = new ChartPanel(lineChart);
+				panelPrognose
+						.setPreferredSize(new java.awt.Dimension(700, 367));
+
+				if (getContentPane().getComponentCount() > 0)
+					getContentPane().remove(panelAusgabe);
+
+				if (getContentPane().getComponentCount() > 0)
+					getContentPane().remove(panelEinnahme);
+
+				if (getContentPane().getComponent(0).equals(panelPrognose))
+					getContentPane().remove(panelPrognose);
+
+				getContentPane().add(panelPrognose);
+				printAll(getGraphics());
+
+			}
+		}
+		sechsMonate.addActionListener(new prognoseSechs(6));
+
+		class prognoseNeun implements ActionListener {
+			int k;
+
+			public prognoseNeun(int k) {
+				this.k = k;
+			}
+
+			public void actionPerformed(ActionEvent e) {
+
+				int zeit = k; // monate
+				// double prognose = budget.getPrognose(budget.ausgaben, zeit);
+				double kontostand = budget.getKontostand();
+
+				System.out.println("Prognose für die nächste" + zeit
+						+ " Monate : "
+						+ (kontostand + zeit * kontostand / zeit));
+
+				// Chart für Prognose
+				// TODO: Durch Werte aus der Datei ersetzen.
+				DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+				for (int i = 0; i < zeit; i++) {
+
+					dataset.addValue(kontostand + (i + 1) * kontostand / zeit,
+							"Kontostand", i + 1 + ".");
+
+				}
+
+				JFreeChart lineChart = ChartFactory.createLineChart("Prognose",
+						"Monate", "EURO", dataset, PlotOrientation.VERTICAL,
+						true, true, false);
+				getContentPane().remove(panelPrognose);
+				panelPrognose = new ChartPanel(lineChart);
+				panelPrognose
+						.setPreferredSize(new java.awt.Dimension(700, 367));
+
+				if (getContentPane().getComponentCount() > 0)
+					getContentPane().remove(panelAusgabe);
+
+				if (getContentPane().getComponentCount() > 0)
+					getContentPane().remove(panelEinnahme);
+
+				
 					
-					class prognoseZwölf implements ActionListener {
-						int k;
-						public prognoseZwölf (int k){
-						this.k = k;	
-						}
-						public void actionPerformed(ActionEvent e) {
-							
-							int zeit = k; // monate
-							// double prognose = budget.getPrognose(budget.ausgaben, zeit);
-							double kontostand = budget.getKontostand();
 
-							System.out.println("Prognose für die nächste"+zeit+" Monate : "
-									+ (kontostand + zeit * kontostand / zeit));
+				getContentPane().add(panelPrognose);
+				printAll(getGraphics());
 
-							// Chart für Prognose
-							// TODO: Durch Werte aus der Datei ersetzen.
-							DefaultCategoryDataset dataset = new DefaultCategoryDataset();
-							for (int i = 0; i < zeit; i++) {
+			}
+		}
+		neunMonate.addActionListener(new prognoseNeun(9));
 
-								dataset.addValue(kontostand + (i + 1) * kontostand / zeit,
-										"Kontostand", i + 1 + ".");
+		class prognoseZwölf implements ActionListener {
+			int k;
 
-							}
+			public prognoseZwölf(int k) {
+				this.k = k;
+			}
 
-							JFreeChart lineChart = ChartFactory.createLineChart("Prognose",
-									"Monate", "EURO", dataset, PlotOrientation.VERTICAL,
-									true, true, false);
+			public void actionPerformed(ActionEvent e) {
 
-							panelPrognose = new ChartPanel(lineChart);
-							panelPrognose
-									.setPreferredSize(new java.awt.Dimension(700, 367));
+				int zeit = k; // monate
+				// double prognose = budget.getPrognose(budget.ausgaben, zeit);
+				double kontostand = budget.getKontostand();
 
-							if (getContentPane().getComponentCount() > 0)
-								getContentPane().remove(panelAusgabe);
+				System.out.println("Prognose für die nächste" + zeit
+						+ " Monate : "
+						+ (kontostand + zeit * kontostand / zeit));
 
-							if (getContentPane().getComponentCount() > 0)
-								getContentPane().remove(panelEinnahme);
+				// Chart für Prognose
+				// TODO: Durch Werte aus der Datei ersetzen.
+				DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+				for (int i = 0; i < zeit; i++) {
 
-							if (getContentPane().getComponent(0).equals(panelPrognose))
-								getContentPane().remove(panelPrognose);
+					dataset.addValue(kontostand + (i + 1) * kontostand / zeit,
+							"Kontostand", i + 1 + ".");
 
-							getContentPane().add(panelPrognose);
-							printAll(getGraphics());
-							
+				}
 
-						}
-					}
-						zwölfMonate.addActionListener(new prognoseZwölf(12));
-				
-				
+				JFreeChart lineChart = ChartFactory.createLineChart("Prognose",
+						"Monate", "EURO", dataset, PlotOrientation.VERTICAL,
+						true, true, false);
+
+				panelPrognose = new ChartPanel(lineChart);
+				panelPrognose
+						.setPreferredSize(new java.awt.Dimension(700, 367));
+
+				if (getContentPane().getComponentCount() > 0)
+					getContentPane().remove(panelAusgabe);
+
+				if (getContentPane().getComponentCount() > 0)
+					getContentPane().remove(panelEinnahme);
+
+				if (getContentPane().getComponent(0).equals(panelPrognose))
+					getContentPane().remove(panelPrognose);
+
+				getContentPane().add(panelPrognose);
+				printAll(getGraphics());
+
+			}
+		}
+		zwölfMonate.addActionListener(new prognoseZwölf(12));
+
 		class eingabenDiagramm implements ActionListener {
 			public void actionPerformed(ActionEvent e) {
 
@@ -480,14 +492,9 @@ public class BudgetPlanGUI extends JFrame {
 
 		class enableDeletePosten implements ActionListener {
 			public void actionPerformed(ActionEvent e) {
-				
 
 			}
 		}
-
-		
-		
-		
 
 		class deletePosten implements ActionListener {
 			public void actionPerformed(ActionEvent e) {
@@ -559,6 +566,22 @@ public class BudgetPlanGUI extends JFrame {
 		}
 
 		deletePostenMenu.addActionListener(new deletePosten());
+		
+		class openFile implements ActionListener {
+			public void actionPerformed(ActionEvent e) {
+
+				JFileChooser fc = new JFileChooser();
+				fc.showOpenDialog(null);
+				System.out.println("Open File ....");
+				
+				File file = fc.getSelectedFile();
+
+				System.out.println(file);
+			}
+
+		}
+
+		dateiOeffnen.addActionListener(new openFile());
 
 		// Tabelle mit Uebersicht der Ausgaben
 		data = new Object[budget.ausgaben.size()][5];
@@ -600,27 +623,25 @@ public class BudgetPlanGUI extends JFrame {
 			}
 
 		};
-		
 
-		 table.setRowSelectionAllowed(true);
+		table.setRowSelectionAllowed(true);
 
-		    table.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
-		      public void valueChanged(ListSelectionEvent e) {
-		        String selectedData = null;
+		table.getSelectionModel().addListSelectionListener(
+				new ListSelectionListener() {
+					public void valueChanged(ListSelectionEvent e) {
+						String selectedData = null;
 
-		        int selectedRow = table.getSelectedRow();
-		        if (selectedRow > -1) {
-		        	deletePostenMenu.setEnabled(true);
-		        }
-		        	else 
-		        		
-		        		deletePostenMenu.setEnabled(false);
-		        	
-		        
-		        System.out.println("Selected: " + selectedData);
-		      } 
+						int selectedRow = table.getSelectedRow();
+						if (selectedRow > -1) {
+							deletePostenMenu.setEnabled(true);
+							System.out.println("Selected: " + selectedData);
+						} else
 
-		    });
+							deletePostenMenu.setEnabled(false);
+
+					}
+
+				});
 
 		table.setRowHeight(25);
 
@@ -1054,6 +1075,12 @@ public class BudgetPlanGUI extends JFrame {
 
 			}
 		});
+	}
+
+	@Override
+	public void update(Observable arg0, Object arg1) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }
