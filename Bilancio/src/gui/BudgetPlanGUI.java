@@ -252,15 +252,15 @@ public class BudgetPlanGUI extends JFrame implements Observer {
 				panelPrognose
 						.setPreferredSize(new java.awt.Dimension(700, 367));
 
-				if (getContentPane().getComponentCount() > 0)
-					getContentPane().remove(panelAusgabe);
-
-				if (getContentPane().getComponentCount() > 0)
-					getContentPane().remove(panelEinnahme);
-
-				if (getContentPane().getComponent(0).equals(panelPrognose))
-					getContentPane().remove(panelPrognose);
-
+//				if (getContentPane().getComponentCount() > 0)
+//					getContentPane().remove(panelAusgabe);
+//
+//				if (getContentPane().getComponentCount() > 0)
+//					getContentPane().remove(panelEinnahme);
+//
+//				if (getContentPane().getComponent(0).equals(panelPrognose))
+//					getContentPane().remove(panelPrognose);
+				getContentPane().removeAll();
 				getContentPane().add(panelPrognose);
 				printAll(getGraphics());
 
@@ -303,15 +303,16 @@ public class BudgetPlanGUI extends JFrame implements Observer {
 				panelPrognose
 						.setPreferredSize(new java.awt.Dimension(700, 367));
 
-				if (getContentPane().getComponentCount() > 0)
-					getContentPane().remove(panelAusgabe);
+//				if (getContentPane().getComponentCount() > 0)
+//					getContentPane().remove(panelAusgabe);
+//
+//				if (getContentPane().getComponentCount() > 0)
+//					getContentPane().remove(panelEinnahme);
+//
+//				if (getContentPane().getComponent(0).equals(panelPrognose))
+//					getContentPane().remove(panelPrognose);
 
-				if (getContentPane().getComponentCount() > 0)
-					getContentPane().remove(panelEinnahme);
-
-				if (getContentPane().getComponent(0).equals(panelPrognose))
-					getContentPane().remove(panelPrognose);
-
+				getContentPane().removeAll();
 				getContentPane().add(panelPrognose);
 				printAll(getGraphics());
 
@@ -349,20 +350,20 @@ public class BudgetPlanGUI extends JFrame implements Observer {
 				JFreeChart lineChart = ChartFactory.createLineChart("Prognose",
 						"Monate", "EURO", dataset, PlotOrientation.VERTICAL,
 						true, true, false);
-				getContentPane().remove(panelPrognose);
+				getContentPane().removeAll();
 				panelPrognose = new ChartPanel(lineChart);
 				panelPrognose
 						.setPreferredSize(new java.awt.Dimension(700, 367));
 
-				if (getContentPane().getComponentCount() > 0)
-					getContentPane().remove(panelAusgabe);
-
-				if (getContentPane().getComponentCount() > 0)
-					getContentPane().remove(panelEinnahme);
-
-				
+//				if (getContentPane().getComponentCount() > 0)
+//					getContentPane().remove(panelAusgabe);
+//
+//				if (getContentPane().getComponentCount() > 0)
+//					getContentPane().remove(panelEinnahme);
+//
+//				
 					
-
+				getContentPane().removeAll();	
 				getContentPane().add(panelPrognose);
 				printAll(getGraphics());
 
@@ -405,15 +406,16 @@ public class BudgetPlanGUI extends JFrame implements Observer {
 				panelPrognose
 						.setPreferredSize(new java.awt.Dimension(700, 367));
 
-				if (getContentPane().getComponentCount() > 0)
-					getContentPane().remove(panelAusgabe);
+//				if (getContentPane().getComponentCount() > 0)
+//					getContentPane().remove(panelAusgabe);
+//
+//				if (getContentPane().getComponentCount() > 0)
+//					getContentPane().remove(panelEinnahme);
+//
+//				if (getContentPane().getComponent(0).equals(panelPrognose))
+//					getContentPane().remove(panelPrognose);
 
-				if (getContentPane().getComponentCount() > 0)
-					getContentPane().remove(panelEinnahme);
-
-				if (getContentPane().getComponent(0).equals(panelPrognose))
-					getContentPane().remove(panelPrognose);
-
+				getContentPane().removeAll();
 				getContentPane().add(panelPrognose);
 				printAll(getGraphics());
 
