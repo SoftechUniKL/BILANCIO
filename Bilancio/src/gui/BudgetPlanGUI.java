@@ -424,11 +424,14 @@ public class BudgetPlanGUI extends JFrame implements Observer {
 		class eingabenDiagramm implements ActionListener {
 			public void actionPerformed(ActionEvent e) {
 
-				if (getContentPane().getComponentCount() > 0) {
+				/*if (getContentPane().getComponentCount() > 0) {
 					getContentPane().remove(panelAusgabe);
 					if (panelPrognose != null)
 						getContentPane().remove(panelPrognose);
-				}
+				}*/
+				
+				getContentPane().removeAll();
+				
 				getContentPane().add(panelEinnahme);
 				printAll(getGraphics());
 			}
@@ -437,21 +440,29 @@ public class BudgetPlanGUI extends JFrame implements Observer {
 
 		diagrammEinnahmen.addActionListener(new eingabenDiagramm());
 
-		// class übersichtTabelle implements ActionListener {
-		// public void actionPerformed(ActionEvent e) {
+		class übersichtTabelle implements ActionListener {
+		 public void actionPerformed(ActionEvent e) {
+			 
+			    getContentPane().removeAll();
+				getContentPane().add(scrollpane);
+				printAll(getGraphics());
+			 
 
-		// }
+		 }
 
-		// tabellenÜbersicht.addActionListener(new übersichtTabelle());
+		}
+		tabellenÜbersicht.addActionListener(new übersichtTabelle());
 
 		class ausgabenDiagramm implements ActionListener {
 			public void actionPerformed(ActionEvent e) {
 
-				if (getContentPane().getComponentCount() > 0) {
+				/*if (getContentPane().getComponentCount() > 0) {
 					getContentPane().remove(panelEinnahme);
 					if (panelPrognose != null)
 						getContentPane().remove(panelPrognose);
-				}
+				}*/
+				
+				getContentPane().removeAll();
 				getContentPane().add(panelAusgabe);
 				printAll(getGraphics());
 			}
@@ -735,7 +746,7 @@ public class BudgetPlanGUI extends JFrame implements Observer {
 		buttonContailer.add(button);
 		buttonContailer.add(prognose);
 
-		getContentPane().add(buttonContailer);
+		//getContentPane().add(buttonContailer);
 
 		// Berechnet Layout mit geringstem Platzbedarf
 		pack();
