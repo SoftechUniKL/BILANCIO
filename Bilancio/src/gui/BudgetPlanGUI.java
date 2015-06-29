@@ -8,6 +8,7 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -123,6 +124,8 @@ public class BudgetPlanGUI extends JFrame implements Observer {
 
 		super("BILANCIO");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//		this.setResizable(false);
+	
 		getContentPane().setLayout(new FlowLayout());
 		
 		getContentPane().setBackground(Color.WHITE);
@@ -161,6 +164,7 @@ public class BudgetPlanGUI extends JFrame implements Observer {
 		this.setJMenuBar(menubar);
 
 		JMenu datei = new JMenu("Datei");
+		datei.setMnemonic(KeyEvent.VK_D);
 		JMenuItem dateiOeffnen = new JMenuItem("Datei öffnen");
 		JMenuItem dateiSpeichern = new JMenuItem("Datei speichern");
 		JMenuItem exit = new JMenuItem("Programm beenden");
@@ -171,6 +175,7 @@ public class BudgetPlanGUI extends JFrame implements Observer {
 		menubar.add(datei);
 
 		JMenu ansicht = new JMenu("Ansicht");
+		ansicht.setMnemonic(KeyEvent.VK_A);
 		JMenuItem tabellenÜbersicht = new JMenuItem("Tabellenansicht");
 		JMenuItem diagrammAusgaben = new JMenuItem("Ausgabendiagramm anzeigen");
 		JMenuItem diagrammEinnahmen = new JMenuItem(
@@ -182,6 +187,7 @@ public class BudgetPlanGUI extends JFrame implements Observer {
 		menubar.add(ansicht);
 
 		JMenu posten = new JMenu("Posten");
+		posten.setMnemonic(KeyEvent.VK_P);
 		addPostenMenu = new JMenuItem("Posten hinzufügen");
 		final JMenuItem deletePostenMenu = new JMenuItem("Posten löschen");
 		deletePostenMenu.setEnabled(false);
@@ -190,6 +196,7 @@ public class BudgetPlanGUI extends JFrame implements Observer {
 		menubar.add(posten);
 
 		JMenu prognosebutton = new JMenu("Prognose");
+		prognosebutton.setMnemonic(KeyEvent.VK_R);
 		JMenuItem dreiMonate = new JMenuItem("3 Monate");
 		JMenuItem sechsMonate = new JMenuItem("6 Monate");
 		JMenuItem neunMonate = new JMenuItem("9 Monate");
@@ -202,6 +209,7 @@ public class BudgetPlanGUI extends JFrame implements Observer {
 		menubar.add(prognosebutton);
 
 		JMenu hilfe = new JMenu("Hilfe");
+		hilfe.setMnemonic(KeyEvent.VK_H);
 		JMenuItem about = new JMenuItem("Über uns");
 		JMenuItem kontakt = new JMenuItem("Kontakt");
 		hilfe.add(about);
