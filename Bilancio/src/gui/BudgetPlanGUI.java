@@ -81,7 +81,7 @@ public class BudgetPlanGUI extends JFrame implements Observer {
 	/**
 	 * Scrollelemente, das die Tabelle umfasst
 	 */
-	private JScrollPane scrollpane;
+	private static JScrollPane scrollpane;
 	/**
 	 * Schaltflaeche, die beim Klicken einen Dialog anzeigt
 	 */
@@ -104,6 +104,8 @@ public class BudgetPlanGUI extends JFrame implements Observer {
 	private ChartPanel panelPrognose;
 	private int row;
 	static JMenuItem addPostenMenu;
+	
+	static JMenuItem deletePostenMenu;
 
 	static private JTextField testTextField;
 
@@ -136,10 +138,10 @@ public class BudgetPlanGUI extends JFrame implements Observer {
 
 		initWindow(); // Initialisierung des Frameinhalts
 		addBehavior(); // Verhalten der GUI Elemente dieses Frames
-		addPosten(tableModel); // Die Tabelle um eine Zeile erweitern
-		saveTable(tableModel, budget);
+		//addPosten(tableModel); // Die Tabelle um eine Zeile erweitern
+		//saveTable(tableModel, budget);
 
-		sorttable(tableModel, table);
+		//sorttable(tableModel, table);
 		diagrammAuswahl();
 		showKonto();
 		showPrognose();
@@ -189,7 +191,7 @@ public class BudgetPlanGUI extends JFrame implements Observer {
 		JMenu posten = new JMenu("Posten");
 		posten.setMnemonic(KeyEvent.VK_P);
 		addPostenMenu = new JMenuItem("Posten hinzufügen");
-		final JMenuItem deletePostenMenu = new JMenuItem("Posten löschen");
+		deletePostenMenu = new JMenuItem("Posten löschen");
 		deletePostenMenu.setEnabled(false);
 		posten.add(addPostenMenu);
 		posten.add(deletePostenMenu);
@@ -442,6 +444,8 @@ public class BudgetPlanGUI extends JFrame implements Observer {
 				
 				getContentPane().removeAll();
 				
+				getDataEinnahme();
+				
 				getContentPane().add(panelEinnahme);
 				printAll(getGraphics());
 			}
@@ -484,24 +488,24 @@ public class BudgetPlanGUI extends JFrame implements Observer {
 		class addPosten implements ActionListener {
 			public void actionPerformed(ActionEvent e) {
 
-				System.out.println("Anzahl der Zeilen vor update = "
-						+ table.getRowCount());
-				System.out.println("Anzahl der Liste vor update = "
-						+ budget.ausgaben.size());
+//				System.out.println("Anzahl der Zeilen vor update = "
+//						+ table.getRowCount());
+//				System.out.println("Anzahl der Liste vor update = "
+//						+ budget.ausgaben.size());
 				// final EingabeMaske pMaske = new EingabeMaske (budget,
 				// (MyTableModel) tableModel);
 				final EingabeMaske pMaske = new EingabeMaske();
 				pMaske.budget = budget;
 				pMaske.tableModel = BudgetPlanGUI.tableModel;
 
-				table.putClientProperty("terminateEditOnFocusLost", true);
+			//	table.putClientProperty("terminateEditOnFocusLost", true);
 
-				updateTable(pMaske);
+				//updateTable(pMaske);
 
-				System.out.println("Anzahl der Zeilen nach update = "
-						+ table.getRowCount());
-				System.out.println("Anzahl der Liste nach update = "
-						+ budget.ausgaben.size());
+//				System.out.println("Anzahl der Zeilen nach update = "
+//						+ table.getRowCount());
+//				System.out.println("Anzahl der Liste nach update = "
+//						+ budget.ausgaben.size());
 
 				getContentPane().repaint();
 
@@ -604,96 +608,87 @@ public class BudgetPlanGUI extends JFrame implements Observer {
 
 		dateiOeffnen.addActionListener(new openFile());
 
-		// Tabelle mit Uebersicht der Ausgaben
-		data = new Object[budget.ausgaben.size()][5];
-		int i = 0;
-		for (Posten p : budget.ausgaben) {
-			data[i][0] = new SimpleDateFormat("dd.MM.yyyy")
-					.format(p.getDatum());
-			data[i][2] = p.getBezeichnung();
-			// data[i][2] = String.format("%.2f", p.getBetrag());
-			data[i][3] = p.getBetrag();
-			data[i][1] = p.getKategorie();
-			data[i][4] = p.getTransaktionsart();
-			i++;
-
-		}
-
-		// Add row to table
-		tableModel = new MyTableModel(data, new Object[] { "Datum",
-				"Kategorie", "Bezeichnung", "Betrag", "Transaktionsart" });
-
-		table = new JTable(tableModel) {
-
-			/**
-			 * Tabelle für die Liste der Transaktionenen
-			 */
-			private static final long serialVersionUID = 1L;
-
-			public Component prepareRenderer(TableCellRenderer renderer,
-					int row, int column) {
-				Component c = super.prepareRenderer(renderer, row, column);
-
-				// Alternate row color
-
-				if (!isRowSelected(row))
-					c.setBackground(row % 2 != 0 ? getBackground()
-							: Color.LIGHT_GRAY);
-
-				return c;
-			}
-
-		};
-
-		table.setRowSelectionAllowed(true);
-
-		table.getSelectionModel().addListSelectionListener(
-				new ListSelectionListener() {
-					public void valueChanged(ListSelectionEvent e) {
-						String selectedData = null;
-
-						int selectedRow = table.getSelectedRow();
-						if (selectedRow > -1) {
-							deletePostenMenu.setEnabled(true);
-							System.out.println("Selected: " + selectedData);
-						} else
-
-							deletePostenMenu.setEnabled(false);
-
-					}
-
-				});
-
-		table.setRowHeight(25);
-
-		table.getTableHeader().setOpaque(false);
-		table.getTableHeader().setBackground(Color.GRAY);
-		table.getTableHeader().setForeground(Color.WHITE);
-
-		einAusgabeColumn = table.getColumnModel().getColumn(4);
-		einAusgabeCombobox = new JComboBox();
-		einAusgabeCombobox.addItem("Einnahme");
-		einAusgabeCombobox.addItem("Ausgabe");
-		einAusgabeColumn
-				.setCellEditor(new DefaultCellEditor(einAusgabeCombobox));
-
-		table.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-		scrollpane = new JScrollPane(table);
+		updateTableFromModel();
+		System.out.println("Firts time updateTableFromModel called.");
+		
+//		// Tabelle mit Uebersicht der Ausgaben
+//		data = new Object[budget.ausgaben.size()][5];
+//		int i = 0;
+//		for (Posten p : budget.ausgaben) {
+//			data[i][0] = new SimpleDateFormat("dd.MM.yyyy")
+//					.format(p.getDatum());
+//			data[i][2] = p.getBezeichnung();
+//			// data[i][2] = String.format("%.2f", p.getBetrag());
+//			data[i][3] = p.getBetrag();
+//			data[i][1] = p.getKategorie();
+//			data[i][4] = p.getTransaktionsart();
+//			i++;
+//
+//		}
+//
+//		// Add row to table
+//		tableModel = new MyTableModel(data, new Object[] { "Datum",
+//				"Kategorie", "Bezeichnung", "Betrag", "Transaktionsart" });
+//
+//		table = new JTable(tableModel) {
+//
+//			/**
+//			 * Tabelle für die Liste der Transaktionenen
+//			 */
+//			private static final long serialVersionUID = 1L;
+//
+//			public Component prepareRenderer(TableCellRenderer renderer,
+//					int row, int column) {
+//				Component c = super.prepareRenderer(renderer, row, column);
+//
+//				// Alternate row color
+//
+//				if (!isRowSelected(row))
+//					c.setBackground(row % 2 != 0 ? getBackground()
+//							: Color.LIGHT_GRAY);
+//
+//				return c;
+//			}
+//
+//		};
+//
+//		table.setRowSelectionAllowed(true);
+//
+//		table.getSelectionModel().addListSelectionListener(
+//				new ListSelectionListener() {
+//					public void valueChanged(ListSelectionEvent e) {
+//						String selectedData = null;
+//
+//						int selectedRow = table.getSelectedRow();
+//						if (selectedRow > -1) {
+//							deletePostenMenu.setEnabled(true);
+//							System.out.println("Selected: " + selectedData);
+//						} else
+//
+//							deletePostenMenu.setEnabled(false);
+//
+//					}
+//
+//				});
+//
+//		table.setRowHeight(25);
+//
+//		table.getTableHeader().setOpaque(false);
+//		table.getTableHeader().setBackground(Color.GRAY);
+//		table.getTableHeader().setForeground(Color.WHITE);
+//
+//		einAusgabeColumn = table.getColumnModel().getColumn(4);
+//		einAusgabeCombobox = new JComboBox();
+//		einAusgabeCombobox.addItem("Einnahme");
+//		einAusgabeCombobox.addItem("Ausgabe");
+//		einAusgabeColumn
+//				.setCellEditor(new DefaultCellEditor(einAusgabeCombobox));
+//
+//		table.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+//		scrollpane = new JScrollPane(table);
 
 		// Kreisdiagramm
-		pdEinnahme = new DefaultPieDataset();
-		pdAusgabe = new DefaultPieDataset();
-
-		for (Posten p : budget.ausgaben) {
-			if (p.getTransaktionsart().equals("Einnahme"))
-				pdEinnahme.setValue(p.getBezeichnung(), p.getBetrag());
-			if (p.getTransaktionsart().equals("Ausgabe"))
-				pdAusgabe.setValue(p.getBezeichnung(), p.getBetrag());
-		}
-
-		// Für Einnahmen
-		pieChartEinnahme = ChartFactory.createPieChart("Einnahme", pdEinnahme);
-		panelEinnahme = new ChartPanel(pieChartEinnahme);
+		
 
 		// Für Ausgaben
 		pieChartAusgabe = ChartFactory.createPieChart("Ausgaben", pdAusgabe);
@@ -761,6 +756,8 @@ public class BudgetPlanGUI extends JFrame implements Observer {
 		// Berechnet Layout mit geringstem Platzbedarf
 		pack();
 	}
+
+	
 
 	// Verhalten hinzufuegen
 	public void addBehavior() {
@@ -834,6 +831,7 @@ public class BudgetPlanGUI extends JFrame implements Observer {
 		});
 	}
 
+	 EingabeMaske pMaske = null;
 	// Tabelle um eine Zeile Erweitern hinzufuegen
 	public void addPosten(final DefaultTableModel tableModel) {
 		// registriere den ActionListener fuer den Button als anonyme Klasse
@@ -852,13 +850,15 @@ public class BudgetPlanGUI extends JFrame implements Observer {
 						+ budget.ausgaben.size());
 				// final EingabeMaske pMaske = new EingabeMaske (budget,
 				// (MyTableModel) tableModel);
-				final EingabeMaske pMaske = new EingabeMaske();
+			
+				pMaske = new EingabeMaske();
 				pMaske.budget = budget;
 				pMaske.tableModel = BudgetPlanGUI.tableModel;
 
 				// table.putClientProperty("terminateEditOnFocusLost", true);
 
-				updateTable(pMaske);
+				pMaske.budget.tell("Posten has been added.");
+				//updateTable(pMaske);
 
 				System.out.println("Anzahl der Zeilen nach update = "
 						+ table.getRowCount());
@@ -1100,8 +1100,130 @@ public class BudgetPlanGUI extends JFrame implements Observer {
 
 	@Override
 	public void update(Observable arg0, Object arg1) {
-		// TODO Auto-generated method stub
+		System.out.println(this.toString() +" : Message from Model  = "+(String ) arg1);
+		
+		updateTableFromModel();
+		
 		
 	}
+	
+	public void updateTableFromModel(){
+		
+		//tableModel.addRow(new Object[5]);
+		
+		
+		System.out.println("Update Table From Model has been called.");
+		System.out.println("Budget list = " + budget.ausgaben.size());
+		
+		// Tabelle mit Uebersicht der Ausgaben
+				data = new Object[budget.ausgaben.size()][5];
+				int i = 0;
+				for (Posten p : budget.ausgaben) {
+					data[i][0] = new SimpleDateFormat("dd.MM.yyyy")
+							.format(p.getDatum());
+					data[i][2] = p.getBezeichnung();
+					// data[i][2] = String.format("%.2f", p.getBetrag());
+					data[i][3] = p.getBetrag();
+					data[i][1] = p.getKategorie();
+					data[i][4] = p.getTransaktionsart();
+					i++;
+
+				}
+
+				// Add row to table
+					tableModel = new MyTableModel(data, new Object[] { "Datum",
+						"Kategorie", "Bezeichnung", "Betrag", "Transaktionsart" });
+
+					table = new JTable(tableModel) {
+
+					/**
+					 * Tabelle für die Liste der Transaktionenen
+					 */
+					private static final long serialVersionUID = 1L;
+
+					public Component prepareRenderer(TableCellRenderer renderer,
+							int row, int column) {
+						Component c = super.prepareRenderer(renderer, row, column);
+
+						// Alternate row color
+
+						if (!isRowSelected(row))
+							c.setBackground(row % 2 != 0 ? getBackground()
+									: Color.LIGHT_GRAY);
+
+						return c;
+					}
+
+				};
+				
+				sorttable(tableModel, table);
+
+				table.setRowSelectionAllowed(true);
+
+				table.getSelectionModel().addListSelectionListener(
+						new ListSelectionListener() {
+							public void valueChanged(ListSelectionEvent e) {
+								String selectedData = null;
+
+								int selectedRow = table.getSelectedRow();
+								if (selectedRow > -1) {
+									deletePostenMenu.setEnabled(true);
+									System.out.println("Selected: " + selectedData);
+								} else
+
+									deletePostenMenu.setEnabled(false);
+
+							}
+
+						});
+
+				table.setRowHeight(25);
+
+				table.getTableHeader().setOpaque(false);
+				table.getTableHeader().setBackground(Color.GRAY);
+				table.getTableHeader().setForeground(Color.WHITE);
+
+				einAusgabeColumn = table.getColumnModel().getColumn(4);
+				einAusgabeCombobox = new JComboBox();
+				einAusgabeCombobox.addItem("Einnahme");
+				einAusgabeCombobox.addItem("Ausgabe");
+				einAusgabeColumn
+						.setCellEditor(new DefaultCellEditor(einAusgabeCombobox));
+
+				table.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+				
+				
+					
+					scrollpane = new JScrollPane(table);
+					
+				
+				
+				
+				
+				System.out.println("Table länge = " + table.getRowCount());
+				
+				getContentPane().removeAll();
+				getContentPane().add(scrollpane);
+				printAll(getGraphics());
+				
+				
+				
+	}
+	
+	private void getDataEinnahme(){
+		pdEinnahme = new DefaultPieDataset();
+		pdAusgabe = new DefaultPieDataset();
+
+		for (Posten p : budget.ausgaben) {
+			if (p.getTransaktionsart().equals("Einnahme"))
+				pdEinnahme.setValue(p.getBezeichnung(), p.getBetrag());
+			if (p.getTransaktionsart().equals("Ausgabe"))
+				pdAusgabe.setValue(p.getBezeichnung(), p.getBetrag());
+		}
+
+		// Für Einnahmen
+		pieChartEinnahme = ChartFactory.createPieChart("Einnahme", pdEinnahme);
+		panelEinnahme = new ChartPanel(pieChartEinnahme);
+		}
 
 }

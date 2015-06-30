@@ -309,7 +309,7 @@ public class EingabeMaske extends JFrame {
 
 				saveEingabe();
 
-				tableModel.addRow(new Object[5]);
+/*				tableModel.addRow(new Object[5]);
 				int lastRow = tableModel.getRowCount();
 
 				tableModel.setValueAt(tfDatum.getText(), lastRow - 1, 0);
@@ -326,7 +326,7 @@ public class EingabeMaske extends JFrame {
 				}
 				tableModel.setValueAt(tfBezeichnung.getText(), lastRow - 1, 2);
 				tableModel.setValueAt(Betrag.doubleValue(), lastRow - 1, 3);
-
+*/
 				frame.dispose();
 
 			}
