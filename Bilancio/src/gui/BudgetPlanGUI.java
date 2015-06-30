@@ -23,6 +23,10 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.Properties;
+import org.jdatepicker.impl.JDatePanelImpl;
+import org.jdatepicker.impl.JDatePickerImpl;
+import org.jdatepicker.impl.UtilDateModel;
 
 import javax.swing.BoxLayout;
 import javax.swing.DefaultCellEditor;
@@ -51,6 +55,9 @@ import javax.swing.table.TableRowSorter;
 import model.BudgetPlanModel;
 import model.Posten;
 
+import org.jdatepicker.impl.JDatePanelImpl;
+import org.jdatepicker.impl.JDatePickerImpl;
+import org.jdatepicker.impl.UtilDateModel;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
@@ -62,6 +69,7 @@ import org.jfree.data.xy.DefaultXYDataset;
 
 import probe.ProbeMaske;
 import probe.ProbeMaske2;
+import utility.DateLabelFormatter;
 import utility.WriteFile;
 
 import com.opencsv.CSVWriter;
@@ -108,6 +116,14 @@ public class BudgetPlanGUI extends JFrame implements Observer {
 	static JMenuItem deletePostenMenu;
 
 	static private JTextField testTextField;
+	static private Date selectedDate1; 
+	static private JDatePickerImpl datePicker1;
+	
+	static private Date selectedDate2; 
+	static private JDatePickerImpl datePicker2;
+	
+	static private JPanel contentPanel ;
+	static private JPanel controlPanel ;
 
 	/**
 	 * Modell der Daten
@@ -131,7 +147,11 @@ public class BudgetPlanGUI extends JFrame implements Observer {
 		getContentPane().setLayout(new FlowLayout());
 		
 		getContentPane().setBackground(Color.WHITE);
-
+		
+		contentPanel = new JPanel ();
+		controlPanel= new JPanel ();
+		contentPanel.setLayout(new FlowLayout());
+		
 		BudgetPlanGUI.budget = budget;
 		budget.addObserver(this);
 		// this.budget = new BudgetPlanModel();
@@ -160,7 +180,34 @@ public class BudgetPlanGUI extends JFrame implements Observer {
 					.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
 		} catch (Exception e) {
 		}
-
+		
+		
+		
+		
+		UtilDateModel model1 = new UtilDateModel();
+		UtilDateModel model2 = new UtilDateModel();
+		Properties p = new Properties();
+		p.put("text.today", "Today");
+		p.put("text.month", "Month");
+		p.put("text.year", "Year");
+		
+		JDatePanelImpl datePane1 = new JDatePanelImpl(model1, p);
+		datePicker1 = new JDatePickerImpl(datePane1, new DateLabelFormatter());
+		selectedDate1 = new Date();
+		
+		JDatePanelImpl datePane2 = new JDatePanelImpl(model2, p);
+		datePicker2 = new JDatePickerImpl(datePane2, new DateLabelFormatter());
+		selectedDate2 = new Date();
+		
+		
+		
+		
+		controlPanel.add(datePicker1);
+		controlPanel.add(datePicker2);
+		
+		
+		
+		
 		JMenuBar menubar = new JMenuBar();
 
 		this.setJMenuBar(menubar);
@@ -475,7 +522,7 @@ public class BudgetPlanGUI extends JFrame implements Observer {
 					if (panelPrognose != null)
 						getContentPane().remove(panelPrognose);
 				}*/
-				
+				getDataAusgabe();
 				getContentPane().removeAll();
 				getContentPane().add(panelAusgabe);
 				printAll(getGraphics());
@@ -738,6 +785,9 @@ public class BudgetPlanGUI extends JFrame implements Observer {
 		// panelPrognose.setPreferredSize(new java.awt.Dimension(560, 367));
 
 		// Elemente dem Fenster hinzufuegen:
+		
+		getContentPane().add(controlPanel);
+		getContentPane().add(contentPanel);
 		getContentPane().add(scrollpane);
 		JPanel buttonContailer = new JPanel();
 		buttonContailer.setLayout(new BoxLayout(buttonContailer,
@@ -1210,15 +1260,30 @@ public class BudgetPlanGUI extends JFrame implements Observer {
 				
 	}
 	
+	private void getDataAusgabe (){
+		pdAusgabe = new DefaultPieDataset();
+//		pieChartAusgabe = ChartFactory.createPieChart("Ausgaben", pdAusgabe);
+//		panelAusgabe = new ChartPanel(pieChartAusgabe);
+		
+		for (Posten p : budget.ausgaben) {
+			
+			if (p.getTransaktionsart().equals("Ausgabe"))
+				pdAusgabe.setValue(p.getBezeichnung(), p.getBetrag());
+			
+		}
+		
+		pieChartAusgabe = ChartFactory.createPieChart("Ausgaben", pdAusgabe);
+		panelAusgabe = new ChartPanel(pieChartAusgabe);
+		
+	}
+	
 	private void getDataEinnahme(){
 		pdEinnahme = new DefaultPieDataset();
-		pdAusgabe = new DefaultPieDataset();
-
+		
 		for (Posten p : budget.ausgaben) {
 			if (p.getTransaktionsart().equals("Einnahme"))
 				pdEinnahme.setValue(p.getBezeichnung(), p.getBetrag());
-			if (p.getTransaktionsart().equals("Ausgabe"))
-				pdAusgabe.setValue(p.getBezeichnung(), p.getBetrag());
+		
 		}
 
 		// Für Einnahmen
