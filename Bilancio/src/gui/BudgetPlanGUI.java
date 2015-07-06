@@ -32,6 +32,7 @@ import org.jdatepicker.impl.JDatePickerImpl;
 import org.jdatepicker.impl.UtilDateModel;
 
 import javax.swing.BoxLayout;
+import javax.swing.ButtonGroup;
 import javax.swing.DefaultCellEditor;
 import javax.swing.GroupLayout;
 import javax.swing.JButton;
@@ -43,6 +44,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
@@ -128,6 +130,9 @@ public class BudgetPlanGUI extends JFrame implements Observer {
 	
 	static private JPanel contentPanel ;
 	static private JPanel controlPanel ;
+	
+	private static JRadioButton rButtonFilterEin;
+	private static JRadioButton rButtonFilterAus;
 
 	/**
 	 * Modell der Daten
@@ -178,6 +183,9 @@ public class BudgetPlanGUI extends JFrame implements Observer {
 		showPrognose();
 		// saveTableChange ();
 		deletePosten();
+		
+		filterDate();
+		
 		setBounds(10, 10, 800, 800); // Groesse des Frames
 		setVisible(true); // Frame wird sichtbar
 
@@ -575,6 +583,23 @@ public class BudgetPlanGUI extends JFrame implements Observer {
 		// panelPrognose.setPreferredSize(new java.awt.Dimension(560, 367));
 
 		// Elemente dem Fenster hinzufuegen:
+		
+		
+		rButtonFilterEin = new JRadioButton("Ein");
+		rButtonFilterEin.setActionCommand("Ein");
+		
+		rButtonFilterAus = new JRadioButton("Aus");
+		rButtonFilterAus.setActionCommand("Aus");
+		rButtonFilterAus.setSelected(true);
+		
+
+		ButtonGroup groupFilter = new ButtonGroup();
+		groupFilter.add(rButtonFilterEin);
+		groupFilter.add(rButtonFilterAus);
+		
+		controlPanel.add(rButtonFilterEin);
+		controlPanel.add(rButtonFilterAus);
+		
 		
 		getContentPane().add(controlPanel);
 		getContentPane().add(contentPanel);
@@ -974,10 +999,10 @@ public class BudgetPlanGUI extends JFrame implements Observer {
 				}
 
 				// Add row to table
-					tableModel = new MyTableModel(data, new Object[] { "Datum",
+				MyTableModel	tableModel = new MyTableModel(data, new Object[] { "Datum",
 						"Kategorie", "Bezeichnung", "Betrag", "Transaktionsart" });
 
-					table = new JTable(tableModel) {
+			final JTable table = new JTable(tableModel) {
 
 					/**
 					 * Tabelle für die Liste der Transaktionenen
@@ -1026,37 +1051,16 @@ public class BudgetPlanGUI extends JFrame implements Observer {
 				table.getTableHeader().setBackground(Color.GRAY);
 				table.getTableHeader().setForeground(Color.WHITE);
 
-				einAusgabeColumn = table.getColumnModel().getColumn(4);
-				einAusgabeCombobox = new JComboBox();
-				einAusgabeCombobox.addItem("Einnahme");
-				einAusgabeCombobox.addItem("Ausgabe");
-				einAusgabeColumn
-						.setCellEditor(new DefaultCellEditor(einAusgabeCombobox));
-
 				table.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-				
-				
-					
+	
 					scrollpane = new JScrollPane(table);
-					
-				
-				
-				
+	
 				
 				System.out.println("Table länge = " + table.getRowCount());
-				
-//				getContentPane().removeAll();
-//				getContentPane().add(scrollpane);
-//				printAll(getGraphics());
 				
 				contentPanel.removeAll();
 				contentPanel.add(scrollpane);
 				printAll(getGraphics());
-				
-//				((JPanel)getContentPane().getComponent(1)).removeAll(); 
-//				((JPanel)getContentPane().getComponent(1)).add(scrollpane);
-//				((JPanel)getContentPane().getComponent(1)).printAll(getGraphics());
-				
 				
 				
 	}
@@ -1113,5 +1117,138 @@ public class BudgetPlanGUI extends JFrame implements Observer {
 				}
 			} while (true);
 		}
+	 
+	 
+	 public void filterDate() {
+	
+			rButtonFilterEin.addActionListener(new ActionListener() {
+				
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					
+					Date date1, date2 = new Date();
+					date1 = (Date)datePicker1.getModel().getValue();
+					date2 = (Date)datePicker2.getModel().getValue();
+					
+					if(rButtonFilterEin.isSelected()){
+						
+						System.out.println("Filter on.");
+						System.out.println("Date 1" + datePicker1.getModel().getValue());
+						System.out.println("Date 2" + datePicker2.getModel().getValue());
+						
+						updateTableFromModel2(budget, date1, date2);  
+						
+					}
+					
+				}
+
+			});
+			
+	rButtonFilterAus.addActionListener(new ActionListener() {
+				
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					
+					if(rButtonFilterAus.isSelected()){
+						
+						System.out.println("Filter off.");
+						
+						updateTableFromModel(budget);  
+						
+					}
+					
+				}
+
+			});
+				
+	 }
+	 
+	public void updateTableFromModel2(BudgetPlanModel model,
+			Date selectedDate1, Date selectedDate2) {
+
+		if (model != null)
+			budget = model;
+
+		System.out.println("Update Table From Model has been called. FILTER");
+		System.out.println("Budget list = " + budget.ausgaben.size());
+
+		// Tabelle mit Uebersicht der Ausgaben
+		data = new Object[budget.ausgaben.size()][5];
+		int i = 0;
+		for (Posten p : budget.ausgaben) {
+			if (p.getDatum().after(selectedDate1)
+					&& p.getDatum().before(selectedDate2)) {
+
+				data[i][0] = new SimpleDateFormat("dd.MM.yyyy").format(p
+						.getDatum());
+				data[i][2] = p.getBezeichnung();
+				// data[i][2] = String.format("%.2f", p.getBetrag());
+				data[i][3] = p.getBetrag();
+				data[i][1] = p.getKategorie();
+				data[i][4] = p.getTransaktionsart();
+			}
+			i++;
+
+		}
+
+		// Add row to table
+		MyTableModel tableModel = new MyTableModel(data, new Object[] { "Datum",
+				"Kategorie", "Bezeichnung", "Betrag", "Transaktionsart" });
+
+		final JTable table = new JTable(tableModel) {
+
+			public Component prepareRenderer(TableCellRenderer renderer,
+					int row, int column) {
+				Component c = super.prepareRenderer(renderer, row, column);
+
+				// Alternate row color
+
+				if (!isRowSelected(row))
+					c.setBackground(row % 2 != 0 ? getBackground()
+							: Color.LIGHT_GRAY);
+
+				return c;
+			}
+
+		};
+
+		sorttable(tableModel, table);
+
+		table.setRowSelectionAllowed(true);
+
+		table.getSelectionModel().addListSelectionListener(
+				new ListSelectionListener() {
+					public void valueChanged(ListSelectionEvent e) {
+						String selectedData = null;
+
+						int selectedRow = table.getSelectedRow();
+						if (selectedRow > -1) {
+							deletePostenMenu.setEnabled(true);
+							System.out.println("Selected row in table: "
+									+ selectedRow);
+						} else
+
+							deletePostenMenu.setEnabled(false);
+
+					}
+
+				});
+
+		table.setRowHeight(25);
+
+		table.getTableHeader().setOpaque(false);
+		table.getTableHeader().setBackground(Color.GRAY);
+		table.getTableHeader().setForeground(Color.WHITE);
+
+		table.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+		scrollpane = new JScrollPane(table);
+
+		System.out.println("Table länge = " + table.getRowCount());
+
+		contentPanel.removeAll();
+		contentPanel.add(scrollpane);
+		printAll(getGraphics());
+
+	}
 
 }
