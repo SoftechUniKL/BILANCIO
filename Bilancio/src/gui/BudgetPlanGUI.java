@@ -425,10 +425,10 @@ public class BudgetPlanGUI extends JFrame implements Observer {
 
 		class deletePosten implements ActionListener {
 			public void actionPerformed(ActionEvent e) {
-
+				System.out.println("Anzahl der Posten, vor Löschen" + budget.ausgaben.size());
 				int row = table.getSelectedRow();
 				if (row != -1) {
-					System.out.println("Selecter row : " + row);
+					System.out.println("Selected row : " + row);
 					// was wurde gelöscht: einnahme ode ausgabe
 					removedPosten = (String) tableModel.getValueAt(row, 4);
 					System.out.println("removedPosten   " + removedPosten);
@@ -439,52 +439,55 @@ public class BudgetPlanGUI extends JFrame implements Observer {
 
 				// PieChart für Einnahme
 				// pdEinnahme-inhalt vor löschen
-				System.out.println("Vor dem Löschen: ");
-				System.out.println("Einnahmen= " + pdEinnahme.getKeys());
-				System.out.println("Ausgaben= " + pdAusgabe.getKeys());
+//				System.out.println("Vor dem Löschen: ");
+//				System.out.println("Einnahmen= " + pdEinnahme.getKeys());
+//				System.out.println("Ausgaben= " + pdAusgabe.getKeys());
 
 				// Posten aus der Liste löschen
 				budget.ausgaben.remove(row);
+				
+				System.out.println("Anzahl der Posten, nach Löschen" + budget.ausgaben.size());
 
 				// TODO: bessere Lösung finden
 				// PieChart leeren
-				if (removedPosten.equals("Einnahme")) {
-
-					pdEinnahme.clear();
-					panelEinnahme.removeAll();
-					panelEinnahme.revalidate();
-
-					// Daten für PieChart aus der Tabelle lesen
-					for (Posten p : budget.ausgaben) {
-						if (p.getTransaktionsart().equals("Einnahme"))
-							pdEinnahme.setValue(p.getBezeichnung(),
-									p.getBetrag());
-					}
-
-					panelEinnahme.repaint();
-				}
-
-				if (removedPosten.equals("Ausgabe")) {
-					pdAusgabe.clear();
-					panelAusgabe.removeAll();
-					panelAusgabe.revalidate();
-
-					// Daten für PieChart aus der Tabelle lesen
-					for (Posten p : budget.ausgaben) {
-						if (p.getTransaktionsart().equals("Ausgabe"))
-							pdAusgabe.setValue(p.getBezeichnung(),
-									p.getBetrag());
-					}
-
-					panelAusgabe.repaint();
-
-				}
-
-				// TODO: nach dem Test löschen
-				// pdEinnahme-inhalt nach löschen
-				System.out.println("Nach dem Löschen: ");
-				System.out.println("Einahmen: " + pdEinnahme.getKeys());
-				System.out.println("Ausgaben: " + pdAusgabe.getKeys());
+//				if (removedPosten.equals("Einnahme")) {
+//
+//					pdEinnahme.clear();
+//					panelEinnahme.removeAll();
+//					panelEinnahme.revalidate();
+//
+//					// Daten für PieChart aus der Tabelle lesen
+//					for (Posten p : budget.ausgaben) {
+//						if (p.getTransaktionsart().equals("Einnahme"))
+//							pdEinnahme.setValue(p.getBezeichnung(),
+//									p.getBetrag());
+//					}
+//
+//					panelEinnahme.repaint();
+//				}
+//
+//				if (removedPosten.equals("Ausgabe")) {
+//					pdAusgabe.clear();
+//					panelAusgabe.removeAll();
+//					panelAusgabe.revalidate();
+//
+//					// Daten für PieChart aus der Tabelle lesen
+//					for (Posten p : budget.ausgaben) {
+//						if (p.getTransaktionsart().equals("Ausgabe"))
+//							pdAusgabe.setValue(p.getBezeichnung(),
+//									p.getBetrag());
+//					}
+//
+//					panelAusgabe.repaint();
+//
+//				}
+//
+//				// TODO: nach dem Test löschen
+//				// pdEinnahme-inhalt nach löschen
+//				System.out.println("Nach dem Löschen: ");
+//				System.out.println("Einahmen: " + pdEinnahme.getKeys());
+//				System.out.println("Ausgaben: " + pdAusgabe.getKeys());
+				
 
 				budget.tell("A Transaction has been deleted.");
 
@@ -1008,7 +1011,7 @@ public class BudgetPlanGUI extends JFrame implements Observer {
 								int selectedRow = table.getSelectedRow();
 								if (selectedRow > -1) {
 									deletePostenMenu.setEnabled(true);
-									System.out.println("Selected: " + selectedData);
+									System.out.println("Selected row in table: " + selectedRow);
 								} else
 
 									deletePostenMenu.setEnabled(false);
