@@ -1,5 +1,7 @@
 package gui;
 
+import java.sql.Date;
+
 import javax.swing.table.DefaultTableModel;
 
 public class MyTableModel extends DefaultTableModel{
@@ -18,7 +20,10 @@ public class MyTableModel extends DefaultTableModel{
 		}
 
 		@Override
-		public Class getColumnClass(int col) {
+		public Class getColumnClass(int col) { 
+			
+			if (col == 0)
+				return  Date.class;
 			if (col == 3) // second column accepts only Integer values
 				return Double.class;
 

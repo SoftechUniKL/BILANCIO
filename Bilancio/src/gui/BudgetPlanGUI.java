@@ -1011,8 +1011,7 @@ public class BudgetPlanGUI extends JFrame implements Observer {
 				data = new Object[budget.ausgaben.size()][5];
 				int i = 0;
 				for (Posten p : budget.ausgaben) {
-					data[i][0] = new SimpleDateFormat("dd.MM.yyyy")
-							.format(p.getDatum());
+					data[i][0] = p.getDatum();
 					data[i][2] = p.getBezeichnung();
 					// data[i][2] = String.format("%.2f", p.getBetrag());
 					data[i][3] = p.getBetrag();
