@@ -51,6 +51,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
+import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -209,6 +210,7 @@ public class BudgetPlanGUI extends JFrame implements Observer {
 		getContentPane().setBackground(Color.WHITE);
 		
 		kontostandPanel = new JPanel ();
+		
 		contentPanel = new JPanel ();
 		controlPanel= new JPanel ();
 		contentPanel.setLayout(new FlowLayout());
@@ -610,6 +612,9 @@ public class BudgetPlanGUI extends JFrame implements Observer {
 		//showkontostand.setBounds(300, 110, 150, 40);
 		kontostandPanel.add(showkontostand);
 		labelKontostand = new JLabel ("KONTOSTAND");
+		labelKontostand.setPreferredSize(new Dimension(500, 40));
+		labelKontostand.setHorizontalAlignment(SwingConstants.RIGHT);
+		labelKontostand.setFont(labelKontostand.getFont().deriveFont(20.0f));
 		kontostandPanel.add(labelKontostand);
 		
 		
