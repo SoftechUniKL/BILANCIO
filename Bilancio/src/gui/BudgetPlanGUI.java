@@ -18,6 +18,7 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 //import java.time.temporal.JulianFields;
 import java.util.Date;
 import java.util.List;
@@ -1166,6 +1167,14 @@ public class BudgetPlanGUI extends JFrame implements Observer {
 	public void updateTableFromModel2(BudgetPlanModel model,
 			Date selectedDate1, Date selectedDate2) {
 
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(selectedDate1);
+		cal.add(Calendar.DATE, -1);
+		
+		selectedDate1 = cal.getTime();
+		
+		
+		
 		if (model != null)
 			budget = model;
 
@@ -1176,8 +1185,11 @@ public class BudgetPlanGUI extends JFrame implements Observer {
 		data = new Object[budget.ausgaben.size()][5];
 		int i = 0;
 		for (Posten p : budget.ausgaben) {
-			if (p.getDatum().after(selectedDate1)
-					&& p.getDatum().before(selectedDate2)) {
+			int after =selectedDate2.compareTo(p.getDatum());
+			int before = selectedDate1.compareTo(p.getDatum());
+			
+			if ((before < 0) && (after>0))
+					 {
 
 				data[i][0] = new SimpleDateFormat("dd.MM.yyyy").format(p
 						.getDatum());
