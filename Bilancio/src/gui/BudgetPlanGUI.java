@@ -40,6 +40,7 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -105,7 +106,6 @@ public class BudgetPlanGUI extends JFrame implements Observer {
 	private JButton addPosten;
 	private JButton saveTable;
 	private JButton deletePosten;
-	private JButton showkontostand;
 	private JButton prognose;
 	private TableColumn einAusgabeColumn;
 	private JComboBox einAusgabeCombobox;
@@ -131,7 +131,9 @@ public class BudgetPlanGUI extends JFrame implements Observer {
 	
 	static private JPanel contentPanel ;
 	static private JPanel controlPanel ;
-	
+	static private JPanel kontostandPanel ;
+	private static JButton showkontostand;
+	private static JLabel labelKontostand;
 	private static JRadioButton rButtonFilterEin;
 	private static JRadioButton rButtonFilterAus;
 
@@ -157,7 +159,9 @@ public class BudgetPlanGUI extends JFrame implements Observer {
 		getContentPane().setLayout(new FlowLayout());
 		
 		getContentPane().setBackground(Color.WHITE);
-		
+		kontostandPanel = new JPanel ();
+//		kontostandPanel.setLayout(new FlowLayout());
+	
 		contentPanel = new JPanel ();
 		controlPanel= new JPanel ();
 		contentPanel.setLayout(new FlowLayout());
@@ -181,13 +185,14 @@ public class BudgetPlanGUI extends JFrame implements Observer {
 		//sorttable(tableModel, table);
 		diagrammAuswahl();
 		showKonto();
+		
 		showPrognose();
 		// saveTableChange ();
 		deletePosten();
 		
 		filterDate();
 		
-		setBounds(10, 10, 800, 800); // Groesse des Frames
+		setBounds(10, 10, 700, 800); // Groesse des Frames
 		setVisible(true); // Frame wird sichtbar
 
 	}
@@ -200,14 +205,16 @@ public class BudgetPlanGUI extends JFrame implements Observer {
 	
 		getContentPane().setLayout(new FlowLayout());
 		
+		
 		getContentPane().setBackground(Color.WHITE);
 		
+		kontostandPanel = new JPanel ();
 		contentPanel = new JPanel ();
 		controlPanel= new JPanel ();
 		contentPanel.setLayout(new FlowLayout());
 		//TODO : Delete after testing
 		contentPanel.setBackground(Color.BLUE);
-		
+		getContentPane().add(kontostandPanel);
 		getContentPane().add(controlPanel);
 		getContentPane().add(contentPanel);
 		
@@ -349,9 +356,9 @@ public class BudgetPlanGUI extends JFrame implements Observer {
 						.setPreferredSize(new java.awt.Dimension(700, 367));
 
 
-				((JPanel)getContentPane().getComponent(1)).removeAll(); 
-				((JPanel)getContentPane().getComponent(1)).add(panelPrognose);
-				getContentPane().getComponent(1).revalidate();
+				((JPanel)getContentPane().getComponent(2)).removeAll(); 
+				((JPanel)getContentPane().getComponent(2)).add(panelPrognose);
+				getContentPane().getComponent(2).revalidate();
 				
 			}
 		}
@@ -369,8 +376,8 @@ public class BudgetPlanGUI extends JFrame implements Observer {
 		
 				getDataEinnahme();
 				
-				((JPanel)getContentPane().getComponent(1)).removeAll(); 
-				((JPanel)getContentPane().getComponent(1)).add(panelEinnahme);
+				((JPanel)getContentPane().getComponent(2)).removeAll(); 
+				((JPanel)getContentPane().getComponent(2)).add(panelEinnahme);
 				
 				getContentPane().getComponent(1).revalidate();
 			}
@@ -382,10 +389,10 @@ public class BudgetPlanGUI extends JFrame implements Observer {
 		class übersichtTabelle implements ActionListener {
 		 public void actionPerformed(ActionEvent e) {
 			
-				((JPanel)getContentPane().getComponent(1)).removeAll(); 
-				((JPanel)getContentPane().getComponent(1)).add(scrollpane);
+				((JPanel)getContentPane().getComponent(2)).removeAll(); 
+				((JPanel)getContentPane().getComponent(2)).add(scrollpane);
 				
-	getContentPane().getComponent(1).revalidate();
+	getContentPane().getComponent(2).revalidate();
 			
 
 		 }
@@ -398,8 +405,8 @@ public class BudgetPlanGUI extends JFrame implements Observer {
 				
 				getDataAusgabe();
 				
-				((JPanel)getContentPane().getComponent(1)).removeAll(); 
-				((JPanel)getContentPane().getComponent(1)).add(panelAusgabe);
+				((JPanel)getContentPane().getComponent(2)).removeAll(); 
+				((JPanel)getContentPane().getComponent(2)).add(panelAusgabe);
 				
 				
 				getContentPane().getComponent(1).revalidate();
@@ -418,7 +425,7 @@ public class BudgetPlanGUI extends JFrame implements Observer {
 
 			
 				//getContentPane().repaint();
-				getContentPane().getComponent(1).revalidate();
+				getContentPane().getComponent(2).revalidate();
 
 			}
 
@@ -557,8 +564,7 @@ public class BudgetPlanGUI extends JFrame implements Observer {
 
 		deletePosten.setBounds(300, 110, 150, 40);
 		// DeletePosten Button
-		showkontostand = new JButton("    Kontostand zeigen   ");
-		showkontostand.setBounds(300, 110, 150, 40);
+		
 
 		// Dropliste für Diagramm
 		DiagrammAuswahl = new JComboBox();
@@ -600,7 +606,16 @@ public class BudgetPlanGUI extends JFrame implements Observer {
 		
 		controlPanel.add(rButtonFilterEin);
 		controlPanel.add(rButtonFilterAus);
+		showkontostand = new JButton("    Kontostand zeigen   ");
+		//showkontostand.setBounds(300, 110, 150, 40);
+		kontostandPanel.add(showkontostand);
+		labelKontostand = new JLabel ("KONTOSTAND");
+		kontostandPanel.add(labelKontostand);
 		
+		
+		kontostandPanel.show(true);
+		
+		getContentPane().add(kontostandPanel);
 		
 		getContentPane().add(controlPanel);
 		getContentPane().add(contentPanel);
@@ -613,7 +628,7 @@ public class BudgetPlanGUI extends JFrame implements Observer {
 		buttonContailer.add(deletePosten);
 		buttonContailer.add(saveTable);
 		buttonContailer.add(DiagrammAuswahl);
-		buttonContailer.add(showkontostand);
+		//buttonContailer.add(showkontostand);
 		buttonContailer.add(button);
 		buttonContailer.add(prognose);
 
@@ -869,12 +884,15 @@ public class BudgetPlanGUI extends JFrame implements Observer {
 		showkontostand.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				JOptionPane.showMessageDialog(
-						BudgetPlanGUI.this,
-						"                             "
-								+ String.format("%.2f", budget.getKontostand())
-								+ " Euro", "Kontostand",
-						JOptionPane.PLAIN_MESSAGE);
+				
+				labelKontostand.setText(Double.toString(budget.getKontostand()));
+				
+				if (budget.getKontostand()>=0)
+					
+						kontostandPanel.setBackground(Color.GREEN);
+				else 
+				
+					kontostandPanel.setBackground(Color.RED);
 
 			}
 		});
