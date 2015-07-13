@@ -9,11 +9,9 @@ import model.BudgetPlanModel;
 
 public class BudgetPlan {
 	public static void main(String[] args) {
-		BudgetPlanModel budget = new BudgetPlanModel(); // Modell
-//		BudgetPlanGUI gui =new BudgetPlanGUI(budget); // View und Controller
 		
-		
-		BudgetPlanGUI gui =new BudgetPlanGUI(null); 
+		new BudgetPlanModel(); // Modell
+		new BudgetPlanGUI(null); // View und Controller
 		
 	}
 	
