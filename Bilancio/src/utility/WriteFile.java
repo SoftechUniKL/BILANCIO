@@ -23,10 +23,7 @@ public class WriteFile implements Observer {
 		
 		this.posten = posten;
 		
-		
-		
 	}
-	
 	
 	public void writeDataIntoFile(){
 		
@@ -34,27 +31,20 @@ public class WriteFile implements Observer {
 		
 		 CSVWriter writer = null;
 			String[] line = new String[5];
-			String str;
+			
 			try {
 				writer = new CSVWriter(new FileWriter(nameOfFile), '#', CSVWriter.NO_QUOTE_CHARACTER);
 				
-				int i = 0;
-				
 				for (Posten p : this.posten) {
-					//
 
 					line[0] = new SimpleDateFormat("dd.MM.yyyy").format(p.getDatum());
+					line[1] = p.getKategorie().toString();
 					line[2] = p.getBezeichnung() ;
 					line[3] = Double.toString( p.getBetrag());
-					//line[2] = String.format("%.2f", p.getBetrag());
-					line[1] = p.getKategorie().toString();
 					line[4] = p.getTransaktionsart().toString();
 					
 					writer.writeNext(line);
-					i++;
-
 				}
-
 				writer.close();
 				
 			} catch (IOException e1) {

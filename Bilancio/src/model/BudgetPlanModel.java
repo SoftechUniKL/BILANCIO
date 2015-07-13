@@ -59,14 +59,12 @@ public BudgetPlanModel(String file) {
 		this.addObserver(wFile);
 		
 		tell("Model has changed.");
-	}
-		
+	}		
 	
 	/**
 	 * Anfangseingabe/betrag für aktuellen Kontostand 
 	 * @param k  Betrag
 	 */
-	
 		void setKontostand (double k ) {
 			Kontostand = k; 
 		}
@@ -88,14 +86,9 @@ public BudgetPlanModel(String file) {
 				if (ausgaben.get(i).getTransaktionsart().equals("Ausgabe") ){
 					tmpKontostand -=ausgaben.get(i).getBetrag();
 					}
-			
 			}
-			
-			
 			return tmpKontostand;
-			
 		}
-	
 	
 		/**
 		 * Anhand vorhandenen Daten , Prognose für die nächste Monate treffen.
@@ -107,8 +100,6 @@ public BudgetPlanModel(String file) {
 			
 			double prognose = 0;
 			 Calendar stichTag = Calendar.getInstance(); 
-//			 int month = stichTag.get(Calendar.MONTH);
-//		     int day = stichTag.get(Calendar.DAY_OF_MONTH);
 		     int year = stichTag.get(Calendar.YEAR) - 1;
 		     stichTag.set(Calendar.YEAR,year - 1);
 		     
@@ -121,10 +112,7 @@ public BudgetPlanModel(String file) {
 		    	if (transaktDatum.before(stichTag.getTime())){
 		    		
 		    		transaktionenCopy.remove(i);
-		    		
 		    	}
-		    
-		    
 		    }
 			
 		    double tmpKontostand=0;;
@@ -140,14 +128,10 @@ public BudgetPlanModel(String file) {
 					}
 			
 			}
-			
 			prognose = getKontostand() + tmpKontostand/12*prognoseMonat;
-			
-			
 			
 			return prognose;
 		}
-		
 		
 		/**
 		 * 	Message an anderen KLassen , bei Änderungen

@@ -8,16 +8,13 @@ import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import java.util.Observable;
-import java.util.Observer;
-
 import model.Posten;
 
 import com.opencsv.CSVReader;
 
 public class ReadFile  {
 	
-	static String fileName = "";
+	private String fileName = "";
 	
 	public List<Posten> posten;
 	
@@ -25,7 +22,6 @@ public class ReadFile  {
 		
 		this.fileName = fileName;
 		this.posten = posten;
-		
 		
 	}
 	
@@ -36,6 +32,7 @@ public class ReadFile  {
 			// Zeilenweises Einlesen der Daten
 			CSVReader reader = new CSVReader(new FileReader(nameOfFile),'#');
 			String[] nextLine;
+		
 			while ((nextLine = reader.readNext()) != null) {
 				DateFormat df = DateFormat.getDateInstance(DateFormat.SHORT, Locale.GERMAN);
 				Date datum = df.parse(nextLine[0]);
@@ -62,7 +59,5 @@ public class ReadFile  {
 			System.exit(1);
 		}
 	}
-
-	
 
 }

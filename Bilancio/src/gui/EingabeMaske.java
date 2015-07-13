@@ -1,6 +1,5 @@
 package gui;
 
-
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -44,8 +43,8 @@ public class EingabeMaske extends JFrame {
 	private static NumberFormat nf = NumberFormat.getInstance(Locale.GERMANY);
 	private static Date today;
 	static String todayFormated = "";
-	
-	static Date selectedDate ;
+
+	static Date selectedDate;
 	static JDatePickerImpl datePicker;
 
 	static JButton saveButton;
@@ -83,9 +82,8 @@ public class EingabeMaske extends JFrame {
 	static JScrollPane scrollpane;
 	static MyTableModel tableModel;
 
-	
-	public EingabeMaske(){
-	
+	public EingabeMaske() {
+
 		initWindow();
 
 		// Aktionen um eingegebene Daten zu speichern oder zu löschen
@@ -97,17 +95,15 @@ public class EingabeMaske extends JFrame {
 		frame.pack();
 		frame.setVisible(true);
 
-
 	}
-	
-	void initWindow(){
-		
+
+	void initWindow() {
+
 		Dimension eingabeSize = new Dimension(150, 20);
-		FlowLayout fl = new FlowLayout(FlowLayout.LEFT,1,15);
-		
+		FlowLayout fl = new FlowLayout(FlowLayout.LEFT, 1, 15);
+
 		today = new Date();
 		todayFormated = df.format(today.getTime());
-		// System.out.println("Heute ist der "+todayFormated);
 
 		frame = new JFrame("Eingabe");
 		frame.getContentPane().setPreferredSize(new Dimension(400, 300));
@@ -123,11 +119,11 @@ public class EingabeMaske extends JFrame {
 		datePanel.setBackground(Color.LIGHT_GRAY);
 		tfDatum = new JFormattedTextField(df);
 		tfDatum.setColumns(10);
-		
+
 		nameDatum = new JLabel("Datum");
 		nameDatum.setPreferredSize(eingabeSize);
 		datePanel.add(nameDatum);
-		
+
 		// Container und Elemente der DatePicker
 		UtilDateModel model = new UtilDateModel();
 		Properties p = new Properties();
@@ -136,13 +132,12 @@ public class EingabeMaske extends JFrame {
 		p.put("text.year", "Year");
 		JDatePanelImpl datePane = new JDatePanelImpl(model, p);
 		datePicker = new JDatePickerImpl(datePane, new DateLabelFormatter());
-	
+
 		selectedDate = new Date();
 		todayFormated = df.format(selectedDate.getTime());
-		
+
 		datePanel.add(datePicker);
 
-		
 		// Container und Elemente der Bezeichnung-Eingabe
 		JPanel bezeichnungPanel = new JPanel(fl);
 		bezeichnungPanel.setBackground(Color.LIGHT_GRAY);
@@ -168,7 +163,6 @@ public class EingabeMaske extends JFrame {
 		nameKategorie = new JLabel("Kategorie");
 		nameKategorie.setPreferredSize(eingabeSize);
 		kategoriePanel.add(nameKategorie);
-		
 
 		listeEinnahmen = new String[] { "Gehalt", "Geschenk", "Kapitalerträge",
 				"sonstige" };
@@ -197,7 +191,7 @@ public class EingabeMaske extends JFrame {
 		panelEinnameAusgabe.add(RButtonAusgabe);
 
 		// Container für Save und Delete Buttons
-		FlowLayout flForButtons = new FlowLayout(FlowLayout.LEFT,80,15);
+		FlowLayout flForButtons = new FlowLayout(FlowLayout.LEFT, 80, 15);
 		JPanel panelForButtonSpeicherUndLoeschen = new JPanel(flForButtons);
 		panelForButtonSpeicherUndLoeschen.setBackground(Color.LIGHT_GRAY);
 		saveButton = new JButton("Speichern");
@@ -211,8 +205,8 @@ public class EingabeMaske extends JFrame {
 		mainPanel.add(bezeichnungPanel);
 		mainPanel.add(betragPanel);
 		mainPanel.add(panelForButtonSpeicherUndLoeschen);
-
 		mainPanel.setBackground(Color.BLACK);
+
 		frame.getContentPane().add(mainPanel);
 	}
 
@@ -259,25 +253,24 @@ public class EingabeMaske extends JFrame {
 			}
 		});
 	}
-	
+
 	/**
-	 *   Wenn der saveButton gedruckt wird, dann werden alle Werte der Textfelder gespeichert
+	 * Wenn der saveButton gedruckt wird, dann werden alle Werte der Textfelder
+	 * gespeichert
 	 */
 
 	public static void saveInput() {
-		
+
 		saveButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				
-				selectedDate  =  (Date) datePicker.getModel().getValue();
-				String dDate = new SimpleDateFormat("dd.MM.yyyy").format(selectedDate);
+
+				selectedDate = (Date) datePicker.getModel().getValue();
+				String dDate = new SimpleDateFormat("dd.MM.yyyy")
+						.format(selectedDate);
 				System.out.println("Datum: Picker :       " + dDate);
-				
 				tfDatum.setText(dDate);
 				System.out.println("Datum:       " + tfDatum.getText());
-				
-				
 				System.out.println("Bezeichnung: " + tfBezeichnung.getText());
 
 				try {
@@ -286,7 +279,6 @@ public class EingabeMaske extends JFrame {
 					// Eingabe sinn macht
 					// Fehler durch POP-Up Fenster anzeigen
 				} catch (ParseException e1) {
-					// TODO Auto-generated catch block
 
 					JOptionPane.showMessageDialog(null,
 							"Eingabe darf nur Dezimalzahl sein. (123,56)",
@@ -308,25 +300,6 @@ public class EingabeMaske extends JFrame {
 				}
 
 				saveEingabe();
-
-/*				tableModel.addRow(new Object[5]);
-				int lastRow = tableModel.getRowCount();
-
-				tableModel.setValueAt(tfDatum.getText(), lastRow - 1, 0);
-				if (RButtonEinnahme.isSelected()) {
-					tableModel.setValueAt(
-							cbKategorieEinnahme.getSelectedItem(), lastRow - 1,
-							1);
-					tableModel.setValueAt("Einnahme", lastRow - 1, 4);
-				}
-				if (RButtonAusgabe.isSelected()) {
-					tableModel.setValueAt(cbKategorieAusgabe.getSelectedItem(),
-							lastRow - 1, 1);
-					tableModel.setValueAt("Ausgabe", lastRow - 1, 4);
-				}
-				tableModel.setValueAt(tfBezeichnung.getText(), lastRow - 1, 2);
-				tableModel.setValueAt(Betrag.doubleValue(), lastRow - 1, 3);
-*/
 				frame.dispose();
 
 			}
@@ -353,7 +326,6 @@ public class EingabeMaske extends JFrame {
 			// macht
 			// Fehler durch POP-Up Fenster anzeigen
 		} catch (ParseException e1) {
-			// TODO Auto-generated catch block
 
 			JOptionPane.showMessageDialog(null,
 					"Eingabe darf nur Dezimalzahl sein. (123,56)", "Error",
@@ -362,13 +334,15 @@ public class EingabeMaske extends JFrame {
 
 		String kategorie = "";
 		String transaktionsArt = "";
-		if (kategoriePanel.getComponentCount() > 1 && RButtonEinnahme.isSelected()) {
+		if (kategoriePanel.getComponentCount() > 1
+				&& RButtonEinnahme.isSelected()) {
 			kategorie = (String) cbKategorieEinnahme.getSelectedItem();
 			transaktionsArt = "Einnahme";
 
 		}
 
-		if (kategoriePanel.getComponentCount() > 1 && RButtonAusgabe.isSelected()) {
+		if (kategoriePanel.getComponentCount() > 1
+				&& RButtonAusgabe.isSelected()) {
 			kategorie = (String) cbKategorieAusgabe.getSelectedItem();
 			transaktionsArt = "Ausgabe";
 		}
@@ -376,23 +350,21 @@ public class EingabeMaske extends JFrame {
 		budget.ausgaben.add(new Posten(datum, kategorie, bezeichnung, betrag
 				.doubleValue(), transaktionsArt));
 
-		
 		budget.tell("New Transaction has been added.");
 
 	}
-	
+
 	/**
 	 * Wenn der deleteButton gedruckt wird, dann werden alle Textfelder gelöscht
 	 */
 	public static void deleteInput() {
-		
+
 		deleteButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				
+
 				tfBezeichnung.setText("");
 				tfBetrag.setText("0,00");
-
 				System.out.println("Alle Eingaben gelöscht.");
 
 			}
