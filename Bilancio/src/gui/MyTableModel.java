@@ -24,8 +24,8 @@ public class MyTableModel extends DefaultTableModel{
 			
 			if (col == 0)
 				return  Date.class;
-			if (col == 3) // second column accepts only Integer values
-				return Double.class;
+//			if (col == 3) // second column accepts only Integer values
+//				return Double.class;
 
 			else
 				return String.class; // other columns accept String values

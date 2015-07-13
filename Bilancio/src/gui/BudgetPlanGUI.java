@@ -57,6 +57,7 @@ import javax.swing.UIManager;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
@@ -914,8 +915,8 @@ public class BudgetPlanGUI extends JFrame implements Observer {
 		for (Posten p : budget.ausgaben) {
 			data[i][0] = p.getDatum();
 			data[i][2] = p.getBezeichnung();
-			// data[i][2] = String.format("%.2f", p.getBetrag());
-			data[i][3] = p.getBetrag();
+			 data[i][3] = String.format("%.2f", p.getBetrag());
+			//data[i][3] = p.getBetrag();
 			data[i][1] = p.getKategorie();
 			data[i][4] = p.getTransaktionsart();
 			i++;
@@ -1013,8 +1014,8 @@ public class BudgetPlanGUI extends JFrame implements Observer {
 				for (Posten p : budget.ausgaben) {
 					data[i][0] = p.getDatum();
 					data[i][2] = p.getBezeichnung();
-					// data[i][2] = String.format("%.2f", p.getBetrag());
-					data[i][3] = p.getBetrag();
+					data[i][3] = String.format("%.2f", p.getBetrag());
+					//data[i][3] = p.getBetrag();
 					data[i][1] = p.getKategorie();
 					data[i][4] = p.getTransaktionsart();
 					i++;
@@ -1034,6 +1035,7 @@ public class BudgetPlanGUI extends JFrame implements Observer {
 
 					public Component prepareRenderer(TableCellRenderer renderer,
 							int row, int column) {
+						
 						Component c = super.prepareRenderer(renderer, row, column);
 
 						// Alternate row color
@@ -1041,11 +1043,19 @@ public class BudgetPlanGUI extends JFrame implements Observer {
 						if (!isRowSelected(row))
 							c.setBackground(row % 2 != 0 ? getBackground()
 									: Color.LIGHT_GRAY);
-
+						
 						return c;
 					}
 
 				};
+				
+
+
+				DefaultTableCellRenderer rightRenderer = new DefaultTableCellRenderer();
+				rightRenderer.setHorizontalAlignment(JLabel.RIGHT);
+				table.getColumnModel().getColumn(3).setCellRenderer(rightRenderer);
+
+
 				
 				sorttable(tableModel, table);
 
