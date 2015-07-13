@@ -18,6 +18,7 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 //import java.time.temporal.JulianFields;
 import java.util.Date;
@@ -154,7 +155,7 @@ public class BudgetPlanGUI extends JFrame implements Observer {
 	public BudgetPlanGUI(BudgetPlanModel budget)  {
 
 		super("BILANCIO");
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 //		this.setResizable(false);
 	
 		getContentPane().setLayout(new FlowLayout());
@@ -527,7 +528,8 @@ public class BudgetPlanGUI extends JFrame implements Observer {
 	
 				BudgetPlanModel myBudget = new BudgetPlanModel(file.toString());				
 				BudgetPlanGUI gui =new BudgetPlanGUI(myBudget);
-				updateTableFromModel(myBudget);
+				gui.setTitle("BILANCIO: "+ file.getName());
+							updateTableFromModel(myBudget);
 
 				System.out.println(file);
 				
@@ -553,8 +555,7 @@ public class BudgetPlanGUI extends JFrame implements Observer {
 		button.setBounds(300, 110, 150, 40);
 
 		// AddPosten Button
-		addPosten = new JButton(" +    Add Posten       ")
-		;
+		addPosten = new JButton(" +    Add Posten       ");
 		addPosten.setBounds(300, 110, 150, 40);
 
 		// SAve Table Button
@@ -911,8 +912,7 @@ public class BudgetPlanGUI extends JFrame implements Observer {
 		data = new Object[budget.ausgaben.size()][5];
 		int i = 0;
 		for (Posten p : budget.ausgaben) {
-			data[i][0] = new SimpleDateFormat("dd.MM.yyyy")
-					.format(p.getDatum());
+			data[i][0] = p.getDatum();
 			data[i][2] = p.getBezeichnung();
 			// data[i][2] = String.format("%.2f", p.getBetrag());
 			data[i][3] = p.getBetrag();
@@ -1119,27 +1119,27 @@ public class BudgetPlanGUI extends JFrame implements Observer {
 		panelEinnahme = new ChartPanel(pieChartEinnahme);
 		}
 	
-	 public static Scanner selectTextFile() {
-		   do {
-		      JFileChooser chooser = new JFileChooser();
-	         FileNameExtensionFilter filter = new FileNameExtensionFilter(
-	            "Text/Java files", "csv", "java");
-	         chooser.setFileFilter(filter);
-	         int returnVal = chooser.showOpenDialog(null);
-				try {
-	            if(returnVal == JFileChooser.APPROVE_OPTION) {
-			         return new Scanner(chooser.getSelectedFile());
-	            } 
-	   		   else {
-			         return null;
-				   }
-				}
-				catch (FileNotFoundException e) {
-				   JOptionPane.showMessageDialog(null, "Invalid file!",
-					   "error", JOptionPane.ERROR_MESSAGE); 
-				}
-			} while (true);
-		}
+//	 public static Scanner selectTextFile() {
+//		   do {
+//		      JFileChooser chooser = new JFileChooser();
+//	         FileNameExtensionFilter filter = new FileNameExtensionFilter(
+//	            "Text/Java files", "csv", "java");
+//	         chooser.setFileFilter(filter);
+//	         int returnVal = chooser.showOpenDialog(null);
+//				try {
+//	            if(returnVal == JFileChooser.APPROVE_OPTION) {
+//			         return new Scanner(chooser.getSelectedFile());
+//	            } 
+//	   		   else {
+//			         return null;
+//				   }
+//				}
+//				catch (FileNotFoundException e) {
+//				   JOptionPane.showMessageDialog(null, "Invalid file!",
+//					   "error", JOptionPane.ERROR_MESSAGE); 
+//				}
+//			} while (true);
+//		}
 	 
 	 
 	 public void filterDate() {
@@ -1204,27 +1204,32 @@ public class BudgetPlanGUI extends JFrame implements Observer {
 		System.out.println("Budget list = " + budget.ausgaben.size());
 
 		// Tabelle mit Uebersicht der Ausgaben
-		data = new Object[budget.ausgaben.size()][5];
-		int i = 0;
+		
+		List<Posten> tran = new ArrayList<Posten>();
+		
+		
 		for (Posten p : budget.ausgaben) {
 			int after =selectedDate2.compareTo(p.getDatum());
 			int before = selectedDate1.compareTo(p.getDatum());
 			
-			if ((before < 0) && (after>0))
-					 {
-
-				data[i][0] = new SimpleDateFormat("dd.MM.yyyy").format(p
-						.getDatum());
-				data[i][2] = p.getBezeichnung();
-				// data[i][2] = String.format("%.2f", p.getBetrag());
-				data[i][3] = p.getBetrag();
-				data[i][1] = p.getKategorie();
-				data[i][4] = p.getTransaktionsart();
+			if ((before < 0) && (after>0)){
+				tran.add(p);
 			}
-			i++;
-
 		}
-
+		
+		data = new Object[budget.ausgaben.size()][5];
+		int i = 0; 
+		for( Posten p : tran ){
+			
+			data[i][0] = p.getDatum();
+			data[i][2] = p.getBezeichnung();
+			data[i][3] = p.getBetrag();
+			data[i][1] = p.getKategorie();
+			data[i][4] = p.getTransaktionsart();
+			
+			i++;
+		}
+		
 		// Add row to table
 		MyTableModel tableModel = new MyTableModel(data, new Object[] { "Datum",
 				"Kategorie", "Bezeichnung", "Betrag", "Transaktionsart" });
