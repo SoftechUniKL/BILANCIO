@@ -26,6 +26,7 @@ import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 
 import model.BudgetPlanModel;
+import model.IBudgetPlanModel;
 import model.Posten;
 
 import org.jdatepicker.impl.JDatePanelImpl;
@@ -78,7 +79,7 @@ public class EingabeMaske extends JFrame {
 
 	static String transaktionsArt;
 
-	static BudgetPlanModel budget;
+	static IBudgetPlanModel budget;
 	static JScrollPane scrollpane;
 	static MyTableModel tableModel;
 
@@ -221,13 +222,13 @@ public class EingabeMaske extends JFrame {
 				if (kategoriePanel.getComponentCount() == 1) {
 					kategoriePanel.add(cbKategorieEinnahme);
 				}
+				
 				if (kategoriePanel.getComponentCount() == 2) {
 					kategoriePanel.remove(1);
 					kategoriePanel.add(cbKategorieEinnahme);
 				}
 
 				frame.printAll(frame.getGraphics());
-
 			}
 		});
 	}
@@ -347,7 +348,7 @@ public class EingabeMaske extends JFrame {
 			transaktionsArt = "Ausgabe";
 		}
 
-		budget.ausgaben.add(new Posten(datum, kategorie, bezeichnung, betrag
+		budget.addAusgabe(new Posten(datum, kategorie, bezeichnung, betrag
 				.doubleValue(), transaktionsArt));
 
 		budget.tell("New Transaction has been added.");

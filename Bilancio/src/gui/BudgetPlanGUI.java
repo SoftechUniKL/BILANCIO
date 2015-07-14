@@ -51,6 +51,7 @@ import javax.swing.table.TableRowSorter;
 import javax.swing.table.TableStringConverter;
 
 import model.BudgetPlanModel;
+import model.IBudgetPlanModel;
 import model.Posten;
 
 import org.jfree.chart.ChartFactory;
@@ -119,7 +120,7 @@ public class BudgetPlanGUI extends JFrame implements Observer {
 	/**
 	 * Modell der Daten
 	 */
-	static public BudgetPlanModel budget;
+	static public IBudgetPlanModel budget;
 
 	/**
 	 * Konstruktor fuer die GUI.
@@ -129,7 +130,7 @@ public class BudgetPlanGUI extends JFrame implements Observer {
 	 * @param budget
 	 *            Modell der Daten
 	 */
-	public BudgetPlanGUI(BudgetPlanModel budget) {
+	public BudgetPlanGUI(IBudgetPlanModel budget) {
 
 		super("BILANCIO");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -396,7 +397,7 @@ public class BudgetPlanGUI extends JFrame implements Observer {
 		class deletePosten implements ActionListener {
 			public void actionPerformed(ActionEvent e) {
 				System.out.println("Anzahl der Posten, vor Löschen"
-						+ budget.ausgaben.size());
+						+ budget.getSize());
 				int row = table.getSelectedRow();
 				if (row != -1) {
 					System.out.println("Selected row : " + row);
@@ -409,10 +410,10 @@ public class BudgetPlanGUI extends JFrame implements Observer {
 				}
 
 				// Posten aus der Liste löschen
-				budget.ausgaben.remove(row);
+				budget.removeAusgabe(row);
 
 				System.out.println("Anzahl der Posten, nach Löschen"
-						+ budget.ausgaben.size());
+						+ budget.getSize());
 
 				budget.tell("A Transaction has been deleted.");
 			}
@@ -539,7 +540,7 @@ public class BudgetPlanGUI extends JFrame implements Observer {
 				System.out.println("Anzahl der Zeilen vor update = "
 						+ table.getRowCount());
 				System.out.println("Anzahl der Liste vor update = "
-						+ budget.ausgaben.size());
+						+ budget.getSize());
 
 				pMaske = new EingabeMaske();
 				EingabeMaske.budget = budget;
@@ -550,7 +551,7 @@ public class BudgetPlanGUI extends JFrame implements Observer {
 				System.out.println("Anzahl der Zeilen nach update = "
 						+ table.getRowCount());
 				System.out.println("Anzahl der Liste nach update = "
-						+ budget.ausgaben.size());
+						+ budget.getSize());
 
 				getContentPane().repaint();
 			}
@@ -576,7 +577,7 @@ public class BudgetPlanGUI extends JFrame implements Observer {
 					tableModel.removeRow(row);
 
 					// Posten aus der Liste löschen
-					budget.ausgaben.remove(row);
+					budget.removeAusgabe(row);
 
 					// PieChart für Einnahme
 					// pdEinnahme-inhalt vor löschen
@@ -593,7 +594,7 @@ public class BudgetPlanGUI extends JFrame implements Observer {
 						panelEinnahme.revalidate();
 
 						// Daten für PieChart aus der Tabelle lesen
-						for (Posten p : budget.ausgaben) {
+						for (Posten p : budget.getAusgabe()) {
 							if (p.getTransaktionsart().equals("Einnahme"))
 								pdEinnahme.setValue(p.getBezeichnung(),
 										p.getBetrag());
@@ -608,7 +609,7 @@ public class BudgetPlanGUI extends JFrame implements Observer {
 						panelAusgabe.revalidate();
 
 						// Daten für PieChart aus der Tabelle lesen
-						for (Posten p : budget.ausgaben) {
+						for (Posten p : budget.getAusgabe()) {
 							if (p.getTransaktionsart().equals("Ausgabe"))
 								pdAusgabe.setValue(p.getBezeichnung(),
 										p.getBetrag());
@@ -744,19 +745,19 @@ public class BudgetPlanGUI extends JFrame implements Observer {
 
 	}
 
-	public void updateTableFromModel(BudgetPlanModel model) {
+	public void updateTableFromModel(IBudgetPlanModel model) {
 
 		// tableModel.addRow(new Object[5]);
 		if (model != null)
 			budget = model;
 
 		System.out.println("Update Table From Model has been called.");
-		System.out.println("Budget list = " + budget.ausgaben.size());
+		System.out.println("Budget list = " + budget.getSize());
 
 		// Tabelle mit Uebersicht der Ausgaben
-		data = new Object[budget.ausgaben.size()][5];
+		data = new Object[budget.getSize()][5];
 		int i = 0;
-		for (Posten p : budget.ausgaben) {
+		for (Posten p : budget.getAusgabe()) {
 			data[i][0] = p.getDatum();
 			data[i][2] = p.getBezeichnung();
 			data[i][3] = String.format("%.2f", p.getBetrag());
@@ -837,7 +838,7 @@ public class BudgetPlanGUI extends JFrame implements Observer {
 
 	private void getDataAusgabe() {
 		pdAusgabe = new DefaultPieDataset();
-		for (Posten p : budget.ausgaben) {
+		for (Posten p : budget.getAusgabe()) {
 
 			if (p.getTransaktionsart().equals("Ausgabe"))
 				pdAusgabe.setValue(p.getBezeichnung(), p.getBetrag());
@@ -852,7 +853,7 @@ public class BudgetPlanGUI extends JFrame implements Observer {
 	private void getDataEinnahme() {
 		pdEinnahme = new DefaultPieDataset();
 
-		for (Posten p : budget.ausgaben) {
+		for (Posten p : budget.getAusgabe()) {
 			if (p.getTransaktionsart().equals("Einnahme"))
 				pdEinnahme.setValue(p.getBezeichnung(), p.getBetrag());
 
@@ -905,7 +906,7 @@ public class BudgetPlanGUI extends JFrame implements Observer {
 
 	}
 
-	public void updateTableFromModel2(BudgetPlanModel model,
+	public void updateTableFromModel2(IBudgetPlanModel model,
 			Date selectedDate1, Date selectedDate2) {
 
 		Calendar cal = Calendar.getInstance();
@@ -918,13 +919,13 @@ public class BudgetPlanGUI extends JFrame implements Observer {
 			budget = model;
 
 		System.out.println("Update Table From Model has been called. FILTER");
-		System.out.println("Budget list = " + budget.ausgaben.size());
+		System.out.println("Budget list = " + budget.getSize());
 
 		// Tabelle mit Uebersicht der Ausgaben
 
 		List<Posten> tran = new ArrayList<Posten>();
 
-		for (Posten p : budget.ausgaben) {
+		for (Posten p : budget.getAusgabe()) {
 			int after = selectedDate2.compareTo(p.getDatum());
 			int before = selectedDate1.compareTo(p.getDatum());
 
@@ -933,7 +934,7 @@ public class BudgetPlanGUI extends JFrame implements Observer {
 			}
 		}
 
-		data = new Object[budget.ausgaben.size()][5];
+		data = new Object[budget.getSize()][5];
 		int i = 0;
 		for (Posten p : tran) {
 

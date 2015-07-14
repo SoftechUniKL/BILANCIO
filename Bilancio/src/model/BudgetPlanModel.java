@@ -16,7 +16,7 @@ import utility.WriteFile;
  * Die Daten werden in der Datei data/budget.csv abgespeichert als CSV-Datei.
  * 
  */
-public class BudgetPlanModel extends  Observable{
+public class BudgetPlanModel extends  Observable implements IBudgetPlanModel{
 	
 	/**
 	 *  Liste der Transaktionen bzw. Posten
@@ -69,10 +69,10 @@ public BudgetPlanModel(String file) {
 			Kontostand = k; 
 		}
 		
-	/**
-	 * 	Kontostand berechnen
-	 * @return kontostand
+	/* (non-Javadoc)
+	 * @see model.IBudgetPlanModel#getKontostand()
 	 */
+		@Override
 		public double getKontostand()		{ 
 			
 			double tmpKontostand = 0;
@@ -90,12 +90,10 @@ public BudgetPlanModel(String file) {
 			return tmpKontostand;
 		}
 	
-		/**
-		 * Anhand vorhandenen Daten , Prognose für die nächste Monate treffen.
-		 * @param transaktionen		// Daten
-		 * @param prognoseMonat		// Anzahl der Monate im vorraus
-		 * @return prognose			// Prognose
+		/* (non-Javadoc)
+		 * @see model.IBudgetPlanModel#getPrognose(java.util.List, int)
 		 */
+		@Override
 		public double getPrognose (List<Posten> transaktionen, int prognoseMonat){
 			
 			double prognose = 0;
@@ -133,10 +131,10 @@ public BudgetPlanModel(String file) {
 			return prognose;
 		}
 		
-		/**
-		 * 	Message an anderen KLassen , bei Änderungen
-		 * @param info		Information über Änderung
+		/* (non-Javadoc)
+		 * @see model.IBudgetPlanModel#tell(java.lang.String)
 		 */
+		@Override
 		public void tell(String info){
 			
 			System.out.println("Number of Observers = " + countObservers());
@@ -146,4 +144,28 @@ public BudgetPlanModel(String file) {
 	            notifyObservers(info);
 	        }
 	    }
+
+		@Override
+		public void addAusgabe(Posten posten) {
+			this.ausgaben.add(posten);
+			
+		}
+		
+		@Override
+		public int getSize() {
+			// TODO Auto-generated method stub
+			return this.ausgaben.size();
+		}
+		
+		@Override
+		public void removeAusgabe(int row) {
+			// TODO Auto-generated method stub
+			this.ausgaben.remove(row);
+		}
+
+		public List<Posten> getAusgabe() {
+			return ausgaben;
+		}
+
+	
 }
