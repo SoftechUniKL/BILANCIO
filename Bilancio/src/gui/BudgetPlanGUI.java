@@ -8,13 +8,18 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.io.File;
+import java.text.NumberFormat;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.Properties;
+
 import org.jdatepicker.impl.JDatePanelImpl;
 import org.jdatepicker.impl.JDatePickerImpl;
 import org.jdatepicker.impl.UtilDateModel;
@@ -41,7 +46,9 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
+import javax.swing.table.TableStringConverter;
 
 import model.BudgetPlanModel;
 import model.Posten;
@@ -52,6 +59,7 @@ import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.data.general.DefaultPieDataset;
+
 import utility.DateLabelFormatter;
 
 /**
@@ -627,8 +635,34 @@ public class BudgetPlanGUI extends JFrame implements Observer {
 	// Tabelle sortieren
 	public void sorttable(final MyTableModel tableModel, final JTable table) {
 		TableRowSorter<MyTableModel> sorter = new TableRowSorter<MyTableModel>();
+		
+		
 		table.setRowSorter(sorter);
 		sorter.setModel(tableModel);
+		
+		sorter.setComparator(3, new Comparator<String>() {
+
+			@Override
+			public int compare(String o1, String o2) {
+				 NumberFormat nf = NumberFormat.getInstance(Locale.GERMANY);
+				 
+				
+				double x = 0;
+				double y = 0;
+				try {
+					x =  nf.parse(o1).doubleValue();
+					y  =  nf.parse(o2).doubleValue();
+				} catch (ParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+				return (int) (y-x);
+			}
+			
+			
+			
+		});
 
 	}
 

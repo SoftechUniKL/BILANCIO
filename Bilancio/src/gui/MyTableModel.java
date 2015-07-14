@@ -24,6 +24,8 @@ public class MyTableModel extends DefaultTableModel {
 
 		if (col == 0)
 			return Date.class;
+		if (col == 3)
+			return Double.class;
 
 		else
 			// andere Spalten akzeprieren nur Stringwerte
