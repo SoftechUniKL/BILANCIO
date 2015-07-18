@@ -166,6 +166,34 @@ public BudgetPlanModel(String file) {
 		public List<Posten> getAusgabe() {
 			return ausgaben;
 		}
+		
+	public int getAnzahlMonate() {
+		int i = 0;
+		Date firstDate = ausgaben.get(0).getDatum();
+
+		for (i = 0; i < ausgaben.size(); i++) {
+			if (firstDate.after(ausgaben.get(i).getDatum())) {
+				firstDate = ausgaben.get(i).getDatum();
+
+			}
+		}
+
+		Date lastDate = ausgaben.get(0).getDatum();
+		for (i = 0; i < ausgaben.size(); i++) {
+			if (lastDate.before(ausgaben.get(i).getDatum())) {
+				lastDate = ausgaben.get(i).getDatum();
+
+			}
+		}
+
+		int jahre = lastDate.getYear() - firstDate.getYear() - 1;
+		int firstmonat = firstDate.getMonth();
+		int lastmonat = lastDate.getMonth();
+
+		int monate = 12 * jahre + (12 - firstmonat) + (lastmonat + 1);
+
+		return monate;
+	}
+}
 
 	
-}
