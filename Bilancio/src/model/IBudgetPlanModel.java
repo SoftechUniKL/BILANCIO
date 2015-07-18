@@ -19,8 +19,7 @@ public interface IBudgetPlanModel {
 	 * @param prognoseMonat		// Anzahl der Monate im vorraus
 	 * @return prognose			// Prognose
 	 */
-	public abstract double getPrognose(List<Posten> transaktionen,
-			int prognoseMonat);
+	public abstract double getPrognose(int prognoseMonat);
 
 	/**
 	 * 	Message an anderen KLassen , bei Änderungen

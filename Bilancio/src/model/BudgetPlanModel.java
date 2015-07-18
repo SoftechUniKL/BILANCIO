@@ -94,17 +94,15 @@ public BudgetPlanModel(String file) {
 		 * @see model.IBudgetPlanModel#getPrognose(java.util.List, int)
 		 */
 		@Override
-		public double getPrognose (List<Posten> transaktionen, int prognoseMonat){
+		public double getPrognose (int prognoseMonat){
 			
 			double prognose = 0;
 			 Calendar stichTag = Calendar.getInstance(); 
 		     int year = stichTag.get(Calendar.YEAR) - 1;
 		     stichTag.set(Calendar.YEAR,year - 1);
 		     
-		     List<Posten> transaktionenCopy = transaktionen;
-		     
 		  // Alle Transaktionen holen, die max 365 tag zurück liegen 
-		    for (int i=0; i<transaktionen.size();i++){
+		   /* for (int i=0; i<transaktionen.size();i++){
 		    	
 		    	Date transaktDatum = transaktionenCopy.get(i).getDatum();
 		    	if (transaktDatum.before(stichTag.getTime())){
@@ -125,8 +123,8 @@ public BudgetPlanModel(String file) {
 					tmpKontostand -=transaktionenCopy.get(i).getBetrag();
 					}
 			
-			}
-			prognose = getKontostand() + tmpKontostand/12*prognoseMonat;
+			} */
+			prognose = getKontostand()+(getKontostand()/getAnzahlMonate())*prognoseMonat;
 			
 			return prognose;
 		}
@@ -190,7 +188,10 @@ public BudgetPlanModel(String file) {
 		int firstmonat = firstDate.getMonth();
 		int lastmonat = lastDate.getMonth();
 
-		int monate = 12 * jahre + (12 - firstmonat) + (lastmonat + 1);
+		int monate = 12 * jahre + (12 - firstmonat) + (lastmonat +1);
+		
+		System.out.println("Jahre:"+ jahre);
+		System.out.println("Monate:"+ monate);
 
 		return monate;
 	}

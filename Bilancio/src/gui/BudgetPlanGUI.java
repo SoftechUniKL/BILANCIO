@@ -307,15 +307,19 @@ public class BudgetPlanGUI extends JFrame implements Observer {
 
 				System.out.println("Prognose für die nächste" + zeit
 						+ " Monate : "
-						+ (kontostand + zeit * kontostand / zeit));
-
+						+ budget.getPrognose(zeit));
+				
+						double pp = budget.getPrognose(zeit)-kontostand;
+						
+						System.out.println("pp;"+pp);
+						
 				// Chart für Prognose
 				// TODO: Durch Werte aus der Datei ersetzen.
 				DefaultCategoryDataset dataset = new DefaultCategoryDataset();
-				for (int i = 0; i < zeit; i++) {
+				for (int i = 0; i <= zeit; i++) {
 
-					dataset.addValue(kontostand + (i + 1) * kontostand / zeit,
-							"Kontostand", i + 1 + ".");
+					dataset.addValue(kontostand + (i) * (pp/zeit),
+							"Kontostand", i  + ".");
 
 				}
 
