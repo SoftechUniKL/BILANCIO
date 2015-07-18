@@ -1,5 +1,6 @@
 package gui;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -24,6 +25,7 @@ import org.jdatepicker.impl.JDatePanelImpl;
 import org.jdatepicker.impl.JDatePickerImpl;
 import org.jdatepicker.impl.UtilDateModel;
 
+import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
@@ -144,9 +146,9 @@ public class BudgetPlanGUI extends JFrame implements Observer {
 
 		contentPanel = new JPanel();
 		controlPanel = new JPanel();
-		contentPanel.setLayout(new FlowLayout());
+		contentPanel.setLayout(new BorderLayout());
 		// TODO : Delete after testing
-		contentPanel.setBackground(Color.BLUE);
+				contentPanel.setBackground(Color.GREEN);
 
 		getContentPane().add(controlPanel);
 		getContentPane().add(contentPanel);
@@ -188,9 +190,11 @@ public class BudgetPlanGUI extends JFrame implements Observer {
 		kontostandPanel = new JPanel();
 		contentPanel = new JPanel();
 		controlPanel = new JPanel();
-		contentPanel.setLayout(new FlowLayout());
+		contentPanel.setLayout(new BorderLayout());
+		
 		// TODO : Delete after testing
 		contentPanel.setBackground(Color.BLUE);
+		
 		getContentPane().add(kontostandPanel);
 		getContentPane().add(controlPanel);
 		getContentPane().add(contentPanel);
@@ -332,8 +336,25 @@ public class BudgetPlanGUI extends JFrame implements Observer {
 						.setPreferredSize(new java.awt.Dimension(700, 367));
 
 				((JPanel) getContentPane().getComponent(2)).removeAll();
-				((JPanel) getContentPane().getComponent(2)).add(panelPrognose);
+				((JPanel) getContentPane().getComponent(2)).add(panelPrognose,BorderLayout.PAGE_START);
+				
+				double vprognose = budget.getPrognose(zeit);
+				JLabel labelprognose = new JLabel ("  			voraussichtlicher Kontostand nach " + zeit + " Monaten: " + Double.toString(vprognose));
+				labelprognose.setPreferredSize(new java.awt.Dimension(10,30));
+				
+				
+					
+				
+				((JPanel) getContentPane().getComponent(2)).add(labelprognose, BorderLayout.CENTER);
+				
+				if(vprognose>0) ((JPanel) getContentPane().getComponent(2)).setBackground(Color.GREEN);
+				else
+					((JPanel) getContentPane().getComponent(2)).setBackground(Color.RED);
 				getContentPane().getComponent(2).revalidate();
+				
+				
+				
+				
 
 			}
 		}
