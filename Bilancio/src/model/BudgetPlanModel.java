@@ -31,6 +31,7 @@ public class BudgetPlanModel extends  Observable implements IBudgetPlanModel{
      */
     double Kontostand = 0.0;
     
+    
 	public BudgetPlanModel() {
 		
 		this.ausgaben = new ArrayList<Posten>();
@@ -158,7 +159,8 @@ public BudgetPlanModel(String file) {
 		@Override
 		public void removeAusgabe(int row) {
 			// TODO Auto-generated method stub
-			this.ausgaben.remove(row);
+			if (row>-1)
+				this.ausgaben.remove(row);
 		}
 
 		public List<Posten> getAusgabe() {

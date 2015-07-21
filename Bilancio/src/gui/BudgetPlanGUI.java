@@ -9,6 +9,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.io.File;
+import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -77,6 +78,8 @@ public class BudgetPlanGUI extends JFrame implements Observer {
 	private static JTable table;
 	public static MyTableModel tableModel;
 	private Object[][] data;
+	
+	private static Object[] selectedObject;
 	/**
 	 * Scrollelemente, das die Tabelle umfasst
 	 */
@@ -136,19 +139,23 @@ public class BudgetPlanGUI extends JFrame implements Observer {
 
 		super("BILANCIO");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		// this.setResizable(false);
+		this.setResizable(false);
 
 		getContentPane().setLayout(new FlowLayout());
 
 		getContentPane().setBackground(Color.WHITE);
 		kontostandPanel = new JPanel();
-		// kontostandPanel.setLayout(new FlowLayout());
+		kontostandPanel.setPreferredSize(new Dimension(680, 40));
 
-		contentPanel = new JPanel();
+		
 		controlPanel = new JPanel();
+		controlPanel.setPreferredSize(new Dimension(680, 40));
+		
+		contentPanel = new JPanel();
 		contentPanel.setLayout(new BorderLayout());
+		contentPanel.setPreferredSize(new Dimension(680, 600));
 		// TODO : Delete after testing
-				contentPanel.setBackground(Color.GREEN);
+				//contentPanel.setBackground(Color.GREEN);
 
 		getContentPane().add(controlPanel);
 		getContentPane().add(contentPanel);
@@ -170,7 +177,7 @@ public class BudgetPlanGUI extends JFrame implements Observer {
 
 		showPrognose();
 		// saveTableChange ();
-		deletePosten();
+//		deletePosten();
 
 		filterDate();
 
@@ -188,9 +195,15 @@ public class BudgetPlanGUI extends JFrame implements Observer {
 		getContentPane().setBackground(Color.WHITE);
 
 		kontostandPanel = new JPanel();
-		contentPanel = new JPanel();
+		kontostandPanel.setPreferredSize(new Dimension(700, 50));
+		
 		controlPanel = new JPanel();
+		controlPanel.setPreferredSize(new Dimension(700, 50));
+		
+		
+		contentPanel = new JPanel();
 		contentPanel.setLayout(new BorderLayout());
+		contentPanel.setPreferredSize(new Dimension(700, 500));
 		
 		// TODO : Delete after testing
 		contentPanel.setBackground(Color.BLUE);
@@ -418,29 +431,39 @@ public class BudgetPlanGUI extends JFrame implements Observer {
 		}
 
 		addPostenMenu.addActionListener(new addPosten());
+		
+		
 
 		class deletePosten implements ActionListener {
+			
+			@SuppressWarnings("deprecation")
 			public void actionPerformed(ActionEvent e) {
-				System.out.println("Anzahl der Posten, vor Löschen"
+				System.out.println("class deletePosten : Anzahl der Posten, vor Löschen: "
 						+ budget.getSize());
-				int row = table.getSelectedRow();
-				if (row != -1) {
-					System.out.println("Selected row : " + row);
-					// was wurde gelöscht: einnahme ode ausgabe
-					removedPosten = (String) tableModel.getValueAt(row, 4);
-					System.out.println("removedPosten   " + removedPosten);
-					// remove selected row from the model
-					tableModel.removeRow(row);
+				
+				System.out.println("Deleted Object : " + selectedObject[0]);
+				// Posten aus der Liste löschen
+				budget.removeAusgabe(-1);
+
+				int i= 0;
+				for (Posten p : budget.getAusgabe()) {
+					//TODO selectedObject[0] in dd.mm.yyyy erst umwandeln danach vergleichen 
+					//selectedObject[0] = p.getDatum().;
+					
+					if(compareData(selectedObject,p))
+						System.out.println("Row number in file : " + i);
+					
+		
+					else
+						i++;
 
 				}
-
-				// Posten aus der Liste löschen
-				budget.removeAusgabe(row);
-
 				System.out.println("Anzahl der Posten, nach Löschen"
 						+ budget.getSize());
 
 				budget.tell("A Transaction has been deleted.");
+				
+				deletePostenMenu.setEnabled(false);
 			}
 		}
 
@@ -514,13 +537,16 @@ public class BudgetPlanGUI extends JFrame implements Observer {
 
 		controlPanel.add(rButtonFilterEin);
 		controlPanel.add(rButtonFilterAus);
+		
 		showkontostand = new JButton("    Kontostand zeigen   ");
-		kontostandPanel.add(showkontostand);
+		kontostandPanel.add(showkontostand,BorderLayout.WEST);
 		labelKontostand = new JLabel("KONTOSTAND");
 		labelKontostand.setPreferredSize(new Dimension(500, 40));
+		
 		labelKontostand.setHorizontalAlignment(SwingConstants.RIGHT);
 		labelKontostand.setFont(labelKontostand.getFont().deriveFont(20.0f));
-		kontostandPanel.add(labelKontostand);
+		
+		kontostandPanel.add(labelKontostand,BorderLayout.EAST);
 
 		getContentPane().add(kontostandPanel);
 
@@ -586,77 +612,78 @@ public class BudgetPlanGUI extends JFrame implements Observer {
 
 	String removedPosten;
 
-	// Eine Zeile in einer Tabelle löschen
-	public void deletePosten() {
-		// registriere den ActionListener fuer den Button als anonyme Klasse
-		deletePosten.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				int row = table.getSelectedRow();
-				if (row != -1) {
-					System.out.println("Selecter row : " + row);
-					// was wurde gelöscht: einnahme ode ausgabe
-					removedPosten = (String) tableModel.getValueAt(row, 4);
-					System.out.println("removedPosten   " + removedPosten);
-					// remove selected row from the model
-					tableModel.removeRow(row);
-
-					// Posten aus der Liste löschen
-					budget.removeAusgabe(row);
-
-					// PieChart für Einnahme
-					// pdEinnahme-inhalt vor löschen
-					System.out.println("Vor dem Löschen: ");
-					System.out.println("Einnahmen= " + pdEinnahme.getKeys());
-					System.out.println("Ausgaben= " + pdAusgabe.getKeys());
-
-					// TODO: bessere Lösung finden
-					// PieChart leeren
-					if (removedPosten.equals("Einnahme")) {
-
-						pdEinnahme.clear();
-						panelEinnahme.removeAll();
-						panelEinnahme.revalidate();
-
-						// Daten für PieChart aus der Tabelle lesen
-						for (Posten p : budget.getAusgabe()) {
-							if (p.getTransaktionsart().equals("Einnahme"))
-								pdEinnahme.setValue(p.getBezeichnung(),
-										p.getBetrag());
-						}
-
-						panelEinnahme.repaint();
-					}
-
-					if (removedPosten.equals("Ausgabe")) {
-						pdAusgabe.clear();
-						panelAusgabe.removeAll();
-						panelAusgabe.revalidate();
-
-						// Daten für PieChart aus der Tabelle lesen
-						for (Posten p : budget.getAusgabe()) {
-							if (p.getTransaktionsart().equals("Ausgabe"))
-								pdAusgabe.setValue(p.getBezeichnung(),
-										p.getBetrag());
-						}
-
-						panelAusgabe.repaint();
-
-					}
-				}
-
-				// TODO: nach dem Test löschen
-				// pdEinnahme-inhalt nach löschen
-				System.out.println("Nach dem Löschen: ");
-				System.out.println("Einahmen: " + pdEinnahme.getKeys());
-				System.out.println("Ausgaben: " + pdAusgabe.getKeys());
-
-				budget.tell("A Transaction has been deleted.");
-
-			}
-
-		});
-	}
+//	// Eine Zeile in einer Tabelle löschen
+//	public void deletePosten() {
+//		// registriere den ActionListener fuer den Button als anonyme Klasse
+//		deletePosten.addActionListener(new ActionListener() {
+//			@Override
+//			public void actionPerformed(ActionEvent e) {
+//				int row = table.getSelectedRow();
+//				
+//				if (row != -1) {
+//					System.out.println("Selecter row : " + row);
+//					// was wurde gelöscht: einnahme ode ausgabe
+//					removedPosten = (String) tableModel.getValueAt(row, 4);
+//					System.out.println("removedPosten   " + removedPosten);
+//					// remove selected row from the model
+//					tableModel.removeRow(row);
+//
+//					// Posten aus der Liste löschen
+//					budget.removeAusgabe(row);
+//
+//					// PieChart für Einnahme
+//					// pdEinnahme-inhalt vor löschen
+//					System.out.println("Vor dem Löschen: ");
+//					System.out.println("Einnahmen= " + pdEinnahme.getKeys());
+//					System.out.println("Ausgaben= " + pdAusgabe.getKeys());
+//
+//					// TODO: bessere Lösung finden
+//					// PieChart leeren
+//					if (removedPosten.equals("Einnahme")) {
+//
+//						pdEinnahme.clear();
+//						panelEinnahme.removeAll();
+//						panelEinnahme.revalidate();
+//
+//						// Daten für PieChart aus der Tabelle lesen
+//						for (Posten p : budget.getAusgabe()) {
+//							if (p.getTransaktionsart().equals("Einnahme"))
+//								pdEinnahme.setValue(p.getBezeichnung(),
+//										p.getBetrag());
+//						}
+//
+//						panelEinnahme.repaint();
+//					}
+//
+//					if (removedPosten.equals("Ausgabe")) {
+//						pdAusgabe.clear();
+//						panelAusgabe.removeAll();
+//						panelAusgabe.revalidate();
+//
+//						// Daten für PieChart aus der Tabelle lesen
+//						for (Posten p : budget.getAusgabe()) {
+//							if (p.getTransaktionsart().equals("Ausgabe"))
+//								pdAusgabe.setValue(p.getBezeichnung(),
+//										p.getBetrag());
+//						}
+//
+//						panelAusgabe.repaint();
+//
+//					}
+//				}
+//
+//				// TODO: nach dem Test löschen
+//				// pdEinnahme-inhalt nach löschen
+//				System.out.println("Nach dem Löschen: ");
+//				System.out.println("Einahmen: " + pdEinnahme.getKeys());
+//				System.out.println("Ausgaben: " + pdAusgabe.getKeys());
+//
+//				budget.tell("A Transaction has been deleted.");
+//
+//			}
+//
+//		});
+//	}
 
 	// Tabelle sortieren
 	public void sorttable(final MyTableModel tableModel, final JTable table) {
@@ -698,8 +725,10 @@ public class BudgetPlanGUI extends JFrame implements Observer {
 		showkontostand.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				
+				String kntoStd = String.format(Locale.GERMANY, "%.2f", budget.getKontostand());
 
-				labelKontostand.setText(Double.toString(budget.getKontostand()));
+				labelKontostand.setText("EUR "+ kntoStd);
 
 				if (budget.getKontostand() >= 0)
 
@@ -712,6 +741,9 @@ public class BudgetPlanGUI extends JFrame implements Observer {
 		});
 
 	}
+	
+	
+	
 
 
 	public void showPrognose() {
@@ -789,15 +821,17 @@ public class BudgetPlanGUI extends JFrame implements Observer {
 			// data[i][3] = p.getBetrag();
 			data[i][1] = p.getKategorie();
 			data[i][4] = p.getTransaktionsart();
+			//data[i][5] = p.getKey();
 			i++;
 
 		}
 
 		// Add row to table
-		MyTableModel tableModel = new MyTableModel(data, new Object[] {
+		final MyTableModel tableModel = new MyTableModel(data, new Object[] {
 				"Datum", "Kategorie", "Bezeichnung", "Betrag",
 				"Transaktionsart" });
-
+		
+		
 		final JTable table = new JTable(tableModel) {
 
 			/**
@@ -836,11 +870,46 @@ public class BudgetPlanGUI extends JFrame implements Observer {
 						int selectedRow = table.getSelectedRow();
 						if (selectedRow > -1) {
 							deletePostenMenu.setEnabled(true);
-							System.out.println("Selected row in table: "
+							System.out.println("Selected row in table mmm: "
 									+ selectedRow);
-						} else
+						
+						
+						
+						 selectedObject = new Object[tableModel.getColumnCount()];
+						 
+						 System.out.println("tableModel.rowData  : " +  tableModel.getColumnCount());
+							
+							for(int i=0 ; i<selectedObject.length;i++){
+								
+								selectedObject[i] = (Object) table.getModel().getValueAt(selectedRow, i).toString();
 
+								
+								
+								if(i==3){
+									System.out.println("Obj : " + selectedObject[i]);
+									//System.out.println("Obj : " + Double.parseDouble((String) selectedObject[i]));
+								}
+								else
+									System.out.println("Obj : " + selectedObject[i]);
+								
+								
+							}
+							
+							
+							// remove selected row from the model
+							//tableModel.removeRow(selectedRow);
+
+						}
+						else 
 							deletePostenMenu.setEnabled(false);
+
+//						// Posten aus der Liste löschen
+//						budget.removeAusgabe(selectedRow);
+//
+//						System.out.println("Anzahl der Posten, nach Löschen"
+//								+ budget.getSize());
+//
+//						budget.tell("A Transaction has been deleted.");
 					}
 				});
 
@@ -997,20 +1066,20 @@ public class BudgetPlanGUI extends JFrame implements Observer {
 		sorttable(tableModel, table);
 		table.setRowSelectionAllowed(true);
 
-		table.getSelectionModel().addListSelectionListener(
-				new ListSelectionListener() {
-					public void valueChanged(ListSelectionEvent e) {
-
-						int selectedRow = table.getSelectedRow();
-						if (selectedRow > -1) {
-							deletePostenMenu.setEnabled(true);
-							System.out.println("Selected row in table: "
-									+ selectedRow);
-						} else
-
-							deletePostenMenu.setEnabled(false);
-					}
-				});
+//		table.getSelectionModel().addListSelectionListener(
+//				new ListSelectionListener() {
+//					public void valueChanged(ListSelectionEvent e) {
+//
+//						int selectedRow = table.getSelectedRow();
+//						if (selectedRow > -1) {
+//							deletePostenMenu.setEnabled(true);
+//							System.out.println("table.getSelectionModel() - Selected row in: "
+//									+ selectedRow);
+//						} else
+//
+//							deletePostenMenu.setEnabled(false);
+//					}
+//				});
 
 		table.setRowHeight(25);
 
@@ -1028,4 +1097,51 @@ public class BudgetPlanGUI extends JFrame implements Observer {
 		printAll(getGraphics());
 
 	}
+	
+	 boolean compareData(Object[] selectedObject, Posten p){
+		 
+		
+		@SuppressWarnings("static-access")
+		int yrObj = ((Calendar)selectedObject[0]).getInstance().get(Calendar.YEAR);
+		
+		@SuppressWarnings("static-access")
+		int mntObj = ((Calendar)selectedObject[0]).getInstance().get(Calendar.MONTH);
+		
+		@SuppressWarnings("static-access")
+		int dyObj = ((Calendar)selectedObject[0]).getInstance().get(Calendar.DAY_OF_WEEK);
+		
+		int yrP = p.getDatum().getYear();
+		int mntP = p.getDatum().getMonth();
+		int dyP = p.getDatum().getDay();
+		
+		boolean dateCmp = ( (yrObj == yrP) && (mntObj == mntP) && (dyObj == dyP) ) ;
+		
+		if(dateCmp)
+			System.out.println("Date is equal");
+		
+		
+		
+		 
+			
+			if( (	((Date)selectedObject[0]).getDate() == p.getDatum().getDay()  &&
+					
+					(((Date)selectedObject[0]).getMonth() == p.getDatum().getMonth()) &&
+					
+					(((Date)selectedObject[0]).getYear() == p.getDatum().getYear()) &&
+					
+					p.getKategorie().equals(selectedObject[1]) &&
+				p.getBezeichnung().equals(selectedObject[2]) &&
+				
+				 p.getTransaktionsart().equals(selectedObject[4])) ) {
+				
+				//TODO selectedObject[3] in xx.xx erst umwandeln danach vergleichen 
+				//(p.getBetrag() - Double.parseDouble(selectedObject[3].toString()) <0.01 ) &&
+				
+			return true;
+			}
+			
+					
+			else
+				return false; 
+		}
 }
