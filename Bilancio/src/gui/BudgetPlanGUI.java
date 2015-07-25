@@ -303,7 +303,7 @@ public class BudgetPlanGUI extends JFrame implements Observer {
 						+ "Die Entwicklergruppe bestand aus Amanuel Abraham, Samuel Asmelash und \n"
 						+ "Tim Lamberty. Die Betreuung des Projekts lag bei Frau Dr. Bieniusa (AG Softwaretechnik).\n";
 				JOptionPane.showMessageDialog(BudgetPlanGUI.this,
-						about, "About", JOptionPane.PLAIN_MESSAGE);
+						about, "BILANCIO", JOptionPane.PLAIN_MESSAGE);
 				
 				
 			}
