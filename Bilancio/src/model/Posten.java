@@ -1,6 +1,5 @@
 package model;
 import java.util.Date;
-import java.util.Random;
 
 /**
  * Posten in der Budgetplanung
@@ -27,7 +26,7 @@ public class Posten {
 	
 	double Kontostand; 
 	
-	private double key = 0.0 ;
+	private int key ;
 
 	/**
 	 * Konstruktor
@@ -41,13 +40,13 @@ public class Posten {
 	 * @param kategorie
 	 *            Art der Ausgabe
 	 */
-	public Posten(Date datum,String kategorie, String bezeichnung, double betrag, String Transaktionsart) {
+	public Posten(int key, Date datum,String kategorie, String bezeichnung, double betrag, String Transaktionsart) {
 		this.bezeichnung = bezeichnung;
 		this.datum = datum;
 		this.betrag = betrag;
 		this.kategorie = kategorie;
 		this.Transaktionsart = Transaktionsart; 
-		//this.key +=1;
+		this.key = key;
 	}
 
 	public Date getDatum() {
@@ -71,8 +70,12 @@ public class Posten {
 		
 	}
 
-	public double getKey() {
+	public int getKey() {
 		return key;
+	}
+
+	public void setKey(int key) {
+		this.key = key;
 	}
 
 

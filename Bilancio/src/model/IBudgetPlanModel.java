@@ -1,7 +1,5 @@
 package model;
 
-import gui.BudgetPlanGUI;
-
 import java.util.List;
 import java.util.Observer;
 
@@ -29,13 +27,17 @@ public interface IBudgetPlanModel {
 
 	public abstract void addObserver(Observer observer);
 
-	public abstract void addAusgabe(Posten posten);
+	public abstract void addPosten(Posten posten);
 	
 	public abstract int getSize();
 	
 	public abstract void removeAusgabe(int row);
 	
-	public abstract List<Posten> getAusgabe();
+	public abstract List<Posten> getTransaction();
+	
+	public abstract int getKey() ;
+
+	//public abstract void setKey();
 	
 	
 

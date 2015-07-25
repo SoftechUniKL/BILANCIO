@@ -17,6 +17,8 @@ public class WriteFile implements Observer {
 	
 	public List<Posten> posten;
 	
+	private static boolean log = false;
+	
 	public WriteFile(String fileName, List<Posten> posten){
 		
 		this.fileName = fileName;
@@ -30,7 +32,7 @@ public class WriteFile implements Observer {
 		String nameOfFile = fileName;
 		
 		 CSVWriter writer = null;
-			String[] line = new String[5];
+			String[] line = new String[6];
 			
 			try {
 				writer = new CSVWriter(new FileWriter(nameOfFile), '#', CSVWriter.NO_QUOTE_CHARACTER);
@@ -42,6 +44,7 @@ public class WriteFile implements Observer {
 					line[2] = p.getBezeichnung() ;
 					line[3] = Double.toString( p.getBetrag());
 					line[4] = p.getTransaktionsart().toString();
+					line[5] = Integer.toString(p.getKey());
 					
 					writer.writeNext(line);
 				}
@@ -57,6 +60,7 @@ public class WriteFile implements Observer {
 	@Override
 	public void update(Observable o, Object arg) {
 		// TODO Auto-generated method stub
+		if(log)
 		System.out.println(this.toString() +" : Message from Model  = "+(String ) arg);
 		
 		writeDataIntoFile();

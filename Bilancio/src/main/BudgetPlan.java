@@ -11,7 +11,8 @@ public class BudgetPlan {
 	public static void main(String[] args) {
 		
 		new BudgetPlanModel(); // Modell
-		new BudgetPlanGUI(null); // View und Controller
+		new BudgetPlanGUI(null); // View und Controller, enabele file open
+		
 		
 	}
 	

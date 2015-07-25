@@ -25,7 +25,6 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 
-import model.BudgetPlanModel;
 import model.IBudgetPlanModel;
 import model.Posten;
 
@@ -82,6 +81,8 @@ public class EingabeMaske extends JFrame {
 	static IBudgetPlanModel budget;
 	static JScrollPane scrollpane;
 	static MyTableModel tableModel;
+	
+	static boolean log = false;
 
 	public EingabeMaske() {
 
@@ -165,11 +166,11 @@ public class EingabeMaske extends JFrame {
 		nameKategorie.setPreferredSize(eingabeSize);
 		kategoriePanel.add(nameKategorie);
 
-		listeEinnahmen = new String[] { "Gehalt", "Geschenk", "Kapitalerträge",
-				"sonstige" };
+		listeEinnahmen = new String[] { "Gehalt", "Geschenk", "Zinsen",
+				"sonstiges" };
 		listeAusgaben = new String[] { "Miete", "Lebensmittel",
 				"Versicherungen", "Freizeit", "Hobbys", "Bildung",
-				"Zins- und Tilgungszahlungen" };
+				"Kredit", "sonstiges" };
 
 		// Container und Elemente der Einnahme.Aisgabe-Eingabe
 		RButtonEinnahme = new JRadioButton("Einnahme");
@@ -269,10 +270,14 @@ public class EingabeMaske extends JFrame {
 				selectedDate = (Date) datePicker.getModel().getValue();
 				String dDate = new SimpleDateFormat("dd.MM.yyyy")
 						.format(selectedDate);
+				if(log)
 				System.out.println("Datum: Picker :       " + dDate);
 				tfDatum.setText(dDate);
+				if(log)
 				System.out.println("Datum:       " + tfDatum.getText());
+				if(log)
 				System.out.println("Bezeichnung: " + tfBezeichnung.getText());
+				
 
 				try {
 					Betrag = nf.parse(tfBetrag.getText());
@@ -285,17 +290,19 @@ public class EingabeMaske extends JFrame {
 							"Eingabe darf nur Dezimalzahl sein. (123,56)",
 							"Error", JOptionPane.ERROR_MESSAGE);
 				}
-
+				if(log)
 				System.out.println("Betrag:" + Betrag.doubleValue());
 
 				if (kategoriePanel.getComponentCount() > 1
 						&& RButtonEinnahme.isSelected()) {
+					if(log)
 					System.out.println("Kategorie: "
 							+ cbKategorieEinnahme.getSelectedItem());
 				}
 
 				if (kategoriePanel.getComponentCount() > 1
 						&& RButtonAusgabe.isSelected()) {
+					if(log)
 					System.out.println("Kategorie: "
 							+ cbKategorieAusgabe.getSelectedItem());
 				}
@@ -348,7 +355,9 @@ public class EingabeMaske extends JFrame {
 			transaktionsArt = "Ausgabe";
 		}
 
-		budget.addAusgabe(new Posten(datum, kategorie, bezeichnung, betrag
+//		int lastElement = budget.getAusgabe().size()-1;
+//		int key = budget.getAusgabe().get(lastElement).getKey();
+		budget.addPosten(new Posten(0,datum, kategorie, bezeichnung, betrag
 				.doubleValue(), transaktionsArt));
 
 		budget.tell("New Transaction has been added.");
@@ -366,6 +375,8 @@ public class EingabeMaske extends JFrame {
 
 				tfBezeichnung.setText("");
 				tfBetrag.setText("0,00");
+				
+				if(log)
 				System.out.println("Alle Eingaben gelöscht.");
 
 			}

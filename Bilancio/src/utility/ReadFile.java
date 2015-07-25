@@ -40,8 +40,9 @@ public class ReadFile  {
 				double betrag = Double.parseDouble(nextLine[3]);
 				String kategorie = nextLine[1];
 				String Transaktionsart = nextLine[4];
+				int key = Integer.parseInt(nextLine[5]);
 				
-				posten.add(new Posten(datum, kategorie, bezeichnung, betrag, Transaktionsart));
+				posten.add(new Posten(key, datum, kategorie, bezeichnung, betrag, Transaktionsart));
 			}
 			reader.close();
 

@@ -31,6 +31,13 @@ public class BudgetPlanModel extends  Observable implements IBudgetPlanModel{
      */
     double Kontostand = 0.0;
     
+    /**
+     * EIndeutiger Schlüssel
+     */
+    
+    public int key;
+    
+    private static boolean log = false;
     
 	public BudgetPlanModel() {
 		
@@ -101,30 +108,7 @@ public BudgetPlanModel(String file) {
 			 Calendar stichTag = Calendar.getInstance(); 
 		     int year = stichTag.get(Calendar.YEAR) - 1;
 		     stichTag.set(Calendar.YEAR,year - 1);
-		     
-		  // Alle Transaktionen holen, die max 365 tag zurück liegen 
-		   /* for (int i=0; i<transaktionen.size();i++){
-		    	
-		    	Date transaktDatum = transaktionenCopy.get(i).getDatum();
-		    	if (transaktDatum.before(stichTag.getTime())){
-		    		
-		    		transaktionenCopy.remove(i);
-		    	}
-		    }
-			
-		    double tmpKontostand=0;;
-		    int size = transaktionenCopy.size();
-			for ( int i=0; i< size ; i++) {
-				
-				if (transaktionenCopy.get(i).getTransaktionsart().equals("Einnahme") ){
-					tmpKontostand +=transaktionenCopy.get(i).getBetrag();
-				}
-				
-				if (transaktionenCopy.get(i).getTransaktionsart().equals("Ausgabe") ){
-					tmpKontostand -=transaktionenCopy.get(i).getBetrag();
-					}
-			
-			} */
+		
 			prognose = getKontostand()+(getKontostand()/getAnzahlMonate())*prognoseMonat;
 			
 			return prognose;
@@ -135,7 +119,7 @@ public BudgetPlanModel(String file) {
 		 */
 		@Override
 		public void tell(String info){
-			
+			if(log)
 			System.out.println("Number of Observers = " + countObservers());
 	        if(countObservers()>0){
 	        	
@@ -145,25 +129,42 @@ public BudgetPlanModel(String file) {
 	    }
 
 		@Override
-		public void addAusgabe(Posten posten) {
+		public void addPosten(Posten posten) {
+			
+			int lastElement =  this.ausgaben.size()-1;
+			int key =  this.ausgaben.get(lastElement).getKey();
+			
+			posten.setKey(key+1);
 			this.ausgaben.add(posten);
 			
 		}
 		
 		@Override
 		public int getSize() {
-			// TODO Auto-generated method stub
+		
 			return this.ausgaben.size();
 		}
 		
 		@Override
-		public void removeAusgabe(int row) {
-			// TODO Auto-generated method stub
-			if (row>-1)
-				this.ausgaben.remove(row);
+		public void removeAusgabe(int key) {
+
+			int i = 0;
+			for (Posten p : ausgaben) {
+					
+				if(key == p.getKey()) {	
+					if(log)
+					System.out.println( key + " wurde aus der Tranksaktionsliste gelöscht. ");
+					ausgaben.remove(i);
+					break;
+				}
+	
+				else 	i++;
+
+			}
+				
 		}
 
-		public List<Posten> getAusgabe() {
+		public List<Posten> getTransaction() {
 			return ausgaben;
 		}
 		
@@ -192,11 +193,25 @@ public BudgetPlanModel(String file) {
 
 		int monate = 12 * jahre + (12 - firstmonat) + (lastmonat +1);
 		
+		if(log)
 		System.out.println("Jahre:"+ jahre);
+		if(log)
 		System.out.println("Monate:"+ monate);
 
 		return monate;
 	}
-}
+	
+	
+	@Override
+	public int getKey() {
+		
+		return key;
+	}
+
+	public void setKey() {
+		int key =  ausgaben.get(ausgaben.size()-1).getKey();
+		this.key = key + 1;
+	}
 
 	
+}
