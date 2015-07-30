@@ -297,9 +297,9 @@ public class EingabeMaske extends JFrame {
 					System.out.println("Datum:       " + tfDatum.getText());
 					
 				} catch (Exception e2) {
-					JOptionPane.showMessageDialog(null,
-							"Geben Sie Datum ein.",
-							"Error", JOptionPane.ERROR_MESSAGE);
+//					JOptionPane.showMessageDialog(null,
+//							"Geben Sie Datum ein.",
+//							"Error", JOptionPane.ERROR_MESSAGE);
 				}
 				
 				if(log)
@@ -307,15 +307,17 @@ public class EingabeMaske extends JFrame {
 				
 
 				try {
-					Betrag = nf.parse(tfBetrag.getText());
+					
+					if(isNumeric(tfBetrag.getText()))
+						Betrag = nf.parse(tfBetrag.getText());
 					// TODO: Eingabe des Betrages validieren. Prüfe ob die
 					// Eingabe sinn macht
 					// Fehler durch POP-Up Fenster anzeigen
 				} catch (ParseException e1) {
 
-					JOptionPane.showMessageDialog(null,
-							"Eingabe darf nur Dezimalzahl sein. (123,56)",
-							"Error", JOptionPane.ERROR_MESSAGE);
+//					JOptionPane.showMessageDialog(null,
+//							"Eingabe darf nur Dezimalzahl sein. (123,56)",
+//							"Error", JOptionPane.ERROR_MESSAGE);
 				}
 				if(log)
 				System.out.println("Betrag:" + Betrag.doubleValue());
@@ -334,8 +336,18 @@ public class EingabeMaske extends JFrame {
 							+ cbKategorieAusgabe.getSelectedItem());
 				}
 
-				saveEingabe();
-				frame.dispose();
+				if(budget != null  &&  isNumeric(tfBetrag.getText())) {
+					saveEingabe();
+					frame.dispose();
+				}
+					
+					
+					else
+						
+							JOptionPane.showMessageDialog(null,
+									"Betrag darf nur Dezimalzahl sein. (123,56)", "Error",
+									JOptionPane.ERROR_MESSAGE);
+				
 
 			}
 		});
@@ -346,27 +358,28 @@ public class EingabeMaske extends JFrame {
 	 */
 	public static void saveEingabe() {
 
+		
+		String bezeichnung = (String) tfBezeichnung.getText();
 		Date datum = null;
 		String dat = tfDatum.getText();
+		
+		Number betrag = null;
+		
 
 		try {
 			datum = df.parse(dat);
-		} catch (ParseException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-		String bezeichnung = (String) tfBezeichnung.getText();
-		Number betrag = null;
-		try {
+			
+			
+				
 			betrag = nf.parse(tfBetrag.getText());
-			// TODO: Eingabe des Betrages validieren. Prüfe ob die Eingabe sinn
-			// macht
-			// Fehler durch POP-Up Fenster anzeigen
+			
 		} catch (ParseException e1) {
-
 			JOptionPane.showMessageDialog(null,
-					"Eingabe darf nur Dezimalzahl sein. (123,56)", "Error",
+					"Geben Sie Datum ein. \n Eingabe darf nur Dezimalzahl sein. (123,56)", "Error",
 					JOptionPane.ERROR_MESSAGE);
+			//e1.printStackTrace();
+
+
 		}
 
 		String kategorie = "";
@@ -386,10 +399,22 @@ public class EingabeMaske extends JFrame {
 
 //		int lastElement = budget.getAusgabe().size()-1;
 //		int key = budget.getAusgabe().get(lastElement).getKey();
-		budget.addPosten(new Posten(0,datum, kategorie, bezeichnung, betrag
-				.doubleValue(), transaktionsArt));
+		double betr = 0;
+		try{
+			
+			 betr = betrag.doubleValue();
+			 
+			 budget.addPosten(new Posten(0,datum, kategorie, bezeichnung, betr
+						, transaktionsArt));
 
-		budget.tell("New Transaction has been added.");
+				budget.tell("New Transaction has been added.");
+				
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(null,
+					"Betrag darf nur Dezimalzahl sein. (123,56)", "Error",
+					JOptionPane.ERROR_MESSAGE);
+		}
+		
 
 	}
 
@@ -410,6 +435,12 @@ public class EingabeMaske extends JFrame {
 
 			}
 		});
+	}
+	
+	
+	public static boolean isNumeric(String str)
+	{
+	  return str.matches("-?\\d+(\\,\\d+)?");  //match a number with optional '-' and decimal.
 	}
 
 }

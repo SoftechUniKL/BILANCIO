@@ -11,7 +11,6 @@ import model.BudgetPlanModel;
 import model.Posten;
 
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 public class RemoveAddPostenTest {
@@ -21,6 +20,8 @@ public class RemoveAddPostenTest {
 
 	@Before
 	public void   init() {
+		
+		//String file = "C:/Bilancio/Budget/budget3_test.csv";
 		testBudgetPlanModel =  new  BudgetPlanModel();
 		
 	}
@@ -34,7 +35,7 @@ public class RemoveAddPostenTest {
 		int listlengthAfter = testBudgetPlanModel.ausgaben.size();
 		
 		
-		assertEquals(1, listlengthBefore- listlengthAfter);
+		assertEquals(10, listlengthBefore- listlengthAfter);
 	}
 	
 	@Test
@@ -85,9 +86,11 @@ public class RemoveAddPostenTest {
 		} catch (ParseException e1) {
 			e1.printStackTrace();
 		}  
-		Posten posten = new Posten(datum, null, null, listlengthBefore, null);
 		
-		testBudgetPlanModel.addPosten(posten);;
+		
+		Posten posten = new Posten(0,datum, null, null, listlengthBefore, null);
+		
+		testBudgetPlanModel.addPosten(posten);
 		
 		int listlengthAfter = testBudgetPlanModel.ausgaben.size();
 		

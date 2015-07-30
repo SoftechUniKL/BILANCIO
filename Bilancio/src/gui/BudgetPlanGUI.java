@@ -155,6 +155,9 @@ public class BudgetPlanGUI extends JFrame implements Observer {
 		contentPanel = new JPanel();
 		contentPanel.setLayout(new BorderLayout());
 		contentPanel.setPreferredSize(new Dimension(680, 600));
+		
+		JLabel label = new JLabel("Öffne eine  CSV Datei.");
+		contentPanel.add(label, BorderLayout.NORTH);
 
 
 		getContentPane().add(controlPanel);
@@ -202,6 +205,9 @@ public class BudgetPlanGUI extends JFrame implements Observer {
 		contentPanel = new JPanel();
 		contentPanel.setLayout(new BorderLayout());
 		contentPanel.setPreferredSize(new Dimension(700, 500));
+		
+		JLabel label = new JLabel("Öffe eine  CSV Datei.");
+		contentPanel.add(label);
 		
 		
 		getContentPane().add(kontostandPanel);
@@ -363,6 +369,7 @@ public class BudgetPlanGUI extends JFrame implements Observer {
 				this.k = k;
 			}
 
+			@SuppressWarnings("deprecation")
 			public void actionPerformed(ActionEvent e) {
 
 				int prognosePeriode = k; // Prognose-Periode in Monate
@@ -393,6 +400,9 @@ public class BudgetPlanGUI extends JFrame implements Observer {
 				panelPrognose = new ChartPanel(lineChart);
 				panelPrognose
 						.setPreferredSize(new java.awt.Dimension(700, 367));
+				
+				//Do not show Control Panel
+				getContentPane().getComponent(1).show(false);
 
 				((JPanel) getContentPane().getComponent(2)).removeAll();
 				((JPanel) getContentPane().getComponent(2)).add(panelPrognose,BorderLayout.PAGE_START);
@@ -434,6 +444,9 @@ public class BudgetPlanGUI extends JFrame implements Observer {
 			public void actionPerformed(ActionEvent e) {
 
 				getDataEinnahme();
+				
+				// Do not show Control Panel
+				getContentPane().getComponent(1).show(false);
 
 				((JPanel) getContentPane().getComponent(2)).removeAll();
 				((JPanel) getContentPane().getComponent(2)).add(panelEinnahme);
@@ -457,6 +470,7 @@ public class BudgetPlanGUI extends JFrame implements Observer {
 				((JPanel) getContentPane().getComponent(2)).removeAll();
 				((JPanel) getContentPane().getComponent(2)).add(scrollpane);
 
+				getContentPane().getComponent(1).show(true);
 				getContentPane().getComponent(2).revalidate();
 
 			}
@@ -475,6 +489,10 @@ public class BudgetPlanGUI extends JFrame implements Observer {
 
 				//getDataAusgabe();
 				getDataAusgabeBAR();
+				
+				// Do not show Control Panel
+				getContentPane().getComponent(1).show(false);
+				
 				((JPanel) getContentPane().getComponent(2)).removeAll();
 				((JPanel) getContentPane().getComponent(2)).add(panelAusgabe);
 				getContentPane().getComponent(1).revalidate();
@@ -890,7 +908,7 @@ public class BudgetPlanGUI extends JFrame implements Observer {
 	private void getDataAusgabeBAR() {
 		pdAusgabeBar = new DefaultCategoryDataset();
 		
-		double sum [] = new double[7];
+		double sum [] = new double[8];
 		
 		String bez[] = new String[] { "Miete", "Lebensmittel",
 				"Versicherungen", "Freizeit", "Hobbys", "Bildung",
@@ -933,6 +951,7 @@ public class BudgetPlanGUI extends JFrame implements Observer {
 				break;
 
 			default:
+				;
 				break;
 			}
 
@@ -985,6 +1004,7 @@ public class BudgetPlanGUI extends JFrame implements Observer {
 				break;
 
 			default:
+				sum [3] += p.getBetrag();
 				break;
 			}
 
