@@ -12,13 +12,26 @@ import model.Posten;
 import com.opencsv.CSVWriter;
 
 public class WriteFile implements Observer {
+	/** 
+	 * Name der CSV Datei
+	 */
 	
 	String fileName;
+	/**
+	 * Liste der Transaktionen
+	 */
 	
 	public List<Posten> posten;
 	
 	private static boolean log = false;
 	
+	/**
+	 * Konstruktor für WriteFile
+	 * @param fileName
+	 * Name der Datei
+	 * @param posten
+	 * Name der Transaktionen
+	 */
 	public WriteFile(String fileName, List<Posten> posten){
 		
 		this.fileName = fileName;
@@ -26,6 +39,10 @@ public class WriteFile implements Observer {
 		this.posten = posten;
 		
 	}
+	
+	/**
+	 * Transaktionen werden aus dem Modell in die CSV Datei geschrieben
+	 */
 	
 	public void writeDataIntoFile(){
 		
@@ -56,7 +73,9 @@ public class WriteFile implements Observer {
 			}
 	}
 
-
+/**
+ * Update für das Programm falls eine Änderung der Transaktionenliste stattfindet
+ */
 	@Override
 	public void update(Observable o, Object arg) {
 		// TODO Auto-generated method stub

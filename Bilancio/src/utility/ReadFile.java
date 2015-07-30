@@ -14,10 +14,25 @@ import com.opencsv.CSVReader;
 
 public class ReadFile  {
 	
+	/**  
+	 * Name der zu öffnenden CSV Datei
+	 */
+	
 	private String fileName = "";
+	
+	/**  
+	 * Liste der Transaktionen aus der CSV Datei
+	 */
 	
 	public List<Posten> posten;
 	
+	/**
+	 * Konstruktor für ReadFile
+	 * @param fileName
+	 * Name der Datei
+	 * @param posten
+	 * Liste der Transaktionen
+	 */
 	public ReadFile(String fileName, List<Posten> posten){
 		
 		this.fileName = fileName;
@@ -25,6 +40,9 @@ public class ReadFile  {
 		
 	}
 	
+	/**
+	 * Liste der Transaktionen der CSV Datei wird in ein Modell übertragen
+	 */
 	public void readDatafromFile(){
 		
 		String nameOfFile = fileName;

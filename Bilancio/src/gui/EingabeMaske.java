@@ -34,6 +34,12 @@ import org.jdatepicker.impl.UtilDateModel;
 
 import utility.DateLabelFormatter;
 
+/**
+ * Eingabemaske
+ * @author Tim
+ *
+ */
+
 public class EingabeMaske extends JFrame {
 
 	private static final long serialVersionUID = 1L;
@@ -84,6 +90,9 @@ public class EingabeMaske extends JFrame {
 	
 	static boolean log = false;
 
+	/**
+	 * Konstruktor
+	 */
 	public EingabeMaske() {
 
 		initWindow();
@@ -98,6 +107,10 @@ public class EingabeMaske extends JFrame {
 		frame.setVisible(true);
 
 	}
+	
+	/**
+	 * Initialisierung des Eingabefensters zum Hinzufügen einer neuen Transaktion 
+	 */
 
 	void initWindow() {
 
@@ -211,9 +224,13 @@ public class EingabeMaske extends JFrame {
 
 		frame.getContentPane().add(mainPanel);
 	}
+	
+	/**
+	 * Methode, die die Liste der Möglichkeiten anzeigt, wenn wir Einnahme als Transaktionsart wählen
+	 */
 
 	public static void OnClickEinnahme() {
-		// Wenn beim Radiobutton Einnahme angeklickt wird
+		
 		RButtonEinnahme.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -233,9 +250,11 @@ public class EingabeMaske extends JFrame {
 			}
 		});
 	}
-
+/**
+ * Methode, die die Liste der Möglichkeiten anzeigt, wenn wir Ausgabe als Transaktionsart wählen
+ */
 	public static void OnClickAusgabe() {
-		// Wenn beim Radiobutton Ausgabe angeklickt wird
+		
 		RButtonAusgabe.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -322,7 +341,9 @@ public class EingabeMaske extends JFrame {
 		});
 	}
 
-	// Eingabe speichern
+	/**
+	 * Methode zum Speichern einer Transaktion ins Modell
+	 */
 	public static void saveEingabe() {
 
 		Date datum = null;

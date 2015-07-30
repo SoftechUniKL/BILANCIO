@@ -167,7 +167,7 @@ public class BudgetPlanGUI extends JFrame implements Observer {
 		
 
 		initWindow(); // Initialisierung des Frameinhalts
-		addBehavior(); // Verhalten der GUI Elemente dieses Frames
+		
 
 		showKonto();
 
@@ -180,6 +180,9 @@ public class BudgetPlanGUI extends JFrame implements Observer {
 		setVisible(true); // Frame wird sichtbar
 
 	}
+	/**
+	 * Konstruktor für das GUI
+	 */
 
 	public BudgetPlanGUI() {
 
@@ -211,7 +214,10 @@ public class BudgetPlanGUI extends JFrame implements Observer {
 
 	}
 
-	// Initialisieren des Fensters
+	/**
+	 * Initialiserung des Fensters
+	 */
+	
 	protected void initWindow() {
 
 		try {
@@ -251,10 +257,10 @@ public class BudgetPlanGUI extends JFrame implements Observer {
 		JMenu datei = new JMenu("Datei");
 		datei.setMnemonic(KeyEvent.VK_D);
 		JMenuItem dateiOeffnen = new JMenuItem("Datei öffnen");
-		JMenuItem dateiSpeichern = new JMenuItem("Datei speichern");
+		//JMenuItem dateiSpeichern = new JMenuItem("Datei speichern");
 		JMenuItem exit = new JMenuItem("Programm beenden");
 		datei.add(dateiOeffnen);
-		datei.add(dateiSpeichern);
+		//datei.add(dateiSpeichern);
 		datei.add(exit);
 
 		menubar.add(datei);
@@ -299,6 +305,12 @@ public class BudgetPlanGUI extends JFrame implements Observer {
 		
 		menubar.add(about);
 		
+		/**
+		 * ActionListener für "about" 
+		 * @author Tim
+		 *
+		 */
+		
 		class About implements MenuListener {
 
 			@Override
@@ -337,6 +349,12 @@ public class BudgetPlanGUI extends JFrame implements Observer {
 		}
 
 		exit.addActionListener(new exitaction());
+		
+		/**
+		 * ActionListener für die verschiedenen Prognosemonate
+		 * @author Tim
+		 *
+		 */
 
 		class Prognose implements ActionListener {
 			int k;
@@ -405,6 +423,12 @@ public class BudgetPlanGUI extends JFrame implements Observer {
 		neunMonate.addActionListener(new Prognose(9));
 		// Prognose Periode = 12 Monate
 		zwölfMonate.addActionListener(new Prognose(12));
+		
+		/**
+		 * Actionlistener für Einnahmen Diagramm
+		 * @author Tim
+		 *
+		 */
 
 		class eingabenDiagramm implements ActionListener {
 			public void actionPerformed(ActionEvent e) {
@@ -420,6 +444,12 @@ public class BudgetPlanGUI extends JFrame implements Observer {
 		}
 
 		diagrammEinnahmen.addActionListener(new eingabenDiagramm());
+		
+		/** 
+		 * ActionListener für Tabellenübersicht
+		 * @author Tim
+		 *
+		 */
 
 		class übersichtTabelle implements ActionListener {
 			public void actionPerformed(ActionEvent e) {
@@ -433,6 +463,12 @@ public class BudgetPlanGUI extends JFrame implements Observer {
 
 		}
 		tabellenÜbersicht.addActionListener(new übersichtTabelle());
+		
+		/**
+		 * ActionListener für Ausgabediagramm
+		 * @author Tim
+		 *
+		 */
 
 		class ausgabenDiagramm implements ActionListener {
 			public void actionPerformed(ActionEvent e) {
@@ -447,6 +483,12 @@ public class BudgetPlanGUI extends JFrame implements Observer {
 		}
 
 		diagrammAusgaben.addActionListener(new ausgabenDiagramm());
+		
+		/** 
+		 * ActionListener zum Hinzufügen einer Transaktion
+		 * @author Tim
+		 *
+		 */
 
 		class addPosten implements ActionListener {
 			public void actionPerformed(ActionEvent e) {
@@ -462,7 +504,11 @@ public class BudgetPlanGUI extends JFrame implements Observer {
 
 		addPostenMenu.addActionListener(new addPosten());
 		
-		
+		/**
+		 * Actionlistener zum Löschen einer Transaktion
+		 * @author Tim
+		 *
+		 */
 
 		class deletePosten implements ActionListener {
 			
@@ -501,6 +547,12 @@ public class BudgetPlanGUI extends JFrame implements Observer {
 		}
 
 		deletePostenMenu.addActionListener(new deletePosten());
+		
+		/**
+		 * ActionListener zum Öffnen der CSV Datei
+		 * @author Tim
+		 *
+		 */
 
 		class openFile implements ActionListener {
 			public void actionPerformed(ActionEvent e) {
@@ -609,129 +661,21 @@ public class BudgetPlanGUI extends JFrame implements Observer {
 		
 	}
 
-	// Verhalten hinzufuegen
-	public void addBehavior() {
-		// registriere den ActionListener fuer den Button als anonyme Klasse
-		button.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				JOptionPane.showMessageDialog(BudgetPlanGUI.this,
-						"Add Posten!", "Hinweis", JOptionPane.PLAIN_MESSAGE);
-			}
-		});
-	}
+	
 
 	EingabeMaske pMaske = null;
-/*
-	// Tabelle um eine Zeile Erweitern hinzufuegen
-	public void addPosten(final DefaultTableModel tableModel) {
-		// registriere den ActionListener fuer den Button als anonyme Klasse
-		addPosten.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				if(log)
-				System.out.println("Anzahl der Zeilen vor update = "
-						+ table.getRowCount());
-				if(log)
-				System.out.println("Anzahl der Liste vor update = "
-						+ budget.getSize());
 
-				pMaske = new EingabeMaske();
-				EingabeMaske.budget = budget;
-				EingabeMaske.tableModel = BudgetPlanGUI.tableModel;
-
-				EingabeMaske.budget.tell("Posten has been added.");
-
-				if(log)
-				System.out.println("Anzahl der Zeilen nach update = "
-						+ table.getRowCount());
-				if(log)
-				System.out.println("Anzahl der Liste nach update = "
-						+ budget.getSize());
-
-				getContentPane().repaint();
-			}
-
-		});
-	}
-
-*/
 	String removedPosten;
 
-//	// Eine Zeile in einer Tabelle löschen
-//	public void deletePosten() {
-//		// registriere den ActionListener fuer den Button als anonyme Klasse
-//		deletePosten.addActionListener(new ActionListener() {
-//			@Override
-//			public void actionPerformed(ActionEvent e) {
-//				int row = table.getSelectedRow();
-//				
-//				if (row != -1) {
-//					System.out.println("Selecter row : " + row);
-//					// was wurde gelöscht: einnahme ode ausgabe
-//					removedPosten = (String) tableModel.getValueAt(row, 4);
-//					System.out.println("removedPosten   " + removedPosten);
-//					// remove selected row from the model
-//					tableModel.removeRow(row);
-//
-//					// Posten aus der Liste löschen
-//					budget.removeAusgabe(row);
-//
-//					// PieChart für Einnahme
-//					// pdEinnahme-inhalt vor löschen
-//					System.out.println("Vor dem Löschen: ");
-//					System.out.println("Einnahmen= " + pdEinnahme.getKeys());
-//					System.out.println("Ausgaben= " + pdAusgabe.getKeys());
-//
-//					// TODO: bessere Lösung finden
-//					// PieChart leeren
-//					if (removedPosten.equals("Einnahme")) {
-//
-//						pdEinnahme.clear();
-//						panelEinnahme.removeAll();
-//						panelEinnahme.revalidate();
-//
-//						// Daten für PieChart aus der Tabelle lesen
-//						for (Posten p : budget.getAusgabe()) {
-//							if (p.getTransaktionsart().equals("Einnahme"))
-//								pdEinnahme.setValue(p.getBezeichnung(),
-//										p.getBetrag());
-//						}
-//
-//						panelEinnahme.repaint();
-//					}
-//
-//					if (removedPosten.equals("Ausgabe")) {
-//						pdAusgabe.clear();
-//						panelAusgabe.removeAll();
-//						panelAusgabe.revalidate();
-//
-//						// Daten für PieChart aus der Tabelle lesen
-//						for (Posten p : budget.getAusgabe()) {
-//							if (p.getTransaktionsart().equals("Ausgabe"))
-//								pdAusgabe.setValue(p.getBezeichnung(),
-//										p.getBetrag());
-//						}
-//
-//						panelAusgabe.repaint();
-//
-//					}
-//				}
-//
-//				// TODO: nach dem Test löschen
-//				// pdEinnahme-inhalt nach löschen
-//				System.out.println("Nach dem Löschen: ");
-//				System.out.println("Einahmen: " + pdEinnahme.getKeys());
-//				System.out.println("Ausgaben: " + pdAusgabe.getKeys());
-//
-//				budget.tell("A Transaction has been deleted.");
-//
-//			}
-//
-//		});
-//	}
 
-	// Tabelle sortieren
+	
+	/**
+	 * Spalte der Betragshöhe wird von String in Double umgewandelt und sortierbar gemacht
+	 * @param tableModel
+	 * 		TableModel
+	 * @param table
+	 * 		Table
+	 */
 	public void sorttable(final MyTableModel tableModel, final JTable table) {
 		TableRowSorter<MyTableModel> sorter = new TableRowSorter<MyTableModel>();
 		
@@ -764,7 +708,9 @@ public class BudgetPlanGUI extends JFrame implements Observer {
 		});
 
 	}
-
+/**
+ * Zeigt Kontostand an, falls positiv=grüner Hintergrund, negativ=roter Hintergrund
+ */
 
 	public void showKonto() {
 		// registriere den ActionListener fuer den Button als anonyme Klasse
@@ -793,56 +739,10 @@ public class BudgetPlanGUI extends JFrame implements Observer {
 	}
 	
 	
-/*	
 
-
-	public void showPrognose() {
-		// registriere den ActionListener fuer den Button als anonyme Klasse
-		prognose.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-
-				int zeit = 12; // monate
-				// double prognose = budget.getPrognose(budget.ausgaben, zeit);
-				double kontostand = budget.getKontostand();
-				if(log)
-				System.out.println("Prognose für die nächste 12 Monate : "
-						+ (kontostand + zeit * kontostand / zeit));
-
-				// Chart für Prognose
-				DefaultCategoryDataset dataset = new DefaultCategoryDataset();
-				for (int i = 0; i < zeit; i++) {
-
-					dataset.addValue(kontostand + (i + 1) * kontostand / zeit,
-							"Kontostand", i + 1 + ".");
-
-				}
-
-				JFreeChart lineChart = ChartFactory.createLineChart("Prognose",
-						"Monate", "EURO", dataset, PlotOrientation.VERTICAL,
-						true, true, false);
-
-				panelPrognose = new ChartPanel(lineChart);
-				panelPrognose
-						.setPreferredSize(new java.awt.Dimension(700, 367));
-
-				if (getContentPane().getComponentCount() > 0)
-					getContentPane().remove(panelAusgabe);
-
-				if (getContentPane().getComponentCount() > 0)
-					getContentPane().remove(panelEinnahme);
-
-				if (getContentPane().getComponent(0).equals(panelPrognose))
-					getContentPane().remove(panelPrognose);
-
-				getContentPane().add(panelPrognose);
-				printAll(getGraphics());
-
-			}
-		});
-	}
-
-*/
+	/**
+	 * Änderungen des Modells im GUI anzeigen
+	 */
 	@Override
 	public void update(Observable arg0, Object arg1) {
 		if(log)
@@ -853,6 +753,12 @@ public class BudgetPlanGUI extends JFrame implements Observer {
 		
 
 	}
+	
+	/**
+	 * Erzeugnung der Tabelle im GUI auf Basis des Modells
+	 * @param model
+	 * Model
+	 */
 
 	public void updateTableFromModel(IBudgetPlanModel model) {
 
@@ -1144,6 +1050,16 @@ public class BudgetPlanGUI extends JFrame implements Observer {
 		});
 
 	}
+	
+	/**
+	 * Update der Tabelle mit den gefilterten Transaktionen
+	 * @param model
+	 * Das Modell
+	 * @param selectedDate1
+	 * Anfagnsdatum
+	 * @param selectedDate2
+	 * Enddatum
+	 */
 
 	public void updateTableForFilterdeData(IBudgetPlanModel model,
 			Date selectedDate1, Date selectedDate2) {

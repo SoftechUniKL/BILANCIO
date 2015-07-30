@@ -39,6 +39,10 @@ public class BudgetPlanModel extends  Observable implements IBudgetPlanModel{
     
     private static boolean log = false;
     
+    /**
+     * Konstruktor ohne Parameter
+     */
+    
 	public BudgetPlanModel() {
 		
 		this.ausgaben = new ArrayList<Posten>();
@@ -52,6 +56,12 @@ public class BudgetPlanModel extends  Observable implements IBudgetPlanModel{
 		
 		tell("Model has changed.");
 	}
+	
+	/**
+	 * Konstruktor mit Dateiname als Parameter
+	 * @param file
+	 * Dateiname
+	 */
 	
 public BudgetPlanModel(String file) {
 		
@@ -77,9 +87,7 @@ public BudgetPlanModel(String file) {
 			Kontostand = k; 
 		}
 		
-	/* (non-Javadoc)
-	 * @see model.IBudgetPlanModel#getKontostand()
-	 */
+	
 		@Override
 		public double getKontostand()		{ 
 			
@@ -98,8 +106,8 @@ public BudgetPlanModel(String file) {
 			return tmpKontostand;
 		}
 	
-		/* (non-Javadoc)
-		 * @see model.IBudgetPlanModel#getPrognose(java.util.List, int)
+		/** 
+		 * Prognosealgorithmus
 		 */
 		@Override
 		public double getPrognose (int prognoseMonat){
@@ -114,8 +122,8 @@ public BudgetPlanModel(String file) {
 			return prognose;
 		}
 		
-		/* (non-Javadoc)
-		 * @see model.IBudgetPlanModel#tell(java.lang.String)
+		/**
+		 * Bei Änderungen werden Nachrichten verschickt
 		 */
 		@Override
 		public void tell(String info){
@@ -128,6 +136,9 @@ public BudgetPlanModel(String file) {
 	        }
 	    }
 
+		/**
+		 * Methode zum Posten hinzufügen. Dabei wird der neue Posten mit einem eindeutigen Schlüssel versehen.
+		 */
 		@Override
 		public void addPosten(Posten posten) {
 			
@@ -142,13 +153,17 @@ public BudgetPlanModel(String file) {
 			this.ausgaben.add(posten);
 			
 		}
-		
+		/**
+		 * Methode, die die Länge der Liste bestimmt.
+		 */
 		@Override
 		public int getSize() {
 		
 			return this.ausgaben.size();
 		}
-		
+		/**
+		 * Methode zum Löschen von Transaktionen aus der Liste mit bestimmten Schlüssel
+		 */
 		@Override
 		public void removeAusgabe(int key) {
 
@@ -167,10 +182,18 @@ public BudgetPlanModel(String file) {
 			}
 				
 		}
+		/**
+		 * Gibt die Liste der Transaktionen aus
+		 */
 
 		public List<Posten> getTransaction() {
 			return ausgaben;
 		}
+		
+		/** 
+		 * Bestimmt die Anzahl der Monate für Prognosealgorithmus
+		 * @return Anzahl der Monate
+		 */
 		
 	public int getAnzahlMonate() {
 		int i = 0;
@@ -205,12 +228,17 @@ public BudgetPlanModel(String file) {
 		return monate;
 	}
 	
-	
+	/**
+	 * Gibt Schlüssel einer Transaktion aus
+	 */
 	@Override
 	public int getKey() {
 		
 		return key;
 	}
+	/** 
+	 * Bestimmt den Schlüssel einer Transaktion 
+	 */
 
 	public void setKey() {
 		int key =  ausgaben.get(ausgaben.size()-1).getKey();

@@ -2,7 +2,12 @@ package gui;
 
 import java.sql.Date;
 
+
 import javax.swing.table.DefaultTableModel;
+
+/**
+ * Klasse zur Erweiterung der DefaultTableModel
+ */
 
 public class MyTableModel extends DefaultTableModel {
 
@@ -18,7 +23,9 @@ public class MyTableModel extends DefaultTableModel {
 	public MyTableModel(Object rowData[][], Object columnNames[]) {
 		super(rowData, columnNames);
 	}
-
+/**
+ * Festlegung welcher Datentyp in welche Spalte kommt
+ */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public Class getColumnClass(int col) {
 
@@ -33,7 +40,9 @@ public class MyTableModel extends DefaultTableModel {
 			// andere Spalten akzeprieren nur Stringwerte
 			return String.class; 
 	}
-
+/**
+ * Zellen einer Tabelle sind editierbar
+ */
 	public boolean isCellEditable(int row, int column){
 		// Tabellenzeilen sind nicht editierbar
 		return false;

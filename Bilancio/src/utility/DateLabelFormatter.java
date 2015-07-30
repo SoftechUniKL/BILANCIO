@@ -6,6 +6,12 @@ import java.util.Calendar;
 
 import javax.swing.JFormattedTextField.AbstractFormatter;
 
+/**
+ * Klasse für die Formatierung des Datums in "dd.MM.yyyy";
+ * @author Tim
+ *
+ */
+
 public class DateLabelFormatter extends AbstractFormatter {
 
 	private static final long serialVersionUID = 1L;
