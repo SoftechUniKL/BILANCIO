@@ -43,7 +43,6 @@ import javax.swing.event.MenuEvent;
 import javax.swing.event.MenuListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableRowSorter;
 
@@ -58,8 +57,6 @@ import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.PlotOrientation;
-import org.jfree.chart.renderer.category.CategoryItemRenderer;
-import org.jfree.data.category.CategoryDataset;
 import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.data.general.DefaultPieDataset;
 
@@ -141,7 +138,9 @@ public class BudgetPlanGUI extends JFrame implements Observer {
 
 		super("BILANCIO");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		this.setResizable(false);
+		this.setResizable(true);
+		
+		
 
 		getContentPane().setLayout(new FlowLayout());
 
@@ -172,7 +171,7 @@ public class BudgetPlanGUI extends JFrame implements Observer {
 
 		showKonto();
 
-		showPrognose();
+	//	showPrognose();
 
 
 		filterDate();
@@ -208,6 +207,7 @@ public class BudgetPlanGUI extends JFrame implements Observer {
 
 		initWindow();
 		setVisible(true); // Frame wird sichtbar
+		
 
 	}
 
@@ -237,6 +237,13 @@ public class BudgetPlanGUI extends JFrame implements Observer {
 		controlPanel.add(datePicker1);
 		controlPanel.add(datePicker2);
 
+		
+		/**
+		 * MENU
+		 * 
+		 *  			**************************************************** //
+		 */
+		
 		JMenuBar menubar = new JMenuBar();
 
 		this.setJMenuBar(menubar);
@@ -294,39 +301,34 @@ public class BudgetPlanGUI extends JFrame implements Observer {
 		
 		class About implements MenuListener {
 
-
 			@Override
 			public void menuSelected(MenuEvent arg0) {
-				
 				
 				String about = "Dieses Programm wurde im Rahmen des Programmierprojekts entwickelt.\n"
 						+ "Die Entwicklergruppe bestand aus Amanuel Abraham, Samuel Asmelash und \n"
 						+ "Tim Lamberty. Die Betreuung des Projekts lag bei Frau Dr. Bieniusa (AG Softwaretechnik).\n";
+				
 				JOptionPane.showMessageDialog(BudgetPlanGUI.this,
 						about, "BILANCIO", JOptionPane.PLAIN_MESSAGE);
-				
 				
 			}
 
 			@Override
 			public void menuCanceled(MenuEvent e) {
-				
-				
 			}
 
 			@Override
 			public void menuDeselected(MenuEvent e) {
-				
-				
 			}
-
-			
-			
 		}
 		
 		about.addMenuListener(new About());
 		
-
+		/**
+		 * 
+		 * ActionListener für Programm-Beenden
+		 *
+		 */
 		class exitaction implements ActionListener {
 			public void actionPerformed(ActionEvent e) {
 				System.exit(0);
@@ -345,24 +347,23 @@ public class BudgetPlanGUI extends JFrame implements Observer {
 
 			public void actionPerformed(ActionEvent e) {
 
-				int zeit = k; // monate
+				int prognosePeriode = k; // Prognose-Periode in Monate
 				
 				double kontostand = budget.getKontostand();
 				if(log)
-				System.out.println("Prognose für die nächste" + zeit
+				System.out.println("Prognose für die nächste" + prognosePeriode
 						+ " Monate : "
-						+ budget.getPrognose(zeit));
+						+ budget.getPrognose(prognosePeriode));
 				
-						double pp = budget.getPrognose(zeit)-kontostand;
+						double pp = budget.getPrognose(prognosePeriode)-kontostand;
 						
 						if(log) System.out.println("pp;"+pp);
 						
 				// Chart für Prognose
-				// TODO: Durch Werte aus der Datei ersetzen.
 				DefaultCategoryDataset dataset = new DefaultCategoryDataset();
-				for (int i = 0; i <= zeit; i++) {
+				for (int i = 0; i <= prognosePeriode; i++) {
 
-					dataset.addValue(kontostand + (i) * (pp/zeit),
+					dataset.addValue(kontostand + (i) * (pp/prognosePeriode),
 							"Kontostand", i  + ".");
 
 				}
@@ -378,10 +379,10 @@ public class BudgetPlanGUI extends JFrame implements Observer {
 				((JPanel) getContentPane().getComponent(2)).removeAll();
 				((JPanel) getContentPane().getComponent(2)).add(panelPrognose,BorderLayout.PAGE_START);
 				
-				double vprognose = budget.getPrognose(zeit);
+				double vprognose = budget.getPrognose(prognosePeriode);
 				String vprognoseStr =  String.format(Locale.GERMANY, "%.2f", vprognose);
 				
-				JLabel labelprognose = new JLabel ("  Voraussichtlicher Kontostand nach " + zeit + " Monaten: EUR " +  vprognoseStr);
+				JLabel labelprognose = new JLabel ("  Voraussichtlicher Kontostand nach " + prognosePeriode + " Monaten: EUR " +  vprognoseStr);
 				labelprognose.setPreferredSize(new java.awt.Dimension(10,30));
 				labelprognose.setFont(labelKontostand.getFont().deriveFont(16.0f));
 				
@@ -389,19 +390,20 @@ public class BudgetPlanGUI extends JFrame implements Observer {
 				if(vprognose>0) labelprognose.setBackground(Color.GREEN);
 				if(vprognose<0)  labelprognose.setBackground(Color.RED);
 					
-				
 				((JPanel) getContentPane().getComponent(2)).add(labelprognose, BorderLayout.SOUTH);
 				
-			
 				getContentPane().getComponent(2).revalidate();
 							
-
 			}
 		}
-
+		
+		// Prognose Periode = 3 Monate
 		dreiMonate.addActionListener(new Prognose(3));
+		// Prognose Periode = 6 Monate
 		sechsMonate.addActionListener(new Prognose(6));
+		// Prognose Periode = 9 Monate
 		neunMonate.addActionListener(new Prognose(9));
+		// Prognose Periode = 12 Monate
 		zwölfMonate.addActionListener(new Prognose(12));
 
 		class eingabenDiagramm implements ActionListener {
@@ -620,7 +622,7 @@ public class BudgetPlanGUI extends JFrame implements Observer {
 	}
 
 	EingabeMaske pMaske = null;
-
+/*
 	// Tabelle um eine Zeile Erweitern hinzufuegen
 	public void addPosten(final DefaultTableModel tableModel) {
 		// registriere den ActionListener fuer den Button als anonyme Klasse
@@ -653,6 +655,7 @@ public class BudgetPlanGUI extends JFrame implements Observer {
 		});
 	}
 
+*/
 	String removedPosten;
 
 //	// Eine Zeile in einer Tabelle löschen
@@ -790,7 +793,7 @@ public class BudgetPlanGUI extends JFrame implements Observer {
 	}
 	
 	
-	
+/*	
 
 
 	public void showPrognose() {
@@ -807,7 +810,6 @@ public class BudgetPlanGUI extends JFrame implements Observer {
 						+ (kontostand + zeit * kontostand / zeit));
 
 				// Chart für Prognose
-				// TODO: Durch Werte aus der Datei ersetzen.
 				DefaultCategoryDataset dataset = new DefaultCategoryDataset();
 				for (int i = 0; i < zeit; i++) {
 
@@ -840,6 +842,7 @@ public class BudgetPlanGUI extends JFrame implements Observer {
 		});
 	}
 
+*/
 	@Override
 	public void update(Observable arg0, Object arg1) {
 		if(log)
@@ -901,6 +904,9 @@ public class BudgetPlanGUI extends JFrame implements Observer {
 
 		sorttable(tableModel, table);
 		table.setRowSelectionAllowed(true);
+		
+		table.getColumnModel().getColumn(5).setMinWidth(0);
+		table.getColumnModel().getColumn(5).setMaxWidth(0);
 
 		table.getSelectionModel().addListSelectionListener(
 				new ListSelectionListener() {
@@ -953,6 +959,10 @@ public class BudgetPlanGUI extends JFrame implements Observer {
 		printAll(getGraphics());
 
 	}
+	
+	/**
+	 * Ausgabe-Daten fürKreisdiagram aufbereiten
+	 */
 
 	private void getDataAusgabe() {
 		pdAusgabe = new DefaultPieDataset();
@@ -968,6 +978,9 @@ public class BudgetPlanGUI extends JFrame implements Observer {
 
 	}
 	
+	/**
+	 * Ausgabe-Daten für Balkendiagramm aufbereiten
+	 */
 	private void getDataAusgabeBAR() {
 		pdAusgabeBar = new DefaultCategoryDataset();
 		
@@ -1030,6 +1043,10 @@ public class BudgetPlanGUI extends JFrame implements Observer {
 						
 
 	}
+	
+	/**
+	 * Einnahme-Daten für Kreisdiagramm aufbereiten
+	 */
 
 	private void getDataEinnahme() {
 		pdEinnahme = new DefaultPieDataset();
@@ -1078,7 +1095,11 @@ public class BudgetPlanGUI extends JFrame implements Observer {
 		panelEinnahme = new ChartPanel(pieChartEinnahme);
 	}
 
-
+	
+	/**
+	 * Daten, die nur innerhalb der eingestellten Datumfilter leigen, 
+	 * werden herausgefiltert und dargestellt
+	 */
 	public void filterDate() {
 
 		rButtonFilterEin.addActionListener(new ActionListener() {
@@ -1182,6 +1203,9 @@ public class BudgetPlanGUI extends JFrame implements Observer {
 		sorttable(tableModel, table);
 		table.setRowSelectionAllowed(true);
 		
+		table.getColumnModel().getColumn(5).setMinWidth(0);
+		table.getColumnModel().getColumn(5).setMaxWidth(0);
+		
 		table.getSelectionModel().addListSelectionListener(
 				new ListSelectionListener() {
 					public void valueChanged(ListSelectionEvent e) {
@@ -1233,6 +1257,13 @@ public class BudgetPlanGUI extends JFrame implements Observer {
 		printAll(getGraphics());
 
 	}
+	/**
+	 * Liste der Transaktion wird in eine Liste Data-Objekt kopiert. 
+	 * @param data
+	 * 		Liste der kopierten Daten
+	 * @param tran
+	 * 		Liste der Transaktionen
+	 */
 
 	private void  extractTransactionData(Object data[][], List<Posten> tran) {
 		int i = 0;
@@ -1241,7 +1272,7 @@ public class BudgetPlanGUI extends JFrame implements Observer {
 			data[i][0] = p.getDatum();
 			data[i][1] = p.getKategorie();
 			data[i][2] = p.getBezeichnung();
-			data[i][3] =String.format("%.2f", p.getBetrag());
+			data[i][3] = String.format("%.2f", p.getBetrag());
 			data[i][4] = p.getTransaktionsart();
 			data[i][5] = p.getKey();
 
@@ -1251,9 +1282,11 @@ public class BudgetPlanGUI extends JFrame implements Observer {
 	}
 	
 	/**
-	 * 
+	 * Liste der Transaktion wird in eine Liste Data-Objekt kopiert. 
 	 * @param data
+	 * 		Liste der kopierten Daten
 	 * @param tran
+	 * 		Liste der Transaktionen
 	 */
 	
 	private void  extractTransactionDataForFilter(Object data[][], List<Posten> tran) {

@@ -131,8 +131,12 @@ public BudgetPlanModel(String file) {
 		@Override
 		public void addPosten(Posten posten) {
 			
+			int key;
 			int lastElement =  this.ausgaben.size()-1;
-			int key =  this.ausgaben.get(lastElement).getKey();
+			if(lastElement>-1) 
+				key =  this.ausgaben.get(lastElement).getKey();
+			else
+				key = 0;
 			
 			posten.setKey(key+1);
 			this.ausgaben.add(posten);
