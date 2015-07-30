@@ -268,13 +268,21 @@ public class EingabeMaske extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 
 				selectedDate = (Date) datePicker.getModel().getValue();
-				String dDate = new SimpleDateFormat("dd.MM.yyyy")
-						.format(selectedDate);
-				if(log)
-				System.out.println("Datum: Picker :       " + dDate);
-				tfDatum.setText(dDate);
-				if(log)
-				System.out.println("Datum:       " + tfDatum.getText());
+				try {
+					String dDate = new SimpleDateFormat("dd.MM.yyyy")
+					.format(selectedDate);
+					if(log)
+					System.out.println("Datum: Picker :       " + dDate);
+					tfDatum.setText(dDate);
+					if(log)
+					System.out.println("Datum:       " + tfDatum.getText());
+					
+				} catch (Exception e2) {
+					JOptionPane.showMessageDialog(null,
+							"Geben Sie Datum ein.",
+							"Error", JOptionPane.ERROR_MESSAGE);
+				}
+				
 				if(log)
 				System.out.println("Bezeichnung: " + tfBezeichnung.getText());
 				
