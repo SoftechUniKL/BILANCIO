@@ -8,7 +8,6 @@ import org.junit.Test;
 
 public class FileNameTestCase {
 
-	@SuppressWarnings("deprecation")
 	@Test
 	public void test() {
 		
@@ -16,7 +15,7 @@ public class FileNameTestCase {
 		
 		String file =  testBudgetPlanModel.filename;
 		
-		assertEquals("data/budget.cs", file);
+		assertEquals("data/budget.csv", file);
 	}
 
 }

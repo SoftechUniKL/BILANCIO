@@ -71,7 +71,7 @@ public class BudgetPlanGUI extends JFrame implements Observer {
 	/**
 	 * Tabelle mit Uebersicht der Ausgaben
 	 */
-	private static JTable table;
+	//private static JTable table;
 	public static MyTableModel tableModel;
 	private Object[][] data;
 	
@@ -138,7 +138,7 @@ public class BudgetPlanGUI extends JFrame implements Observer {
 
 		super("BILANCIO");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		this.setResizable(true);
+		this.setResizable(false);
 		
 		
 
@@ -374,7 +374,9 @@ public class BudgetPlanGUI extends JFrame implements Observer {
 
 				int prognosePeriode = k; // Prognose-Periode in Monate
 				
-				double kontostand = budget.getKontostand();
+				double kontostand = 0;
+				if(budget != null){
+					kontostand = budget.getKontostand();
 				if(log)
 				System.out.println("Prognose für die nächste" + prognosePeriode
 						+ " Monate : "
@@ -383,7 +385,7 @@ public class BudgetPlanGUI extends JFrame implements Observer {
 						double pp = budget.getPrognose(prognosePeriode)-kontostand;
 						
 						if(log) System.out.println("pp;"+pp);
-						
+					
 				// Chart für Prognose
 				DefaultCategoryDataset dataset = new DefaultCategoryDataset();
 				for (int i = 0; i <= prognosePeriode; i++) {
@@ -421,7 +423,7 @@ public class BudgetPlanGUI extends JFrame implements Observer {
 				((JPanel) getContentPane().getComponent(2)).add(labelprognose, BorderLayout.SOUTH);
 				
 				getContentPane().getComponent(2).revalidate();
-							
+			}		
 			}
 		}
 		
@@ -441,8 +443,10 @@ public class BudgetPlanGUI extends JFrame implements Observer {
 		 */
 
 		class eingabenDiagramm implements ActionListener {
+			@SuppressWarnings("deprecation")
 			public void actionPerformed(ActionEvent e) {
 
+				if(budget != null) {
 				getDataEinnahme();
 				
 				// Do not show Control Panel
@@ -452,6 +456,8 @@ public class BudgetPlanGUI extends JFrame implements Observer {
 				((JPanel) getContentPane().getComponent(2)).add(panelEinnahme);
 
 				getContentPane().getComponent(1).revalidate();
+				
+				}
 			}
 
 		}
@@ -465,13 +471,18 @@ public class BudgetPlanGUI extends JFrame implements Observer {
 		 */
 
 		class übersichtTabelle implements ActionListener {
+			@SuppressWarnings("deprecation")
 			public void actionPerformed(ActionEvent e) {
+				
+				if(budget != null) {
 
 				((JPanel) getContentPane().getComponent(2)).removeAll();
 				((JPanel) getContentPane().getComponent(2)).add(scrollpane);
 
 				getContentPane().getComponent(1).show(true);
 				getContentPane().getComponent(2).revalidate();
+				
+				}
 
 			}
 
@@ -485,8 +496,10 @@ public class BudgetPlanGUI extends JFrame implements Observer {
 		 */
 
 		class ausgabenDiagramm implements ActionListener {
+			@SuppressWarnings("deprecation")
 			public void actionPerformed(ActionEvent e) {
 
+				if(budget != null) {
 				//getDataAusgabe();
 				getDataAusgabeBAR();
 				
@@ -496,6 +509,7 @@ public class BudgetPlanGUI extends JFrame implements Observer {
 				((JPanel) getContentPane().getComponent(2)).removeAll();
 				((JPanel) getContentPane().getComponent(2)).add(panelAusgabe);
 				getContentPane().getComponent(1).revalidate();
+			}
 			}
 
 		}
@@ -511,16 +525,21 @@ public class BudgetPlanGUI extends JFrame implements Observer {
 		class addPosten implements ActionListener {
 			public void actionPerformed(ActionEvent e) {
 
+				if(budget != null) {
+					
 				new EingabeMaske();
 				EingabeMaske.budget = budget;
 				EingabeMaske.tableModel = BudgetPlanGUI.tableModel;
 				getContentPane().getComponent(2).revalidate();
+				}
 
 			}
 
 		}
-
+		
+		
 		addPostenMenu.addActionListener(new addPosten());
+		
 		
 		/**
 		 * Actionlistener zum Löschen einer Transaktion
@@ -888,6 +907,7 @@ public class BudgetPlanGUI extends JFrame implements Observer {
 	 * Ausgabe-Daten fürKreisdiagram aufbereiten
 	 */
 
+	@SuppressWarnings("unused")
 	private void getDataAusgabe() {
 		pdAusgabe = new DefaultPieDataset();
 		for (Posten p : budget.getTransaction()) {

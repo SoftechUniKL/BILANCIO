@@ -18,6 +18,9 @@ public class Postsize {
 			double Kontostand =  testBudgetPlanModel.getKontostand();
 			assertEquals(65, Kontostand, 0.0001);
 		}	
+	
+	
+	
 
 	
 	}

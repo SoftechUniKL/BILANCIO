@@ -195,6 +195,7 @@ public BudgetPlanModel(String file) {
 		 * @return Anzahl der Monate
 		 */
 		
+	@SuppressWarnings("deprecation")
 	public int getAnzahlMonate() {
 		int i = 0;
 		Date firstDate = ausgaben.get(0).getDatum();
@@ -214,6 +215,7 @@ public BudgetPlanModel(String file) {
 			}
 		}
 
+		
 		int jahre = lastDate.getYear() - firstDate.getYear() - 1;
 		int firstmonat = firstDate.getMonth();
 		int lastmonat = lastDate.getMonth();
