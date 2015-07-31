@@ -68,7 +68,7 @@ public class WriteFile implements Observer {
 				writer.close();
 				
 			} catch (IOException e1) {
-				// TODO Auto-generated catch block
+				
 				e1.printStackTrace();
 			}
 	}
@@ -78,7 +78,7 @@ public class WriteFile implements Observer {
  */
 	@Override
 	public void update(Observable o, Object arg) {
-		// TODO Auto-generated method stub
+		
 		if(log)
 		System.out.println(this.toString() +" : Message from Model  = "+(String ) arg);
 		

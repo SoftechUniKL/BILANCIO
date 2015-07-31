@@ -623,9 +623,6 @@ public class BudgetPlanGUI extends JFrame implements Observer {
 		pieChartAusgabe = ChartFactory.createPieChart("Ausgaben", pdAusgabe);
 		panelAusgabe = new ChartPanel(pieChartAusgabe);
 		
-//		// Balkendiagram für Ausgaben
-//				barAusgabe = ChartFactory.createBarChart("Ausgabe", "", "EUR", pdAusgabeBar);
-//				panelAusgabe = new ChartPanel(barAusgabe);
 		
 		// Button
 		button = new JButton("TestButton!");
@@ -643,14 +640,12 @@ public class BudgetPlanGUI extends JFrame implements Observer {
 		deletePosten = new JButton(" -     Delete Posten   ");
 
 		deletePosten.setBounds(300, 110, 150, 40);
-		// DeletePosten Button
+		
 
 		// Button für Prognose
 		prognose = new JButton("       Prognose        ");
 
-		// Chart für Prognose
-		// TODO: Durch Werte aus der Datei ersetzen.
-		// Elemente dem Fenster hinzufuegen:
+		
 
 		rButtonFilterEin = new JRadioButton("Ein");
 		rButtonFilterEin.setActionCommand("Ein");
@@ -733,7 +728,7 @@ public class BudgetPlanGUI extends JFrame implements Observer {
 					x =  nf.parse(o1).doubleValue();
 					y  =  nf.parse(o2).doubleValue();
 				} catch (ParseException e) {
-					// TODO Auto-generated catch block
+					
 					e.printStackTrace();
 				}
 				
@@ -799,7 +794,7 @@ public class BudgetPlanGUI extends JFrame implements Observer {
 
 	public void updateTableFromModel(IBudgetPlanModel model) {
 
-		// tableModel.addRow(new Object[5]);
+		
 		if (model != null)
 			budget = model;
 		if(log)

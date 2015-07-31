@@ -297,9 +297,7 @@ public class EingabeMaske extends JFrame {
 					System.out.println("Datum:       " + tfDatum.getText());
 					
 				} catch (Exception e2) {
-//					JOptionPane.showMessageDialog(null,
-//							"Geben Sie Datum ein.",
-//							"Error", JOptionPane.ERROR_MESSAGE);
+					
 				}
 				
 				if(log)
@@ -310,14 +308,10 @@ public class EingabeMaske extends JFrame {
 					
 					if(isNumeric(tfBetrag.getText()))
 						Betrag = nf.parse(tfBetrag.getText());
-					// TODO: Eingabe des Betrages validieren. Prüfe ob die
-					// Eingabe sinn macht
-					// Fehler durch POP-Up Fenster anzeigen
+					
 				} catch (ParseException e1) {
 
-//					JOptionPane.showMessageDialog(null,
-//							"Eingabe darf nur Dezimalzahl sein. (123,56)",
-//							"Error", JOptionPane.ERROR_MESSAGE);
+					e1.printStackTrace();
 				}
 				if(log)
 				System.out.println("Betrag:" + Betrag.doubleValue());
@@ -340,9 +334,9 @@ public class EingabeMaske extends JFrame {
 					saveEingabe();
 					frame.dispose();
 				}
+				
 					
-					
-					else
+				else
 						
 							JOptionPane.showMessageDialog(null,
 									"Betrag darf nur Dezimalzahl sein. (123,56)", "Error",
@@ -374,10 +368,10 @@ public class EingabeMaske extends JFrame {
 			betrag = nf.parse(tfBetrag.getText());
 			
 		} catch (ParseException e1) {
-			JOptionPane.showMessageDialog(null,
-					"Geben Sie Datum ein. \n Eingabe darf nur Dezimalzahl sein. (123,56)", "Error",
-					JOptionPane.ERROR_MESSAGE);
-			//e1.printStackTrace();
+//			JOptionPane.showMessageDialog(null,
+//					"Geben Sie Datum ein. \n Eingabe darf nur Dezimalzahl sein. (123,56)", "Error",
+//					JOptionPane.ERROR_MESSAGE);
+//			e1.printStackTrace();
 
 
 		}
@@ -397,8 +391,7 @@ public class EingabeMaske extends JFrame {
 			transaktionsArt = "Ausgabe";
 		}
 
-//		int lastElement = budget.getAusgabe().size()-1;
-//		int key = budget.getAusgabe().get(lastElement).getKey();
+
 		double betr = 0;
 		try{
 			
@@ -410,11 +403,10 @@ public class EingabeMaske extends JFrame {
 				budget.tell("New Transaction has been added.");
 				
 		} catch (Exception e) {
-			JOptionPane.showMessageDialog(null,
-					"Betrag darf nur Dezimalzahl sein. (123,56)", "Error",
-					JOptionPane.ERROR_MESSAGE);
+
 		}
 		
+			
 
 	}
 
