@@ -3,6 +3,14 @@ package model;
 import java.util.List;
 import java.util.Observer;
 
+/**
+ * Interface für das BudgetPlanModel. Hier werden alle Methoden deklariert
+ * @author Abraham Amanuel
+ * @author Asmelash Samuel
+ * @author Lamberty Tim
+ * 
+ *
+ */
 public interface IBudgetPlanModel {
 
 	/**

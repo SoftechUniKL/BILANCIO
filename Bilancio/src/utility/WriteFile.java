@@ -11,6 +11,14 @@ import model.Posten;
 
 import com.opencsv.CSVWriter;
 
+/**
+ * Liste der Transaktionen wird in einer Datei geschrieben
+ * @author Abraham Amanuel
+ * @author Asmelash Samuel
+ * @author Lamberty Tim
+ * 
+ *
+ */
 public class WriteFile implements Observer {
 	/** 
 	 * Name der CSV Datei

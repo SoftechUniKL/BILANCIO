@@ -4,6 +4,9 @@ import model.BudgetPlanModel;
 
 /**
  * Anwendung BudgetPlan
+ * @author Abraham Amanuel
+ * @author Asmelash Samuel
+ * @author Lamberty Tim
  * 
  */
 

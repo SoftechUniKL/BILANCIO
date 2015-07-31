@@ -65,6 +65,10 @@ import utility.DateLabelFormatter;
 /**
  * Graphische Benutzeroberflaeche des BudgetPlaners
  * 
+ * @author Abraham Amanuel
+ * @author Asmelash Samuel
+ * @author Lamberty Tim
+ * 
  */
 public class BudgetPlanGUI extends JFrame implements Observer {
 	private static final long serialVersionUID = 1L;

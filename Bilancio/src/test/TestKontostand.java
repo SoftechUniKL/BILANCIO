@@ -5,7 +5,14 @@ import model.BudgetPlanModel;
 
 import org.junit.Test;
 
-
+/**
+ * Testcase für Kontostand
+ * @author Abraham Amanuel
+ * @author Asmelash Samuel
+ * @author Lamberty Tim
+ * 
+ *
+ */
 public class TestKontostand {
 
 	@Test

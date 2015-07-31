@@ -3,6 +3,11 @@ import java.util.Date;
 
 /**
  * Posten in der Budgetplanung
+ * 
+ * @author Abraham Amanuel
+ * @author Asmelash Samuel
+ * @author Lamberty Tim
+ * 
  */
 public class Posten {
 	/**

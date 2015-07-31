@@ -5,7 +5,15 @@ import model.BudgetPlanModel;
 
 import org.junit.Test;
 
-
+/**
+ * Testcase für Dateiname
+ * 
+ * @author Abraham Amanuel
+ * @author Asmelash Samuel
+ * @author Lamberty Tim
+ * 
+ *
+ */
 public class FileNameTestCase {
 
 	@Test

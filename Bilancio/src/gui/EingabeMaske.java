@@ -36,7 +36,9 @@ import utility.DateLabelFormatter;
 
 /**
  * Eingabemaske
- * @author Tim
+ * @author Abraham Amanuel
+ * @author Asmelash Samuel
+ * @author Lamberty Tim
  *
  */
 

@@ -12,6 +12,14 @@ import model.Posten;
 
 import com.opencsv.CSVReader;
 
+/**
+ * Liste der Transaktionen wird aus einer Datei gelesen und ins Model geladen.
+ * @author Abraham Amanuel
+ * @author Asmelash Samuel
+ * @author Lamberty Tim
+ * 
+ *
+ */
 public class ReadFile  {
 	
 	/**  

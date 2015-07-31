@@ -7,6 +7,10 @@ import javax.swing.table.DefaultTableModel;
 
 /**
  * Klasse zur Erweiterung der DefaultTableModel
+ * 
+ * @author Abraham Amanuel
+ * @author Asmelash Samuel
+ * @author Lamberty Tim
  */
 
 public class MyTableModel extends DefaultTableModel {

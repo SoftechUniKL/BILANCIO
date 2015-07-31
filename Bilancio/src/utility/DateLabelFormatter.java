@@ -8,7 +8,10 @@ import javax.swing.JFormattedTextField.AbstractFormatter;
 
 /**
  * Klasse für die Formatierung des Datums in "dd.MM.yyyy";
- * @author Tim
+ * @author Abraham Amanuel
+ * @author Asmelash Samuel
+ * @author Lamberty Tim
+ * 
  *
  */
 

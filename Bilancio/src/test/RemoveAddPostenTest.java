@@ -13,6 +13,14 @@ import model.Posten;
 import org.junit.Before;
 import org.junit.Test;
 
+/**
+ * Testcase für Löschen und Hizufügen von Trasaktionen
+ * @author Abraham Amanuel
+ * @author Asmelash Samuel
+ * @author Lamberty Tim
+ * 
+ *
+ */
 public class RemoveAddPostenTest {
 	
 	

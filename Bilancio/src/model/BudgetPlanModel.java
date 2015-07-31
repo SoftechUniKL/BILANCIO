@@ -14,7 +14,9 @@ import utility.WriteFile;
  * Datenmodell des Budgetplaners
  * 
  * Die Daten werden in der Datei data/budget.csv abgespeichert als CSV-Datei.
- * 
+ * @author Abraham Amanuel
+ * @author Asmelash Samuel
+ * @author Lamberty Tim
  */
 public class BudgetPlanModel extends  Observable implements IBudgetPlanModel{
 	
